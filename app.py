@@ -21,8 +21,8 @@ from lxml import html
 USER_AGENT = "Mozilla/5.0 (compatible; FaixaCerta/1.0; +https://github.com/KevinCostaAI/faixa-certa)"
 ROBO = "FaixaCerta"
 TEMPO_LOJA = 10  # segundos de espera por loja
-TEMPO_LLM = 20  # segundos para classificar os títulos de uma busca
-LOTE_LLM = 30  # títulos por chamada ao LLM; com mais títulos, as chamadas são feitas em paralelo
+TEMPO_LLM = 30  # segundos para classificar os títulos de uma busca
+LOTE_LLM = 15  # títulos por chamada ao LLM; com mais títulos, as chamadas são feitas em paralelo
 CACHE_SEGUNDOS = 15 * 60  # a mesma busca só é repetida na loja depois de 15 minutos
 MINIMO_OFERTAS = 3  # abaixo disso, a faixa de preço não é exibida
 MAXIMO_POR_LOJA = 30
