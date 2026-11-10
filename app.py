@@ -696,10 +696,6 @@ def mostrar_resultados(busca, coletas, mem):
 
 
 # Interface
-def usar_exemplo(texto):
-    st.session_state.update(campo_busca=texto, digitado=texto, sem_correcao=False)
-
-
 def buscar_como_digitado():
     st.session_state.sem_correcao = True
 
@@ -713,11 +709,6 @@ with st.form("busca"):
     st.text_input("Qual celular você procura?", placeholder="Ex.: iphone 13 128gb", key="campo_busca")
     if st.form_submit_button("Buscar", type="primary"):
         st.session_state.update(digitado=st.session_state.campo_busca, sem_correcao=False)
-
-st.write("Exemplos:")
-colunas = st.columns(4)
-for coluna, exemplo in zip(colunas, ["epone 13 128gb", "galaxi a17 128gb", "motorolla moto g06", "xiaome redmi 15c"]):
-    coluna.button(exemplo, on_click=usar_exemplo, args=(exemplo,), width="stretch")
 
 digitado = (st.session_state.get("digitado") or "").strip()
 if digitado:
