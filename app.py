@@ -542,9 +542,9 @@ def ler_kabum(conteudo, url):
                 except ValueError:
                     pass
             elif isinstance(atual, list):
-                pilha.extend(atual)
+                pilha.extend(reversed(atual))  # invertido para sair na ordem da página (os mais relevantes primeiro)
             elif isinstance(atual, dict):
-                pilha.extend(atual.values())
+                pilha.extend(reversed(list(atual.values())))
                 if not (isinstance(atual.get("name"), str) and atual.get("code") and "price" in atual):
                     continue
                 if atual.get("available") is False:
