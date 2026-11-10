@@ -32,6 +32,9 @@ LLM_MODELO = os.environ.get("LLM_MODEL", "gemini-3.1-flash-lite")
 LLM_MODELO_RESERVA = os.environ.get("LLM_MODEL_FALLBACK", "gemini-3.5-flash-lite")
 COMPARELIVRE = os.environ.get("COMPARELIVRE_URL", "https://comparelivre.com.br").rstrip("/")
 KABUM = os.environ.get("KABUM_URL", "https://www.kabum.com.br").rstrip("/")
+MAGALU = os.environ.get("MAGALU_URL", "https://www.magazineluiza.com.br").rstrip("/")
+GAZIN = os.environ.get("GAZIN_URL", "https://www.gazin.com.br").rstrip("/")
+NOVOMUNDO = os.environ.get("NOVOMUNDO_URL", "https://www.novomundo.com.br").rstrip("/")
 
 
 CONDICOES = ["novo", "usado", "recondicionado"]
@@ -220,6 +223,14 @@ def palavras_do_modelo(busca):
 def falta_modelo(busca):
     """Busca só com marca ou linha ("iphone", "samsung galaxy"): são vários modelos, então não existe uma faixa de preço."""
     return all(p in VOCABULARIO and p != "se" for p in palavras_do_modelo(busca))
+
+
+def menciona_o_modelo(titulo, busca):
+    """O título cita os números do modelo buscado (ex.: "a17" em "Galaxy A17")? Sem eles não pode ser o mesmo
+    modelo, e o título nem vai para o LLM: com mais lojas, isso evita chamadas demais e deixa a resposta mais rápida."""
+    codigos = [p for p in palavras_do_modelo(busca) if re.search(r"\d", p) and p != "5g"]
+    compacto = re.sub(r"[^a-z0-9]", "", limpar(titulo))
+    return all(codigo in compacto for codigo in codigos)
 
 
 def classificar_por_regras(busca, titulos):
@@ -433,6 +444,7 @@ LOJAS_CONHECIDAS = {
     "mercadolivre": "Mercado Livre", "shopee": "Shopee", "amazon": "Amazon", "magazineluiza": "Magazine Luiza",
     "casasbahia": "Casas Bahia", "americanas": "Americanas", "kabum": "KaBuM!", "carrefour": "Carrefour",
     "fastshop": "Fast Shop", "pontofrio": "Ponto", "extra": "Extra", "aliexpress": "AliExpress",
+    "gazin": "Gazin", "novomundo": "Novo Mundo",
 }
 
 
@@ -503,9 +515,75 @@ def ler_kabum(conteudo, url):
     return ofertas
 
 
+def dados_next(conteudo):
+    """JSON que as páginas feitas em Next.js trazem no script __NEXT_DATA__."""
+    bloco = html.fromstring(conteudo).xpath('//script[@id="__NEXT_DATA__"]/text()')
+    return json.loads(bloco[0]) if bloco else {}
+
+
+def campo(dados, *chaves):
+    for chave in chaves:
+        dados = dados.get(chave) if isinstance(dados, dict) else None
+    return dados
+
+
+def ler_magalu(conteudo, url):
+    ofertas = []
+    for item in campo(dados_next(conteudo), "props", "pageProps", "data", "search", "items") or []:
+        oferta = (item.get("offers") or [{}])[0]
+        preco = numero(campo(oferta, "bestPrice", "totalAmount"))  # preço no Pix, como o da KaBuM!
+        if not preco_valido(preco):
+            preco = numero(oferta.get("price"))
+        if item.get("available") is False or not item.get("title") or not item.get("path") or not preco_valido(preco):
+            continue
+        link = MAGALU + item["path"]
+        ofertas.append({"titulo": item["title"].strip(), "preco": preco, "loja": "Magazine Luiza",
+                        "fonte": "Magazine Luiza", "link": link, "pagina": link})
+    return ofertas
+
+
+def ler_gazin(conteudo, url):
+    ofertas = []
+    for produto in campo(dados_next(conteudo), "props", "pageProps", "resultadosBusca", "products") or []:
+        preco = numero(produto.get("price"))
+        # Produto indisponível vem com preço antigo: fica de fora.
+        if produto.get("status") != "AVAILABLE" or not produto.get("name") or not produto.get("url") or not preco_valido(preco):
+            continue
+        link = GAZIN + produto["url"]
+        ofertas.append({"titulo": produto["name"].strip(), "preco": preco, "loja": "Gazin", "fonte": "Gazin",
+                        "link": link, "pagina": link})
+    return ofertas
+
+
+def ler_novomundo(conteudo, url):
+    """Lê a lista de produtos em JSON-LD (schema.org), que traz só os resultados da busca, sem as sugestões."""
+    ofertas = []
+    for bloco in html.fromstring(conteudo).xpath('//script[@type="application/ld+json"]/text()'):
+        try:
+            dados = json.loads(bloco)
+        except ValueError:
+            continue
+        if not isinstance(dados, dict) or dados.get("@type") != "ItemList":
+            continue
+        for elemento in dados.get("itemListElement") or []:
+            produto = elemento.get("item", elemento) if isinstance(elemento, dict) else {}
+            oferta = produto.get("offers") or {}
+            oferta = (oferta[0] if oferta else {}) if isinstance(oferta, list) else oferta
+            preco = numero(oferta.get("price"))
+            if "OutOfStock" in str(oferta.get("availability", "")) or not produto.get("name") or not produto.get("url") or not preco_valido(preco):
+                continue
+            link = urljoin(url, produto["url"])
+            ofertas.append({"titulo": produto["name"].strip(), "preco": preco, "loja": "Novo Mundo", "fonte": "Novo Mundo",
+                            "link": link, "pagina": link})
+    return ofertas
+
+
 FONTES = {
     "Compare Livre": (lambda busca: f"{COMPARELIVRE}/busca?q={quote_plus(busca)}", ler_comparelivre),
     "KaBuM!": (lambda busca: f"{KABUM}/busca/{quote('-'.join(busca.split()))}", ler_kabum),
+    "Magazine Luiza": (lambda busca: f"{MAGALU}/busca/{quote_plus(busca)}/", ler_magalu),
+    "Gazin": (lambda busca: f"{GAZIN}/busca/{quote('-'.join(busca.split()))}", ler_gazin),
+    "Novo Mundo": (lambda busca: f"{NOVOMUNDO}/busca?busca={quote(busca)}", ler_novomundo),
 }
 CABECALHOS = {"User-Agent": USER_AGENT, "Accept": "text/html,application/xhtml+xml", "Accept-Language": "pt-BR,pt;q=0.9"}
 # O Compare Livre às vezes devolve só capinhas e películas para o nome do modelo (ex.: "moto g06").
@@ -601,7 +679,8 @@ def coletar(nome, busca, mem):
             vistos.add(oferta["pagina"])
             unicas.append(oferta)
     resultado["ofertas"] = unicas[:MAXIMO_POR_LOJA]
-    resultado["status"] = f"{len(resultado['ofertas'])} ofertas" if unicas else "nenhuma oferta encontrada"
+    total = len(resultado["ofertas"])
+    resultado["status"] = (f"{total} oferta" if total == 1 else f"{total} ofertas") if unicas else "nenhuma oferta encontrada"
     resultado["coletado"] = datetime.now(FUSO).strftime("%H:%M")
     with mem["trava"]:
         mem["paginas"][url] = resultado
@@ -686,7 +765,12 @@ def mostrar_resultados(busca, coletas, mem):
     if not ofertas:
         st.warning("Nenhuma loja devolveu ofertas para esta busca. Tente escrever de outro jeito ou busque de novo em alguns minutos.")
         return
-    alvo, itens, origem = classificar(busca, [o["titulo"] for o in ofertas], mem)
+    # Os títulos que citam o modelo vão para a classificação; os outros já ficam como "outro modelo".
+    ofertas.sort(key=lambda oferta: not menciona_o_modelo(oferta["titulo"], busca))
+    citam = sum(menciona_o_modelo(oferta["titulo"], busca) for oferta in ofertas)
+    alvo, itens, origem = classificar(busca, [o["titulo"] for o in ofertas[:citam]], mem)
+    itens += [{"celular": True, "marca": None, "modelo": None, "armazenamento_gb": None, "condicao": "novo"}
+              for _ in ofertas[citam:]]
     st.caption(f"Ofertas comparadas por **{origem}**.")
     if not alvo["modelo"]:
         st.warning("Não identifiquei o modelo na busca. Escreva a marca e o modelo, por exemplo: iPhone 13 128GB.")
