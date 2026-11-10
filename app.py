@@ -1,6 +1,7 @@
 """Faixa Certa: compara preços de smartphones em várias lojas, com busca na hora e correção de digitação."""
 
 import difflib
+import hashlib
 import json
 import os
 import re
@@ -23,7 +24,7 @@ ROBO = "FaixaCerta"
 TEMPO_LOJA = 10  # segundos de espera por loja
 TEMPO_LLM = 30  # segundos para classificar os títulos de uma busca
 LOTE_LLM = 15  # títulos por chamada ao LLM; com mais títulos, as chamadas são feitas em paralelo
-CACHE_SEGUNDOS = 15 * 60  # a mesma busca só é repetida na loja depois de 15 minutos
+CACHE_SEGUNDOS = 15 * 60  # o resultado de uma busca bem-sucedida é reutilizado por 15 minutos e depois apagado
 MINIMO_OFERTAS = 3  # abaixo disso, a faixa de preço não é exibida
 MAXIMO_POR_LOJA = 30
 FUSO = ZoneInfo("America/Fortaleza")
@@ -221,8 +222,9 @@ def palavras_do_modelo(busca):
 
 
 def falta_modelo(busca):
-    """Busca só com marca ou linha ("iphone", "samsung galaxy"): são vários modelos, então não existe uma faixa de preço."""
-    return all(p in VOCABULARIO and p != "se" for p in palavras_do_modelo(busca))
+    """Busca só com marca, linha ou rede ("iphone", "samsung galaxy", "smartphone 5g"): são vários modelos,
+    então não existe uma faixa de preço."""
+    return all(p in VOCABULARIO and p != "se" for p in palavras_do_modelo(busca) if p != "5g")
 
 
 def menciona_o_modelo(titulo, busca):
@@ -257,6 +259,17 @@ def rede_em(texto):
     porque muita loja escreve "Galaxy A17 128GB 5G"."""
     palavras = limpar(texto or "").split()
     return "5g" if "5g" in palavras else "4g" if "4g" in palavras else None
+
+
+def marca_no_titulo(titulo, marca_pedida):
+    """Marca escrita no título, pelo nome ou pela linha ("Galaxy" = Samsung). Sem ela escrita, None:
+    a marca deduzida pelo LLM não confirma o anúncio."""
+    achada = marca_em(titulo)
+    if achada:
+        return achada
+    if marca_pedida and chave_marca(marca_pedida) in limpar(titulo).split():
+        return marca_pedida
+    return None
 
 
 def classificar_por_regras(busca, titulos):
@@ -436,10 +449,19 @@ def motivo_descarte(alvo, item, sem_rede=False):
         return "acessório ou outro produto"
     if alvo.get("rede") and item.get("rede") and item["rede"] != alvo["rede"]:
         return f"outra versão ({item['rede'].upper()})"
+    # Com 4G ou 5G na busca, a rede é conferida à parte, e o modelo é comparado sem ela.
+    sem_rede = sem_rede or bool(alvo.get("rede"))
     if not item["modelo"] or chave_modelo(item["modelo"], sem_rede) != chave_modelo(alvo["modelo"], sem_rede):
         return "outro modelo"
-    if alvo["marca"] and item["marca"] and chave_marca(alvo["marca"]) != chave_marca(item["marca"]):
+    # Marca, rede e armazenamento pedidos precisam estar escritos no anúncio.
+    if alvo["marca"] and not item["marca"]:
+        return "marca não informada no anúncio"
+    if alvo["marca"] and chave_marca(alvo["marca"]) != chave_marca(item["marca"]):
         return "outra marca"
+    if alvo.get("rede") and not item.get("rede"):
+        return f"versão ({alvo['rede'].upper()}) não informada no anúncio"
+    if not item["armazenamento_gb"]:
+        return "armazenamento não informado no anúncio"
     if alvo["armazenamento_gb"] and item["armazenamento_gb"] != alvo["armazenamento_gb"]:
         return "outro armazenamento"
     if item["condicao"] != alvo["condicao"]:
@@ -615,6 +637,17 @@ BUSCA_COM_SMARTPHONE = {"Compare Livre"}
 TIPOS_DE_APARELHO = {"celular", "smartphone", "telefone", "aparelho"}
 
 
+NAO_RESERVADOS = frozenset("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~")
+
+
+def normalizar_caminho(caminho):
+    """Forma de comparar caminhos do RFC 9309: caracteres fora do ASCII (como acentos) viram %XX em UTF-8,
+    os %xx ficam em maiúsculas e os que só codificam letras, números ou -._~ voltam a ser o próprio caractere."""
+    codificado = "".join(c if ord(c) < 128 else "".join(f"%{b:02X}" for b in c.encode("utf-8")) for c in caminho)
+    return re.sub(r"%([0-9A-Fa-f]{2})",
+                  lambda m: chr(int(m[1], 16)) if chr(int(m[1], 16)) in NAO_RESERVADOS else "%" + m[1].upper(), codificado)
+
+
 def regras_do_robots(texto):
     """Lê o robots.txt como manda o RFC 9309: junta todos os grupos do nosso robô ou, se não houver, todos os de *."""
     grupos, grupo, lendo_agentes = [], None, False
@@ -629,6 +662,7 @@ def regras_do_robots(texto):
             lendo_agentes = True
         elif campo in ("allow", "disallow") and grupo is not None:
             if valor:
+                valor = normalizar_caminho(valor)
                 grupo["regras"].append((len(valor), campo == "allow", valor))
             lendo_agentes = False
     meus = [g for g in grupos if ROBO.lower() in g["agentes"]] or [g for g in grupos if "*" in g["agentes"]]
@@ -653,10 +687,12 @@ def robots_permite(url, mem):
         resposta = requests.get(f"{dominio}/robots.txt", headers=CABECALHOS, timeout=TEMPO_LOJA)
         if resposta.status_code >= 500:
             resposta.raise_for_status()  # robots.txt fora do ar: não coleta agora (RFC 9309)
-        guardado = (time.time(), regras_do_robots(resposta.text if resposta.status_code < 400 else ""))
+        # O RFC 9309 manda ler o robots.txt como UTF-8, mesmo quando o servidor não informa a codificação.
+        texto = resposta.content.decode("utf-8-sig", errors="replace") if resposta.status_code < 400 else ""
+        guardado = (time.time(), regras_do_robots(texto))
         mem["robots"][dominio] = guardado
     caminho = (partes.path or "/") + (f"?{partes.query}" if partes.query else "")
-    return caminho_permitido(guardado[1], caminho)
+    return caminho_permitido(guardado[1], normalizar_caminho(caminho))
 
 
 def baixar(url, ler, mem):
@@ -710,7 +746,22 @@ def coletar(nome, busca, mem):
     return resultado
 
 
+def esquecer_vencidas(mem):
+    """Apaga da memória as buscas e classificações com mais de 15 minutos e os robots.txt com mais de 24 horas."""
+    agora = time.time()
+    for url, guardado in list(mem["paginas"].items()):
+        if agora - guardado["momento"] >= CACHE_SEGUNDOS:
+            mem["paginas"].pop(url, None)
+    for chave, guardado in list(mem["classificacoes"].items()):
+        if agora - guardado[0] >= CACHE_SEGUNDOS:
+            mem["classificacoes"].pop(chave, None)
+    for dominio, guardado in list(mem["robots"].items()):
+        if agora - guardado[0] > 24 * 3600:
+            mem["robots"].pop(dominio, None)
+
+
 def coletar_todas(busca, mem):
+    esquecer_vencidas(mem)
     with ThreadPoolExecutor(max_workers=len(FONTES)) as executor:
         return list(executor.map(lambda nome: coletar(nome, busca, mem), FONTES))
 
@@ -760,13 +811,18 @@ def endereco(url):
     return quote(url, safe=":/?#[]@!$&'()*+,;=%")
 
 
+def sem_destino(linha):
+    """Oferta do Compare Livre que não traz o endereço da loja: o link abre a página do produto no Compare Livre."""
+    return linha["fonte"] == "Compare Livre" and linha["link"] == linha["pagina"]
+
+
 def tabela_de_ofertas(linhas, com_motivo=False):
     colunas = ["Produto"] + (["Motivo"] if com_motivo else []) + ["Preço", "Loja", "Fonte", "Compra"]
     tabela = ["| " + " | ".join(colunas) + " |", "|" + " --- |" * len(colunas)]
     for _, linha in linhas.iterrows():
         celulas = [escapar(linha["titulo"])] + ([escapar(linha["motivo"])] if com_motivo else [])
         celulas += [escapar(reais(linha["preco"]).replace(" ", "\u00a0")), escapar(linha["loja"]),
-                    f"[{escapar(linha['fonte'])}](<{endereco(linha['pagina'])}>)", f"[Ir à loja](<{endereco(linha['link'])}>)"]
+                    f"[{escapar(linha['fonte'])}](<{endereco(linha['pagina'])}>)", f"[{'Ver no Compare Livre' if sem_destino(linha) else 'Ir à loja'}](<{endereco(linha['link'])}>)"]
         tabela.append("| " + " | ".join(celulas) + " |")
     st.markdown("\n".join(tabela))
 
@@ -782,19 +838,34 @@ def chave_do_anuncio(url):
     return partes.netloc.lower().removeprefix("www.") + caminho + ("?" + urlencode(parametros) if parametros else "")
 
 
+CORES = {
+    "preto", "preta", "branco", "branca", "azul", "verde", "rosa", "roxo", "roxa", "vermelho", "vermelha", "amarelo",
+    "amarela", "cinza", "prata", "prateado", "prateada", "dourado", "dourada", "grafite", "titanio", "meia", "noite",
+    "estelar", "lilas", "creme", "bege", "laranja", "violeta", "marinho", "natural", "deserto", "glacial", "bordo",
+    "ultramarino", "coral", "menta", "lavanda", "areia", "gelo", "onix", "black", "white", "blue", "green", "gold",
+    "silver", "pink", "purple", "gray", "grey", "midnight", "starlight", "teal", "mint", "lime", "cor",
+}
+
+
+def titulo_sem_cor(titulo):
+    return " ".join(p for p in limpar(titulo).split() if p not in CORES)
+
+
 def marcar_repetidas(linhas):
     """Cada oferta conta uma vez na faixa e no mínimo de ofertas:
     1) o mesmo anúncio achado duas vezes (ex.: pelo Compare Livre e na própria KaBuM!) fica só com a versão da loja;
-    2) a mesma loja com o mesmo preço e armazenamento é a mesma oferta, em outra cor ou vinda de outra fonte."""
+    2) o mesmo título, sem contar a cor, na mesma loja, com o mesmo preço e armazenamento, é a mesma oferta.
+    Anúncios de títulos diferentes continuam separados, mesmo com loja e preço iguais."""
     validas = linhas[linhas["motivo"].isna()]
     loja_primeiro = validas.assign(indireto=validas["link"] != validas["pagina"]).sort_values("indireto", kind="stable")
     repetidas = loja_primeiro["link"].map(chave_do_anuncio).duplicated()
     linhas.loc[repetidas[repetidas].index, "motivo"] = "mesmo anúncio já contado"
     validas = linhas[linhas["motivo"].isna()]
     chave = pd.DataFrame({"loja": validas["loja"].map(lambda nome: re.sub(r"[^a-z0-9]", "", normalizar(nome))),
-                          "preco": validas["preco"], "gb": validas["armazenamento_gb"].fillna(0)})
+                          "preco": validas["preco"], "gb": validas["armazenamento_gb"].fillna(0),
+                          "titulo": validas["titulo"].map(titulo_sem_cor)})
     repetidas = chave.duplicated()
-    linhas.loc[repetidas[repetidas].index, "motivo"] = "mesma oferta em outra cor ou fonte (mesma loja e mesmo preço)"
+    linhas.loc[repetidas[repetidas].index, "motivo"] = "mesma oferta em outra cor (mesmo título, loja e preço)"
 
 
 def marcar_fora_do_padrao(linhas):
@@ -810,9 +881,9 @@ def marcar_fora_do_padrao(linhas):
 
 def separar_ofertas(busca, ofertas, alvo, itens):
     """Decide, oferta por oferta, se ela entra na faixa ou por que fica de fora (coluna "motivo")."""
-    # Marca e rede pedidas valem com o LLM e com as regras: se o LLM não disser a marca, vale a escrita no texto.
-    alvo = dict(alvo, marca=alvo["marca"] or marca_em(busca), rede=rede_em(busca))
-    itens = [dict(item, marca=item["marca"] or marca_em(oferta["titulo"]), rede=rede_em(oferta["titulo"]))
+    # Marca e rede valem pelo que está escrito, com o LLM e com as regras: na busca e em cada título.
+    alvo = dict(alvo, marca=marca_em(busca) or alvo["marca"], rede=rede_em(busca))
+    itens = [dict(item, marca=marca_no_titulo(oferta["titulo"], alvo["marca"]), rede=rede_em(oferta["titulo"]))
              for item, oferta in zip(itens, ofertas)]
     motivos = [motivo_descarte(alvo, item) for item in itens]
     if all(motivos) and not alvo["rede"] and chave_modelo(alvo["modelo"]) == chave_modelo(alvo["modelo"], sem_rede=True):
@@ -867,7 +938,8 @@ def mostrar_resultados(busca, coletas, mem):
         melhor = iguais.iloc[0]
         loja = re.sub(r" e mais \d+$", "", melhor["loja"])
         st.markdown(f"**Oferta mais barata:** {escapar(melhor['titulo'])}, por **{escapar(reais(melhor['preco']))}** ({escapar(loja)}).")
-        st.link_button("Ir para a compra", endereco(melhor["link"]), type="primary")
+        st.link_button("Ver a oferta no Compare Livre" if sem_destino(melhor) else "Ir para a compra",
+                       endereco(melhor["link"]), type="primary")
         st.subheader("Ofertas equivalentes")
         tabela_de_ofertas(iguais)
     with st.expander(f"Ofertas descartadas ({len(descartadas)})"):
@@ -877,12 +949,175 @@ def mostrar_resultados(busca, coletas, mem):
             tabela_de_ofertas(descartadas, com_motivo=True)
 
 
+# Reprodução do teste de extração (abre só pelo endereço ?avaliar=1; não aparece na tela de busca)
+# 50 títulos de anúncios lidos em 09/11/2026, rotulados um a um: modelo (None quando não é um dos 14 modelos
+# da base de teste ou é acessório), armazenamento em GB e condição. O extrator por regras é o ponto de comparação
+# do LLM: expressões regulares escritas para os 14 modelos da base de teste.
+
+MODELOS_TESTE = {
+    "iPhone 11": "Apple", "iPhone 13": "Apple", "iPhone 14": "Apple", "iPhone 15": "Apple", "iPhone 16": "Apple",
+    "Galaxy A17": "Samsung", "Galaxy A17 5G": "Samsung",
+    "Moto G06": "Motorola", "Edge 60 Fusion": "Motorola", "Edge 60 Pro": "Motorola", "Edge 70 Fusion": "Motorola", "Edge 70": "Motorola",
+    "Redmi 15C": "Xiaomi", "Redmi 15C 5G": "Xiaomi",
+}
+ARMAZENAMENTOS_TESTE = [64, 128, 256, 512, 1000]
+
+
+def modelo_por_regras(t):
+    iphone = re.search(r"\biphone\s*(11|13|14|15|16)\b(?!\s*(?:pro|plus|max|mini|e)\b)", t)
+    if iphone:
+        return f"iPhone {iphone[1]}"
+    if re.search(r"\b(?:galaxy\s*)?a17\b", t):
+        return "Galaxy A17 5G" if re.search(r"\b5g\b", t) else "Galaxy A17"
+    if re.search(r"\bmoto\s*g\s*06\b|\bmotorola\s*g\s*06\b", t):
+        return "Moto G06"
+    if re.search(r"\bredmi\s*15\s*c\b", t):
+        return "Redmi 15C 5G" if re.search(r"\b5g\b", t) else "Redmi 15C"
+    edge = re.search(r"\bedge\s*(60|70)(?:\s+(fusion|pro))?\b", t)
+    if edge:
+        if edge[2]:
+            nome = f"Edge {edge[1]} {edge[2].capitalize()}"
+            return nome if nome in MODELOS_TESTE else None
+        return "Edge 70" if edge[1] == "70" else None
+    return None
+
+
+def armazenamento_por_regras(t):
+    valores = set()
+    for numero, unidade in re.findall(r"(?<![\d.,])(\d{1,4})\s*(gb|tb)\b", t):
+        valor = int(numero) * (1000 if unidade == "tb" else 1)
+        if valor in ARMAZENAMENTOS_TESTE:
+            valores.add(valor)
+    return valores.pop() if len(valores) == 1 else None
+
+
+def extrair_por_regras(titulo):
+    t = normalizar(titulo)
+    modelo = modelo_por_regras(t)
+    return {"marca": MODELOS_TESTE.get(modelo), "modelo": modelo, "armazenamento_gb": armazenamento_por_regras(t), "condicao": condicao_por_regras(t)}
+
+
+TITULOS_TESTE = [
+    ('Apple iPhone 17e 256gb rosa rosa', None, 256, 'novo'),
+    ('Apple iPhone 16 (256 GB) - Preto', 'iPhone 16', 256, 'novo'),
+    ('Apple iPhone 15 (256 GB) - Azul', 'iPhone 15', 256, 'novo'),
+    ('Apple iPhone 16 (256 GB) - Branco', 'iPhone 16', 256, 'novo'),
+    ('Apple iPhone 15 256GB Preto', 'iPhone 15', 256, 'novo'),
+    ('Apple iPhone 16 (256 GB) - Rosa', 'iPhone 16', 256, 'novo'),
+    ('Apple iPhone 16 256GB Branco', 'iPhone 16', 256, 'novo'),
+    ('Apple iPhone 16 Pro Max (256 GB) - Titânio branco', None, 256, 'novo'),
+    ('Apple iPhone 16 256GB Ultramarino', 'iPhone 16', 256, 'novo'),
+    ('Apple iPhone 16 Pro Max (256 GB) - Titânio-preto', None, 256, 'novo'),
+    ('Apple iPhone 16 Pro (somente Esim) (256 Gb) - preto titânio', None, 256, 'novo'),
+    ('Apple iPhone 16 Pro Max (256 GB) - Titânio-deserto', None, 256, 'novo'),
+    ('iPhone 18 Pro Max 256GB Bordô', None, 256, 'novo'),
+    ('Apple iPhone 16 Pro Max (somente Esim) (256 Gb) - preto titânio', None, 256, 'novo'),
+    ('iPhone 17 Pro Max 256 GB - Azul-profundo - somente eSIM', None, 256, 'novo'),
+    ('iPhone 18 Pro de 256 GB — Preto', None, 256, 'novo'),
+    ('iPhone 18 Pro de 256 GB — Bordô', None, 256, 'novo'),
+    ('iPhone 18 Pro de 256 GB — Prateado', None, 256, 'novo'),
+    ('iPhone 18 Pro de 256 GB — Glacial', None, 256, 'novo'),
+    ('iPhone 17 Pro Max 256 GB - Prateado - somente eSIM', None, 256, 'novo'),
+    ('iPhone 18 Pro Max 256GB Preto', None, 256, 'novo'),
+    ('iPhone Duo de 256 GB — Branco-estrela', None, 256, 'novo'),
+    ('iPhone Duo de 256 GB — Céu noturno', None, 256, 'novo'),
+    ('Smartphone Samsung Galaxy A17 com IA 256GB 8GB RAM Câmera de 50MP Tela de 6.7 NFC IP54 - Cinza', 'Galaxy A17', 256, 'novo'),
+    ('Smartphone Samsung Galaxy A17 5G 256GB 8GB RAM - Cinza', 'Galaxy A17 5G', 256, 'novo'),
+    ('Smartphone Samsung Galaxy A17 4g Tela 6.7 256gb Câmera Tri Cinza', 'Galaxy A17', 256, 'novo'),
+    ('Smartphone Samsung Galaxy A17 5g A17 256gb - Cinza Cinza', 'Galaxy A17 5G', 256, 'novo'),
+    ('Smartphone Samsung Galaxy A17 4G 6.7 256GB 8GB Câmera Tripla', 'Galaxy A17', 256, 'novo'),
+    ('Smartphone Xiaomi Redmi 15C 4GB + 128GB – Tela 6.9" Dual SIM LTE, Desempenho e Estilo Moderno', 'Redmi 15C', 128, 'novo'),
+    ('Celular Xiaomi Redmi 15c 128gb 8gb Ram Dual Sim Azul Azul', 'Redmi 15C', 128, 'novo'),
+    ('Smartphone Xiaomi Redmi 15C 4G 128GB 4GB RAM + 4GB Memoria Virtual 50MP 8MP Preto Verde Azul', 'Redmi 15C', 128, 'novo'),
+    ('Smartphone Xiaomi Redmi 15C de 128 GB com 6 GB de RAM, Verde Menta', 'Redmi 15C', 128, 'novo'),
+    ('Câmera Redmi 15c 6+6 128 Gb Azul Azul', 'Redmi 15C', 128, 'novo'),
+    ('Smartphone Motorola Moto G06 - 64GB 4GB RAM + 8GB Ram Boost, Camera 50MP com AI, Bateria de 5200 mAh e Tela 6.9" - Bege', 'Moto G06', 64, 'novo'),
+    ('Smartphone Motorola Moto G06 - 64GB 4GB RAM + 8GB Ram Boost, Camera 50MP com AI, Bateria de 5200 mAh e Tela 6.9" - Verde', 'Moto G06', 64, 'novo'),
+    ('Smartphone Motorola Moto G06 - 64GB 4GB RAM + 8GB Ram Boost, Camera 50MP com AI, Bateria de 5200 mAh e Tela 6.9" - Azul Marinho', 'Moto G06', 64, 'novo'),
+    ('Smartphone Motorola Moto G06 - 64GB 4GB RAM + 8GB Ram Boost, Camera 50MP com AI, Bateria de 5200 mAh e Tela 6.9" - Laranja', 'Moto G06', 64, 'novo'),
+    ('Capinha Para Motorola Moto Edge 70 60 40 50 Fusion Plus Pro Neo 5G De Capa 5594 TYB', None, None, 'novo'),
+    ('Capinha Para Motorola Moto Edge 70 60 40 50 Fusion Plus Pro Neo 5G Capa Preto Macia Silicone Case TYB 7597', None, None, 'novo'),
+    ('Capinha Para Motorola Moto Edge 70 60 40 50 Fusion Plus Pro Neo 5G De Capa 7204 TYB', None, None, 'novo'),
+    ('Capinha de Silicone Preta Para Motorola Moto Edge 70 60 40 50 Fusion Plus Pro Neo 5G Capa de Celular Macia TY7619', None, None, 'novo'),
+    ('Motorola Edge 70 Fusion Capa De Telefone Para Ultra 60 Pro Stylus 5G 4G Traseira À Prova De Choque', None, None, 'novo'),
+    ('Capinha Para Motorola Moto Edge 70 Fusion Plus 5G Capa De Silicone Macia Estilo Simples Macaron Case 0388', None, None, 'novo'),
+    ('Capinha Para Motorola Moto Edge 70 60 40 50 Fusion Plus Pro Neo 5G Capa De Silicone Anti-impacto Macia Case MKL0562', None, None, 'novo'),
+    ('Capinha Para Motorola Moto Edge 70 60 40 50 Fusion Plus Pro Neo 5G Capa De Silicone Case MKL0325', None, None, 'novo'),
+    ('Película Protetora Hidrogel  TPU Motorola Moto Linha Edge 70 60 50 40 30 20 Pro+ Pro Fusion Plus S Neo', None, None, 'novo'),
+    ('Capinha Para Motorola Moto Edge 70 60 40 50 Fusion Plus Pro Neo 5G Capa Anti Impacto Transparente Macia Case FS1269', None, None, 'novo'),
+    ('Para Motorola edge 70 fusion + 60 g100 pro g86 power g57 60s stylus 50 ultra Fusão', None, None, 'novo'),
+    ('Capa Armadura À Prova De Choque Para Motorola G17 G37 G47 G57 G67 G77 G56 G86 Edge 70 60 50 40 Fusion Protetor De Câmera', None, None, 'novo'),
+    ('Para Motorola Edge 60 70 Fusion Moto G67 G77 G17 G37 G47 G06 G56 G86 G75 Caso De Telefone Armadura Câmera Proteção Capa', None, None, 'novo'),
+]
+
+
+def rotulo_do_llm(item):
+    """Resposta do LLM no formato do rótulo: modelo com a grafia da base de teste (None se for outro), GB e condição."""
+    chaves = {chave_modelo(m): m for m in MODELOS_TESTE}
+    modelo = chaves.get(chave_modelo(item["modelo"])) if item["celular"] and item["modelo"] else None
+    return modelo, item["armazenamento_gb"], item["condicao"]
+
+
+def versao_do_codigo():
+    try:
+        with open(__file__, "rb") as arquivo:
+            return hashlib.sha256(arquivo.read()).hexdigest()[:12]
+    except OSError:
+        return "desconhecida"
+
+
+def mostrar_avaliacao():
+    st.title("Faixa Certa: teste de extração")
+    st.write("Os 50 títulos rotulados passam pelo extrator por regras e, com o botão, pelo LLM. Um título conta como "
+             "acerto quando modelo, armazenamento e condição batem com o rótulo.")
+    erro = None
+    if LLM_CHAVE and st.button("Rodar o LLM nos 50 títulos", type="primary"):
+        inicio = time.perf_counter()
+        try:
+            _, itens, modelo = classificar_em_lotes("celular", [t[0] for t in TITULOS_TESTE])
+            st.session_state.avaliacao_llm = (itens, modelo, time.perf_counter() - inicio,
+                                              datetime.now(FUSO).strftime("%d/%m/%Y %H:%M"))
+        except Exception as falha:
+            erro = f"Não foi possível rodar o LLM agora ({type(falha).__name__}). Tente de novo."
+    if erro:
+        st.warning(erro)
+    llm = st.session_state.get("avaliacao_llm")
+    linhas = []
+    for numero, (titulo, modelo, gb, condicao) in enumerate(TITULOS_TESTE, 1):
+        esperado = (modelo, gb, condicao)
+        regras = extrair_por_regras(titulo)
+        saida = (regras["modelo"], regras["armazenamento_gb"], regras["condicao"])
+        linha = {"n": numero, "titulo": titulo, "esperado_modelo": modelo, "esperado_gb": gb, "esperado_condicao": condicao,
+                 "regras_modelo": saida[0], "regras_gb": saida[1], "regras_condicao": saida[2], "regras_acertou": saida == esperado}
+        if llm:
+            item = llm[0][numero - 1]
+            saida = rotulo_do_llm(item)
+            linha.update({"llm_celular": item["celular"], "llm_marca": item["marca"], "llm_modelo_resposta": item["modelo"],
+                          "llm_modelo": saida[0], "llm_gb": saida[1], "llm_condicao": saida[2], "llm_acertou": saida == esperado})
+        linhas.append(linha)
+    tabela = pd.DataFrame(linhas, dtype=object)
+    resumo = f"Regras: {int(tabela['regras_acertou'].sum())} de {len(tabela)} títulos corretos."
+    if llm:
+        resumo += (f" LLM ({llm[1]}): {int(tabela['llm_acertou'].sum())} de {len(tabela)} títulos corretos, "
+                   f"em {llm[2]:.1f} s, rodado em {llm[3]}.")
+    st.write(resumo)
+    st.caption(f"Versão do código (SHA-256 do app.py, 12 primeiros caracteres): {versao_do_codigo()}. "
+               f"Modelo principal configurado: {LLM_MODELO}; reserva: {LLM_MODELO_RESERVA}.")
+    st.dataframe(tabela.fillna("").astype(str), hide_index=True)
+    csv = tabela.to_csv(index=False)
+    st.download_button("Baixar a tabela (CSV)", csv.encode("utf-8"), "extracao_50_titulos.csv", "text/csv")
+    st.code(csv, language=None)
+
+
 # Interface
 def buscar_como_digitado():
     st.session_state.sem_correcao = True
 
 
 st.set_page_config(page_title="Faixa Certa")
+if st.query_params.get("avaliar") == "1":
+    mostrar_avaliacao()  # reprodução dos testes de extração; não aparece na tela de busca
+    st.stop()
 st.title("Faixa Certa")
 st.write("Compara o preço de um smartphone em várias lojas, com preços buscados na hora.")
 st.caption(f"Extrator principal: {'LLM' if LLM_CHAVE else 'regras (sem chave de IA configurada)'}. Fontes: {', '.join(FONTES)}.")
