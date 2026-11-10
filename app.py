@@ -84,7 +84,9 @@ NEUTRAS = {
     "laranja", "ram", "dual", "chip", "tela", "camera", "bateria", "original", "lacrado", "barato",
     "barata", "promocao", "oferta", "esim", "black", "white", "blue", "green", "gold", "silver", "pink",
     "purple", "gray", "grey", "midnight", "starlight", "teal", "anatel", "homologado", "sempre", "fone", "fones",
-    "intel",
+    "intel", "nota", "fiscal", "preco", "pouco", "pouca", "prova", "display", "amazon", "infinito", "infinita",
+    "cubo", "mint", "lime", "fonte", "fontes", "envio", "space", "foto", "fotos", "oled", "amoled", "real", "reais",
+    "primeira", "primeiro", "nome", "rede", "topo", "prazo", "lento", "poeira",
 }
 EXIBIR = {
     "iphone": "iPhone", "moto": "Moto", "rog": "ROG", "oneplus": "OnePlus", "fe": "FE", "lg": "LG",
@@ -96,6 +98,7 @@ ARMAZENAMENTOS_BUSCA = {32, 64, 128, 256, 512, 1000, 2000}
 
 def separar(texto):
     texto = re.sub(r"\bone\s+plus\b", "oneplus", texto)
+    texto = re.sub(r"\bi\s+(phone|fone|pone)\b", r"i\1", texto)
     texto = re.sub(r"\b(iphone|galaxy|redmi|moto|edge|note|pixel|poco|razr)(?=\d)", r"\1 ", texto)
     texto = re.sub(r"\bgalaxy(?=[asmzf]\d)", "galaxy ", texto)
     texto = re.sub(r"\b([a-z]{4,})(\d+)\b", r"\1 \2", texto)
@@ -108,13 +111,41 @@ def limpar(texto):
     return separar(re.sub(r"[^\w\s]", " ", normalizar(texto)))
 
 
+def som(palavra):
+    """Aproxima a pronúncia em português, para achar erros de quem escreve como fala ("efone", "sansung", "pixeu")."""
+    p = re.sub(r"(.)\1+", r"\1", palavra)                 # letras dobradas: motorolla, honnor
+    for escrita, pronuncia in (("ph", "f"), ("sh", "x"), ("ch", "x"), ("qu", "c"), ("ck", "c"), ("x", "cs")):
+        p = p.replace(escrita, pronuncia)
+    p = p.translate(str.maketrans("ykwz", "icus"))
+    p = re.sub(r"^h", "", p)                              # h inicial não soa: huawei
+    p = re.sub(r"^(?:ai|ei|e)(?=[^aeiou])", "i", p)       # "i" dito "ai" ou escrito "e": aifone, efone
+    p = re.sub(r"m(?=[^aeiou])", "n", p)                  # sansung = samsung
+    p = re.sub(r"l(?=[^aeiou]|$)", "u", p)                # aucatel = alcatel, pixeu = pixel
+    p = re.sub(r"e$", "i", p)                             # realmi = realme
+    return re.sub(r"(.)\1+", r"\1", p)
+
+
+SONS = {palavra: som(palavra) for palavra in VOCABULARIO if len(palavra) >= 4}
+
+
+def parecida(palavra):
+    """Palavra do vocabulário mais parecida: na escrita (nota >= 0,72) ou no som (nota >= 0,80). No empate, vale o som."""
+    som_digitado = som(palavra)
+    notas = []
+    for candidata in VOCABULARIO:
+        escrita = difflib.SequenceMatcher(None, palavra, candidata).ratio()
+        pronuncia = difflib.SequenceMatcher(None, som_digitado, SONS[candidata]).ratio() if candidata in SONS else 0
+        if escrita >= 0.72 or pronuncia >= 0.80:
+            notas.append((max(escrita, pronuncia), pronuncia, candidata))
+    return max(notas)[2] if notas else None
+
+
 def corrigir_palavra(palavra):
     if palavra in APELIDOS:
         return APELIDOS[palavra]
     if palavra in VOCABULARIO or palavra in NEUTRAS or len(palavra) < 4 or any(c.isdigit() for c in palavra):
         return palavra
-    parecidas = difflib.get_close_matches(palavra, VOCABULARIO, n=1, cutoff=0.72)
-    return parecidas[0] if parecidas else palavra
+    return parecida(palavra) or palavra
 
 
 def corrigir_busca(texto):
@@ -184,6 +215,11 @@ def palavras_do_modelo(busca):
         p for p in busca.split()
         if p not in NEUTRAS and p not in MARCAS and p != "4g" and not re.fullmatch(r"\d+(?:gb|tb)", p)
     ]
+
+
+def falta_modelo(busca):
+    """Busca só com marca ou linha ("iphone", "samsung galaxy"): são vários modelos, então não existe uma faixa de preço."""
+    return all(p in VOCABULARIO and p != "se" for p in palavras_do_modelo(busca))
 
 
 def classificar_por_regras(busca, titulos):
@@ -716,10 +752,15 @@ if digitado:
         busca, mudou = limpar(digitado), False
     else:
         busca, mudou = corrigir_busca(digitado)
+    falta = falta_modelo(busca)
     if mudou:
-        st.info(f"Você quis dizer **{exibir(busca)}**? Mostrando resultados para a busca corrigida.")
+        st.info(f"Você quis dizer **{exibir(busca)}**?" + ("" if falta else " Mostrando resultados para a busca corrigida."))
         st.button(f"Buscar “{digitado}” como digitei", on_click=buscar_como_digitado)
-    mem = memoria()
-    with st.spinner(f"Buscando “{exibir(busca)}” nas lojas..."):
-        coletas = coletar_todas(busca, mem)
-        mostrar_resultados(busca, coletas, mem)
+    if falta:
+        st.warning(f"Faltou o modelo: “{exibir(busca)}” pode ser vários celulares. "
+                   "Escreva o modelo também, por exemplo: iPhone 13 128GB ou Galaxy A17.")
+    else:
+        mem = memoria()
+        with st.spinner(f"Buscando “{exibir(busca)}” nas lojas..."):
+            coletas = coletar_todas(busca, mem)
+            mostrar_resultados(busca, coletas, mem)
