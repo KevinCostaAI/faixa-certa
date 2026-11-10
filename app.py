@@ -326,7 +326,7 @@ def chave_llm():
 LLM_CHAVE = chave_llm()
 
 
-def chamar_llm(textos, modelo, formato_json=True):
+def chamar_llm(textos, modelo, formato_json=True, tempo=TEMPO_LLM):
     corpo = {
         "model": modelo,
         "temperature": 0,
@@ -341,7 +341,7 @@ def chamar_llm(textos, modelo, formato_json=True):
         f"{LLM_URL}/chat/completions",
         headers={"Authorization": f"Bearer {LLM_CHAVE}"},
         json=corpo,
-        timeout=TEMPO_LLM,
+        timeout=tempo,
     )
 
 
@@ -363,17 +363,17 @@ def limpar_item(item):
 ERROS_PASSAGEIROS = {429, 500, 502, 503, 504}
 
 
-def classificar_por_llm(textos):
+def classificar_por_llm(textos, tempo=TEMPO_LLM):
     """Tenta o modelo principal duas vezes e, se ele estiver sobrecarregado, o modelo reserva."""
     inicio = time.monotonic()
     ultima = None
     for modelo in dict.fromkeys([LLM_MODELO, LLM_MODELO_RESERVA]):
         for _ in range(2):
-            if time.monotonic() - inicio > TEMPO_LLM:
+            if time.monotonic() - inicio > tempo:
                 break
-            resposta = chamar_llm(textos, modelo)
+            resposta = chamar_llm(textos, modelo, tempo=tempo)
             if resposta.status_code == 400:
-                resposta = chamar_llm(textos, modelo, formato_json=False)
+                resposta = chamar_llm(textos, modelo, formato_json=False, tempo=tempo)
             if resposta.status_code in ERROS_PASSAGEIROS or resposta.status_code == 404:
                 ultima = resposta
                 if resposta.status_code == 404:
@@ -392,11 +392,11 @@ def classificar_por_llm(textos):
     raise requests.HTTPError(f"Erro {ultima.status_code}", response=ultima)
 
 
-def classificar_em_lotes(busca, titulos):
+def classificar_em_lotes(busca, titulos, tempo=TEMPO_LLM):
     """Manda a busca e até LOTE_LLM títulos por chamada, com as chamadas em paralelo."""
     lotes = [list(titulos[i:i + LOTE_LLM]) for i in range(0, len(titulos), LOTE_LLM)] or [[]]
     with ThreadPoolExecutor(max_workers=len(lotes)) as executor:
-        respostas = list(executor.map(lambda lote: classificar_por_llm([busca] + lote), lotes))
+        respostas = list(executor.map(lambda lote: classificar_por_llm([busca] + lote, tempo), lotes))
     itens = [item for resposta, _ in respostas for item in resposta[1:]]
     return respostas[0][0][0], itens, ", ".join(dict.fromkeys(modelo for _, modelo in respostas))
 
@@ -1074,9 +1074,14 @@ def mostrar_avaliacao():
     if LLM_CHAVE and st.button("Rodar o LLM nos 50 títulos", type="primary"):
         inicio = time.perf_counter()
         try:
-            _, itens, modelo = classificar_em_lotes("celular", [t[0] for t in TITULOS_TESTE])
+            # Mesmas instruções, modelos e lotes da busca; aqui a espera por resposta pode chegar a 90 segundos.
+            _, itens, modelo = classificar_em_lotes("celular", [t[0] for t in TITULOS_TESTE], tempo=90)
             st.session_state.avaliacao_llm = (itens, modelo, time.perf_counter() - inicio,
                                               datetime.now(FUSO).strftime("%d/%m/%Y %H:%M"))
+        except requests.HTTPError as falha:
+            detalhe = detalhe_do_erro(falha.response) if falha.response is not None else ""
+            codigo = falha.response.status_code if falha.response is not None else "?"
+            erro = f"Não foi possível rodar o LLM agora (erro HTTP {codigo}{', ' + detalhe if detalhe else ''}). Tente de novo."
         except Exception as falha:
             erro = f"Não foi possível rodar o LLM agora ({type(falha).__name__}). Tente de novo."
     if erro:
