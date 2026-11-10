@@ -24,6 +24,7 @@ USER_AGENT = "Mozilla/5.0 (compatible; FaixaCerta/1.0; +https://github.com/Kevin
 ROBO = "FaixaCerta"
 TEMPO_LOJA = 10  # segundos de espera por loja
 TEMPO_LLM = 20  # segundos para classificar os títulos de uma busca
+LOTE_LLM = 30  # títulos por chamada ao LLM; com mais títulos, as chamadas são feitas em paralelo
 CACHE_SEGUNDOS = 15 * 60  # a mesma busca só é repetida na loja depois de 15 minutos
 MINIMO_OFERTAS = 3  # abaixo disso, a faixa de preço não é exibida
 MAXIMO_POR_LOJA = 30
@@ -379,6 +380,15 @@ def classificar_por_llm(textos):
     raise requests.HTTPError(f"Erro {ultima.status_code}", response=ultima)
 
 
+def classificar_em_lotes(busca, titulos):
+    """Manda a busca e até LOTE_LLM títulos por chamada, com as chamadas em paralelo."""
+    lotes = [list(titulos[i:i + LOTE_LLM]) for i in range(0, len(titulos), LOTE_LLM)] or [[]]
+    with ThreadPoolExecutor(max_workers=len(lotes)) as executor:
+        respostas = list(executor.map(lambda lote: classificar_por_llm([busca] + lote), lotes))
+    itens = [item for resposta, _ in respostas for item in resposta[1:]]
+    return respostas[0][0][0], itens, ", ".join(dict.fromkeys(modelo for _, modelo in respostas))
+
+
 def detalhe_do_erro(resposta):
     try:
         dados = resposta.json()
@@ -400,9 +410,9 @@ def classificar(busca, titulos, mem):
         if guardado and time.time() - guardado[0] < CACHE_SEGUNDOS:
             return guardado[1][0], guardado[1][1:], f"LLM ({guardado[2]})"
         try:
-            itens, modelo = classificar_por_llm([busca] + list(titulos))
-            mem["classificacoes"][chave] = (time.time(), itens, modelo)
-            return itens[0], itens[1:], f"LLM ({modelo})"
+            alvo, itens, modelo = classificar_em_lotes(busca, titulos)
+            mem["classificacoes"][chave] = (time.time(), [alvo] + itens, modelo)
+            return alvo, itens, f"LLM ({modelo})"
         except requests.HTTPError as erro:
             detalhe = detalhe_do_erro(erro.response)
             motivo = f"erro HTTP {erro.response.status_code}" + (f", {detalhe}" if detalhe else "")
@@ -774,10 +784,10 @@ def mostrar_validacao():
         extraido = extrair_por_regras(titulo)
         acertos_regras += rotulo_teste(extraido["modelo"], extraido["armazenamento_gb"], extraido["condicao"]) == rotulo_teste(modelo, armazenamento, condicao)
     st.write(f"Regras: {acertos_regras} de {total} títulos corretos ({acertos_regras / total:.0%}).")
-    if LLM_CHAVE and st.button("Medir o LLM nos 50 títulos (uma chamada)"):
+    if LLM_CHAVE and st.button("Medir o LLM nos 50 títulos"):
         inicio = time.perf_counter()
         try:
-            itens, modelo = classificar_por_llm([t[0] for t in TITULOS_TESTE])
+            _, itens, modelo = classificar_em_lotes("celular", [t[0] for t in TITULOS_TESTE])
             acertos = sum(como_rotulo(i) == rotulo_teste(*t[1:]) for i, t in zip(itens, TITULOS_TESTE))
             st.session_state.medicao_llm = (
                 f"LLM ({modelo}): {acertos} de {total} títulos corretos ({acertos / total:.0%}), "
