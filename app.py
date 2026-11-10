@@ -242,7 +242,7 @@ def condicao_em(texto):
 ACESSORIO = re.compile(
     r"^(?:kit\s+(?:de\s+)?)?(?:\d+\s+)?(?:capa|capinha|case|pelicula|vidro|protetor|carregador|fonte|cabo|fone|"
     r"suporte|adaptador|lente|caneta|bateria|tampa|chip|cartao|pulseira|smartwatch|relogio|tablet|controle|bolsa|"
-    r"carteira)\b|\bpara\s+(?:iphone|galaxy|samsung|motorola|moto|xiaomi|redmi|poco)\b|\bcompativel\b"
+    r"carteira)(?:e?s)?\b|\bpara\s+(?:iphone|galaxy|samsung|motorola|moto|xiaomi|redmi|poco)\b|\bcompativel\b"
 )
 
 
@@ -520,6 +520,10 @@ FONTES = {
     "KaBuM!": (lambda busca: f"{KABUM}/busca/{quote('-'.join(busca.split()))}", ler_kabum),
 }
 CABECALHOS = {"User-Agent": USER_AGENT, "Accept": "text/html,application/xhtml+xml", "Accept-Language": "pt-BR,pt;q=0.9"}
+# O Compare Livre às vezes devolve só capinhas e películas para o nome do modelo (ex.: "moto g06").
+# Nesse caso a busca é refeita uma vez com "smartphone" na frente.
+REFAZ_COM_SMARTPHONE = {"Compare Livre"}
+TIPOS_DE_APARELHO = {"celular", "smartphone", "telefone", "aparelho"}
 
 
 def robots_permite(url, mem):
@@ -541,6 +545,22 @@ def robots_permite(url, mem):
     return not bloqueado and leitor.can_fetch(ROBO, url)
 
 
+def baixar(url, ler, mem):
+    """Baixa e lê uma página de busca. Devolve (ofertas, None) ou ([], motivo da falha)."""
+    try:
+        if not robots_permite(url, mem):
+            return [], "o site não permite coleta automática (robots.txt)"
+        resposta = requests.get(url, headers=CABECALHOS, timeout=TEMPO_LOJA)
+        resposta.raise_for_status()
+        return ler(resposta.content, url), None
+    except requests.HTTPError as erro:
+        return [], f"erro HTTP {erro.response.status_code}"
+    except requests.RequestException:
+        return [], "sem resposta"
+    except Exception:
+        return [], "página em formato não reconhecido"
+
+
 def coletar(nome, busca, mem):
     montar_url, ler = FONTES[nome]
     url = montar_url(busca)
@@ -548,29 +568,27 @@ def coletar(nome, busca, mem):
     if guardado and time.time() - guardado["momento"] < CACHE_SEGUNDOS:
         return guardado
     resultado = {"fonte": nome, "url": url, "ofertas": [], "momento": time.time()}
-    try:
-        if not robots_permite(url, mem):
-            resultado["status"] = "o site não permite coleta automática (robots.txt)"
-            return resultado
-        resposta = requests.get(url, headers=CABECALHOS, timeout=TEMPO_LOJA)
-        resposta.raise_for_status()
-        ofertas = ler(resposta.content, url)
-    except requests.HTTPError as erro:
-        resultado["status"] = f"erro HTTP {erro.response.status_code}"
+    ofertas, falha = baixar(url, ler, mem)
+    if falha:
+        resultado["status"] = falha
         return resultado
-    except requests.RequestException:
-        resultado["status"] = "sem resposta"
-        return resultado
-    except Exception:
-        resultado["status"] = "página em formato não reconhecido"
-        return resultado
+    observacao = ""
+    celulares = sum(not ACESSORIO.search(limpar(oferta["titulo"])) for oferta in ofertas)
+    reserva = " ".join(["smartphone"] + [p for p in busca.split() if p not in TIPOS_DE_APARELHO])
+    if nome in REFAZ_COM_SMARTPHONE and celulares < MINIMO_OFERTAS and reserva != busca:
+        extras, _ = baixar(montar_url(reserva), ler, mem)
+        links = {oferta["link"] for oferta in ofertas}
+        novas = [oferta for oferta in extras if oferta["link"] not in links]
+        if novas:
+            ofertas += novas
+            observacao = f" (busca refeita como “{reserva}”)"
     vistos, unicas = set(), []
     for oferta in ofertas:
         if oferta["link"] not in vistos:
             vistos.add(oferta["link"])
             unicas.append(oferta)
     resultado["ofertas"] = unicas[:MAXIMO_POR_LOJA]
-    resultado["status"] = f"{len(resultado['ofertas'])} ofertas" if unicas else "nenhuma oferta encontrada"
+    resultado["status"] = f"{len(resultado['ofertas'])} ofertas{observacao}" if unicas else "nenhuma oferta encontrada"
     resultado["coletado"] = datetime.now(FUSO).strftime("%H:%M")
     with mem["trava"]:
         mem["paginas"][url] = resultado
@@ -616,8 +634,9 @@ def mostrar_faixa(linhas):
     menor.metric("Menor preço", reais(linhas["preco"].min()))
     mediana.metric("Mediana", reais(statistics.median(linhas["preco"])))
     maior.metric("Maior preço", reais(linhas["preco"].max()))
+    por_fonte = " · ".join(f"{fonte}: {total}" for fonte, total in linhas["fonte"].value_counts().items())
     st.caption(
-        f"Baseada em {len(linhas)} ofertas de {linhas['loja_base'].nunique()} lojas. "
+        f"Baseada em {len(linhas)} ofertas equivalentes ({por_fonte}). "
         "É uma referência para comparação, não um preço recomendado."
     )
 
@@ -663,7 +682,6 @@ def mostrar_resultados(busca, coletas, mem):
     linhas = pd.DataFrame(ofertas)
     linhas["motivo"] = [motivo_descarte(alvo, item) for item in itens]
     linhas["armazenamento_gb"] = [item["armazenamento_gb"] for item in itens]
-    linhas["loja_base"] = linhas["loja"].str.replace(r" e mais \d+$", "", regex=True)
     marcar_fora_do_padrao(linhas)
     iguais = linhas[linhas["motivo"].isna()].sort_values("preco")
     descartadas = linhas[linhas["motivo"].notna()].sort_values("preco")
