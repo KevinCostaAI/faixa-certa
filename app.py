@@ -256,8 +256,13 @@ ACESSORIO = re.compile(
 )
 
 
-def chave_modelo(modelo):
-    palavras = [p for p in limpar(modelo or "").split() if p not in MARCAS]
+# Linhas que muita gente omite ao digitar: todo Samsung é Galaxy ("samsung a56") e "motorola g06" é o Moto G06.
+LINHAS_IMPLICITAS = {"galaxy", "moto"}
+
+
+def chave_modelo(modelo, sem_rede=False):
+    palavras = [p for p in limpar(modelo or "").split()
+                if p not in MARCAS and p not in LINHAS_IMPLICITAS and not (sem_rede and p in ("4g", "5g"))]
     return re.sub(r"[^a-z0-9]", "", "".join(palavras))
 
 
@@ -447,10 +452,10 @@ def mesmo_produto(alvo, item):
     return motivo_descarte(alvo, item) is None
 
 
-def motivo_descarte(alvo, item):
+def motivo_descarte(alvo, item, sem_rede=False):
     if not item["celular"]:
         return "acessório ou outro produto"
-    if not item["modelo"] or chave_modelo(item["modelo"]) != chave_modelo(alvo["modelo"]):
+    if not item["modelo"] or chave_modelo(item["modelo"], sem_rede) != chave_modelo(alvo["modelo"], sem_rede):
         return "outro modelo"
     if alvo["marca"] and item["marca"] and chave_marca(alvo["marca"]) != chave_marca(item["marca"]):
         return "outra marca"
@@ -748,7 +753,12 @@ def mostrar_resultados(busca, coletas, mem):
         st.warning("Não identifiquei o modelo na busca. Escreva a marca e o modelo, por exemplo: iPhone 13 128GB.")
         return
     linhas = pd.DataFrame(ofertas)
-    linhas["motivo"] = [motivo_descarte(alvo, item) for item in itens]
+    motivos = [motivo_descarte(alvo, item) for item in itens]
+    if all(motivos) and chave_modelo(alvo["modelo"]) == chave_modelo(alvo["modelo"], sem_rede=True):
+        # Nenhuma oferta com o mesmo nome e a busca não falou em 4G/5G: aceita a versão 4G ou 5G do modelo
+        # (ex.: quem busca "samsung a56" encontra o Galaxy A56 5G, que só existe em 5G).
+        motivos = [motivo_descarte(alvo, item, sem_rede=True) for item in itens]
+    linhas["motivo"] = motivos
     linhas["armazenamento_gb"] = [item["armazenamento_gb"] for item in itens]
     marcar_fora_do_padrao(linhas)
     iguais = linhas[linhas["motivo"].isna()].sort_values("preco")
