@@ -970,7 +970,8 @@ def busca_das_opcoes(busca):
 def modelo_do_titulo(titulo):
     """Marca e modelo escritos no título, por regras: a marca (ou a linha, como Galaxy) e as palavras de modelo logo
     depois, até a memória, a rede, a cor ou outra palavra comum. "Smartphone Nokia C30, 64GB, Preto" = ("nokia", "c30")."""
-    palavras = limpar(titulo).split()
+    # "Nokia 2.4" vira "2ponto4" para o número com ponto não se partir em dois.
+    palavras = limpar(re.sub(r"(?<=\d)[.,](?=\d)", "ponto", titulo)).split()
     inicio = next((i for i, p in enumerate(palavras) if p in MARCAS or p in MARCA_DA_LINHA), None)
     if inicio is None:
         return None, None
@@ -988,12 +989,17 @@ def modelo_do_titulo(titulo):
                                 and re.fullmatch(r"[a-z]?\d+[a-z]?", proxima) and proxima not in ("4g", "5g"))
         if not (palavra in LINHAS or palavra in VARIANTES or re.search(r"\d", palavra) or nome_antes_do_numero):
             break
+        # Número sozinho só entra logo depois da marca, da linha ou de um nome ("Nokia 105", "iPhone 16", "Edge 60");
+        # depois de um código ("A17"), é tamanho de tela ou outra medida.
+        anterior = modelo[-1] if modelo else primeira
+        if re.fullmatch(r"\d+(?:ponto\d+)?", palavra) and re.search(r"\d", anterior) and anterior != primeira:
+            break
         modelo.append(palavra)
     return marca, (" ".join(modelo) if any(re.search(r"\d", p) for p in modelo) else None)
 
 
 def nome_do_celular(marca, modelo):
-    nome = " ".join(p if p != p.lower() else p.capitalize() for p in exibir(modelo).split())
+    nome = " ".join(p if p != p.lower() else p.capitalize() for p in exibir(modelo).split()).replace("ponto", ".")
     if marca == "apple":
         nome = re.sub(r"\b(\d+)E\b", r"\1e", nome)  # iPhone 16e, como a Apple escreve
     return f"{exibir(marca)} {nome}"
@@ -1045,34 +1051,40 @@ def mostrar_opcoes(busca):
             "para ver a faixa de preço.")
     chave = re.sub(r"\W+", "_", busca)
     st.subheader("Escolha o celular")
+    pedida = condicao_em(busca)
+    condicao = st.radio("Condição", CONDICOES, index=CONDICOES.index(pedida), horizontal=True,
+                        format_func=str.capitalize, key=f"opcao_condicao_{chave}")
+    grupos = [dict(g, ofertas=[o for o in g["ofertas"] if o["condicao"] == condicao]) for g in grupos]
+    grupos = sorted([dict(g, menor=min(o["preco"] for o in g["ofertas"])) for g in grupos if g["ofertas"]],
+                    key=lambda g: g["menor"])
+    if not grupos:
+        st.warning(f"Não encontrei celulares na condição “{condicao}” para esta busca. Escolha outra condição.")
+        st.caption(f"Lojas consultadas: {situacao}.")
+        return
     marcas = sorted({g["marca"] for g in grupos}, key=exibir)
     marca = "todas"
     if len(marcas) > 1:
         marca = st.selectbox("Marca", ["todas"] + marcas, format_func=lambda m: "Todas as marcas" if m == "todas" else exibir(m),
-                             key=f"opcao_marca_{chave}")
+                             key=f"opcao_marca_{chave}_{condicao}")
     lista = [g for g in grupos if marca in ("todas", g["marca"])]
     coluna_modelo, coluna_memoria = st.columns([3, 2])
-    i = coluna_modelo.selectbox("Modelo", range(len(lista)), key=f"opcao_modelo_{chave}_{marca}",
+    i = coluna_modelo.selectbox("Modelo", range(len(lista)), key=f"opcao_modelo_{chave}_{condicao}_{marca}",
                                 format_func=lambda i: f"{lista[i]['nome']} · a partir de {reais(lista[i]['menor'])}")
     grupo = lista[i]
     memorias = sorted({o["gb"] for o in grupo["ofertas"] if o["gb"]})
     menor_por_gb = {gb: min(o["preco"] for o in grupo["ofertas"] if o["gb"] == gb) for gb in memorias}
-    gb = coluna_memoria.selectbox("Memória (armazenamento)", memorias + [None], key=f"opcao_gb_{chave}_{marca}_{i}",
+    gb = coluna_memoria.selectbox("Memória (armazenamento)", memorias + [None], key=f"opcao_gb_{chave}_{condicao}_{marca}_{i}",
                                   format_func=lambda gb: "Todas as memórias" if gb is None else
                                   f"{gb if gb < 1000 else gb // 1000} {'GB' if gb < 1000 else 'TB'} · a partir de {reais(menor_por_gb[gb])}")
-    coluna_condicao, coluna_rede = st.columns(2)
-    pedida = condicao_em(busca)
-    condicao = coluna_condicao.radio("Condição", CONDICOES, index=CONDICOES.index(pedida), horizontal=True,
-                                     format_func=str.capitalize, key=f"opcao_condicao_{chave}")
     # Sem rede na busca, o app compara a versão comum (4G); a 5G é outro modelo. Por isso a escolha só aparece com 5G à venda.
     rede = None
     if any(o["rede"] == "5g" for o in grupo["ofertas"]):
-        rede = coluna_rede.radio("Versão", [None, "5g"], horizontal=True, key=f"opcao_rede_{chave}_{marca}_{i}",
-                                 format_func=lambda r: "5G" if r else "4G (comum)")
-    consulta = " ".join([grupo["marca"], grupo["modelo"]] + ([f"{gb}gb" if gb < 1000 else f"{gb // 1000}tb"] if gb else [])
+        rede = st.radio("Versão", [None, "5g"], horizontal=True, key=f"opcao_rede_{chave}_{condicao}_{marca}_{i}",
+                        format_func=lambda r: "5G" if r else "4G (comum)")
+    consulta = " ".join([grupo["marca"], grupo["modelo"].replace("ponto", ".")] + ([f"{gb}gb" if gb < 1000 else f"{gb // 1000}tb"] if gb else [])
                         + ([rede] if rede else []) + ([condicao] if condicao != "novo" else []))
     st.button(f"Ver a faixa de preço de {exibir(consulta)}", type="primary", on_click=escolher_celular, args=(consulta,))
-    st.subheader("Celulares encontrados, do mais barato ao mais caro")
+    st.subheader(f"Celulares {'novos' if condicao == 'novo' else condicao + 's'} encontrados, do mais barato ao mais caro")
     resumo = {}
     for g in lista:
         for o in g["ofertas"]:
@@ -1083,10 +1095,9 @@ def mostrar_opcoes(busca):
     st.table(pd.DataFrame([{
         "Celular": nome,
         "Memória": (f"{gb} GB" if gb < 1000 else f"{gb // 1000} TB") if gb else "não informada",
-        "Condição": condicao_da_linha.capitalize(),
         "A partir de": reais(dados["menor"]),
         "Anúncios": dados["anuncios"],
-    } for (nome, gb, condicao_da_linha), dados in linhas]), hide_index=True)
+    } for (nome, gb, _), dados in linhas]), hide_index=True)
     st.caption(f"Lojas consultadas: {situacao}." + (f" Preços coletados às {horarios[-1]}." if horarios else "")
                + " Os modelos são lidos dos títulos por regras. A faixa de preço é calculada depois que você escolhe "
                "o celular, só com ofertas equivalentes.")
