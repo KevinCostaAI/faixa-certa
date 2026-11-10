@@ -737,6 +737,15 @@ def tabela_de_ofertas(linhas, com_motivo=False):
     st.markdown("\n".join(tabela))
 
 
+def marcar_repetidas(linhas):
+    """A mesma loja com o mesmo preço e armazenamento é a mesma oferta em outra cor (a KaBuM! lista cada cor
+    como um produto): conta uma vez só, para não encher a tabela nem pesar várias vezes na faixa."""
+    validas = linhas[linhas["motivo"].isna()]
+    chave = validas[["fonte", "loja", "preco"]].assign(gb=validas["armazenamento_gb"].fillna(0))
+    repetidas = chave.duplicated()
+    linhas.loc[repetidas[repetidas].index, "motivo"] = "mesma oferta em outra cor (mesma loja e mesmo preço)"
+
+
 def marcar_fora_do_padrao(linhas):
     """Descarta preços com menos da metade ou mais do dobro da mediana do grupo (kits, defeitos, erros)."""
     grupos = linhas["armazenamento_gb"].fillna(0).astype(int)
@@ -774,6 +783,7 @@ def mostrar_resultados(busca, coletas, mem):
         motivos = [motivo_descarte(alvo, item, sem_rede=True) for item in itens]
     linhas["motivo"] = motivos
     linhas["armazenamento_gb"] = [item["armazenamento_gb"] for item in itens]
+    marcar_repetidas(linhas)
     marcar_fora_do_padrao(linhas)
     iguais = linhas[linhas["motivo"].isna()].sort_values("preco")
     descartadas = linhas[linhas["motivo"].notna()].sort_values("preco")
