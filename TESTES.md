@@ -11,13 +11,16 @@ São 50 títulos de anúncios lidos em 09/11/2026 e rotulados um a um com modelo
 | Método | Acertos |
 | --- | --- |
 | Regras: expressões regulares escritas para os 14 modelos | 38 de 50 (76%) |
+| As mesmas regras com o filtro de acessórios que o app já usa | 49 de 50 (98%) |
 | LLM `gemini-3.5-flash-lite` | 50 de 50 (100%) |
+
+Com o filtro de acessórios, a diferença entre o LLM e as regras cai para 2 pontos percentuais, abaixo da meta de 10 definida no projeto. O resultado vale para esta amostra, e as regras foram escritas para os 14 modelos que ela contém; a vantagem do LLM sobre as regras fica em aberto até um teste com modelos que as regras não conhecem. As colunas `regras_filtro_*` foram calculadas depois, fora do app, com as funções da mesma versão (`extrair_por_regras` e o filtro `ACESSORIO`); o único erro é o título 42, uma capa cujo título começa pelo nome do aparelho.
 
 O LLM rodou no app publicado em 10/11/2026, às 14:04, e levou 25,6 s. Respondeu o modelo reserva, `gemini-3.5-flash-lite`, porque o principal, `gemini-3.1-flash-lite`, não respondeu naquele momento. As instruções e os lotes de 15 títulos são os mesmos da busca.
 
-Para refazer, abra <https://faixa-certa.streamlit.app/?avaliar=1> e clique em "Rodar o LLM nos 50 títulos". A página mostra a versão do código e o modelo usado e baixa a mesma planilha.
+Para refazer, abra <https://faixa-certa.streamlit.app/?avaliar=1> e clique em "Rodar o LLM nos 50 títulos". A página mostra a versão do código e o modelo usado e baixa a mesma planilha, sem as colunas `regras_filtro_*`.
 
-Colunas: `esperado_*` é o rótulo; `regras_*` é a saída do extrator por regras; `llm_modelo_resposta` é o texto devolvido pelo LLM, e `llm_modelo` é esse modelo na grafia da base de teste (vazio quando é outro modelo); `llm_celular` é falso para acessórios.
+Colunas: `esperado_*` é o rótulo; `regras_*` é a saída do extrator por regras; `llm_modelo_resposta` é o texto devolvido pelo LLM, e `llm_modelo` é esse modelo na grafia da base de teste (vazio quando é outro modelo); `llm_celular` é falso para acessórios; `regras_filtro_*` é a saída das regras com o filtro de acessórios.
 
 ## Correção de digitação
 

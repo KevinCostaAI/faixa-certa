@@ -1,51 +1,51 @@
-n,titulo,esperado_modelo,esperado_gb,esperado_condicao,regras_modelo,regras_gb,regras_condicao,regras_acertou,llm_celular,llm_marca,llm_modelo_resposta,llm_modelo,llm_gb,llm_condicao,llm_acertou
-1,Apple iPhone 17e 256gb rosa rosa,,256,novo,,256,novo,True,True,Apple,iPhone 17e,,256,novo,True
-2,Apple iPhone 16 (256 GB) - Preto,iPhone 16,256,novo,iPhone 16,256,novo,True,True,Apple,iPhone 16,iPhone 16,256,novo,True
-3,Apple iPhone 15 (256 GB) - Azul,iPhone 15,256,novo,iPhone 15,256,novo,True,True,Apple,iPhone 15,iPhone 15,256,novo,True
-4,Apple iPhone 16 (256 GB) - Branco,iPhone 16,256,novo,iPhone 16,256,novo,True,True,Apple,iPhone 16,iPhone 16,256,novo,True
-5,Apple iPhone 15 256GB Preto,iPhone 15,256,novo,iPhone 15,256,novo,True,True,Apple,iPhone 15,iPhone 15,256,novo,True
-6,Apple iPhone 16 (256 GB) - Rosa,iPhone 16,256,novo,iPhone 16,256,novo,True,True,Apple,iPhone 16,iPhone 16,256,novo,True
-7,Apple iPhone 16 256GB Branco,iPhone 16,256,novo,iPhone 16,256,novo,True,True,Apple,iPhone 16,iPhone 16,256,novo,True
-8,Apple iPhone 16 Pro Max (256 GB) - Titânio branco,,256,novo,,256,novo,True,True,Apple,iPhone 16 Pro Max,,256,novo,True
-9,Apple iPhone 16 256GB Ultramarino,iPhone 16,256,novo,iPhone 16,256,novo,True,True,Apple,iPhone 16,iPhone 16,256,novo,True
-10,Apple iPhone 16 Pro Max (256 GB) - Titânio-preto,,256,novo,,256,novo,True,True,Apple,iPhone 16 Pro Max,,256,novo,True
-11,Apple iPhone 16 Pro (somente Esim) (256 Gb) - preto titânio,,256,novo,,256,novo,True,True,Apple,iPhone 16 Pro,,256,novo,True
-12,Apple iPhone 16 Pro Max (256 GB) - Titânio-deserto,,256,novo,,256,novo,True,True,Apple,iPhone 16 Pro Max,,256,novo,True
-13,iPhone 18 Pro Max 256GB Bordô,,256,novo,,256,novo,True,True,Apple,iPhone 18 Pro Max,,256,novo,True
-14,Apple iPhone 16 Pro Max (somente Esim) (256 Gb) - preto titânio,,256,novo,,256,novo,True,True,Apple,iPhone 16 Pro Max,,256,novo,True
-15,iPhone 17 Pro Max 256 GB - Azul-profundo - somente eSIM,,256,novo,,256,novo,True,True,Apple,iPhone 17 Pro Max,,256,novo,True
-16,iPhone 18 Pro de 256 GB — Preto,,256,novo,,256,novo,True,True,Apple,iPhone 18 Pro,,256,novo,True
-17,iPhone 18 Pro de 256 GB — Bordô,,256,novo,,256,novo,True,True,Apple,iPhone 18 Pro,,256,novo,True
-18,iPhone 18 Pro de 256 GB — Prateado,,256,novo,,256,novo,True,True,Apple,iPhone 18 Pro,,256,novo,True
-19,iPhone 18 Pro de 256 GB — Glacial,,256,novo,,256,novo,True,True,Apple,iPhone 18 Pro,,256,novo,True
-20,iPhone 17 Pro Max 256 GB - Prateado - somente eSIM,,256,novo,,256,novo,True,True,Apple,iPhone 17 Pro Max,,256,novo,True
-21,iPhone 18 Pro Max 256GB Preto,,256,novo,,256,novo,True,True,Apple,iPhone 18 Pro Max,,256,novo,True
-22,iPhone Duo de 256 GB — Branco-estrela,,256,novo,,256,novo,True,True,Apple,iPhone Duo,,256,novo,True
-23,iPhone Duo de 256 GB — Céu noturno,,256,novo,,256,novo,True,True,Apple,iPhone Duo,,256,novo,True
-24,Smartphone Samsung Galaxy A17 com IA 256GB 8GB RAM Câmera de 50MP Tela de 6.7 NFC IP54 - Cinza,Galaxy A17,256,novo,Galaxy A17,256,novo,True,True,Samsung,Galaxy A17,Galaxy A17,256,novo,True
-25,Smartphone Samsung Galaxy A17 5G 256GB 8GB RAM - Cinza,Galaxy A17 5G,256,novo,Galaxy A17 5G,256,novo,True,True,Samsung,Galaxy A17 5G,Galaxy A17 5G,256,novo,True
-26,Smartphone Samsung Galaxy A17 4g Tela 6.7 256gb Câmera Tri Cinza,Galaxy A17,256,novo,Galaxy A17,256,novo,True,True,Samsung,Galaxy A17,Galaxy A17,256,novo,True
-27,Smartphone Samsung Galaxy A17 5g A17 256gb - Cinza Cinza,Galaxy A17 5G,256,novo,Galaxy A17 5G,256,novo,True,True,Samsung,Galaxy A17 5G,Galaxy A17 5G,256,novo,True
-28,Smartphone Samsung Galaxy A17 4G 6.7 256GB 8GB Câmera Tripla,Galaxy A17,256,novo,Galaxy A17,256,novo,True,True,Samsung,Galaxy A17,Galaxy A17,256,novo,True
-29,"Smartphone Xiaomi Redmi 15C 4GB + 128GB – Tela 6.9"" Dual SIM LTE, Desempenho e Estilo Moderno",Redmi 15C,128,novo,Redmi 15C,128,novo,True,True,Xiaomi,Redmi 15C,Redmi 15C,128,novo,True
-30,Celular Xiaomi Redmi 15c 128gb 8gb Ram Dual Sim Azul Azul,Redmi 15C,128,novo,Redmi 15C,128,novo,True,True,Xiaomi,Redmi 15C,Redmi 15C,128,novo,True
-31,Smartphone Xiaomi Redmi 15C 4G 128GB 4GB RAM + 4GB Memoria Virtual 50MP 8MP Preto Verde Azul,Redmi 15C,128,novo,Redmi 15C,128,novo,True,True,Xiaomi,Redmi 15C,Redmi 15C,128,novo,True
-32,"Smartphone Xiaomi Redmi 15C de 128 GB com 6 GB de RAM, Verde Menta",Redmi 15C,128,novo,Redmi 15C,128,novo,True,True,Xiaomi,Redmi 15C,Redmi 15C,128,novo,True
-33,Câmera Redmi 15c 6+6 128 Gb Azul Azul,Redmi 15C,128,novo,Redmi 15C,128,novo,True,True,Xiaomi,Redmi 15C,Redmi 15C,128,novo,True
-34,"Smartphone Motorola Moto G06 - 64GB 4GB RAM + 8GB Ram Boost, Camera 50MP com AI, Bateria de 5200 mAh e Tela 6.9"" - Bege",Moto G06,64,novo,Moto G06,64,novo,True,True,Motorola,Moto G06,Moto G06,64,novo,True
-35,"Smartphone Motorola Moto G06 - 64GB 4GB RAM + 8GB Ram Boost, Camera 50MP com AI, Bateria de 5200 mAh e Tela 6.9"" - Verde",Moto G06,64,novo,Moto G06,64,novo,True,True,Motorola,Moto G06,Moto G06,64,novo,True
-36,"Smartphone Motorola Moto G06 - 64GB 4GB RAM + 8GB Ram Boost, Camera 50MP com AI, Bateria de 5200 mAh e Tela 6.9"" - Azul Marinho",Moto G06,64,novo,Moto G06,64,novo,True,True,Motorola,Moto G06,Moto G06,64,novo,True
-37,"Smartphone Motorola Moto G06 - 64GB 4GB RAM + 8GB Ram Boost, Camera 50MP com AI, Bateria de 5200 mAh e Tela 6.9"" - Laranja",Moto G06,64,novo,Moto G06,64,novo,True,True,Motorola,Moto G06,Moto G06,64,novo,True
-38,Capinha Para Motorola Moto Edge 70 60 40 50 Fusion Plus Pro Neo 5G De Capa 5594 TYB,,,novo,Edge 70,,novo,False,False,Motorola,Edge 70 Fusion Plus Pro Neo,,,novo,True
-39,Capinha Para Motorola Moto Edge 70 60 40 50 Fusion Plus Pro Neo 5G Capa Preto Macia Silicone Case TYB 7597,,,novo,Edge 70,,novo,False,False,Motorola,Edge 70 Fusion Plus Pro Neo,,,novo,True
-40,Capinha Para Motorola Moto Edge 70 60 40 50 Fusion Plus Pro Neo 5G De Capa 7204 TYB,,,novo,Edge 70,,novo,False,False,Motorola,Edge 70 Fusion Plus Pro Neo,,,novo,True
-41,Capinha de Silicone Preta Para Motorola Moto Edge 70 60 40 50 Fusion Plus Pro Neo 5G Capa de Celular Macia TY7619,,,novo,Edge 70,,novo,False,False,Motorola,Edge 70 Fusion Plus Pro Neo,,,novo,True
-42,Motorola Edge 70 Fusion Capa De Telefone Para Ultra 60 Pro Stylus 5G 4G Traseira À Prova De Choque,,,novo,Edge 70 Fusion,,novo,False,False,Motorola,Edge 70 Fusion,,,novo,True
-43,Capinha Para Motorola Moto Edge 70 Fusion Plus 5G Capa De Silicone Macia Estilo Simples Macaron Case 0388,,,novo,Edge 70 Fusion,,novo,False,False,Motorola,Edge 70 Fusion Plus,,,novo,True
-44,Capinha Para Motorola Moto Edge 70 60 40 50 Fusion Plus Pro Neo 5G Capa De Silicone Anti-impacto Macia Case MKL0562,,,novo,Edge 70,,novo,False,False,Motorola,Edge 70 Fusion Plus Pro Neo,,,novo,True
-45,Capinha Para Motorola Moto Edge 70 60 40 50 Fusion Plus Pro Neo 5G Capa De Silicone Case MKL0325,,,novo,Edge 70,,novo,False,False,Motorola,Edge 70 Fusion Plus Pro Neo,,,novo,True
-46,Película Protetora Hidrogel  TPU Motorola Moto Linha Edge 70 60 50 40 30 20 Pro+ Pro Fusion Plus S Neo,,,novo,Edge 70,,novo,False,False,Motorola,Moto Edge,,,novo,True
-47,Capinha Para Motorola Moto Edge 70 60 40 50 Fusion Plus Pro Neo 5G Capa Anti Impacto Transparente Macia Case FS1269,,,novo,Edge 70,,novo,False,False,Motorola,Moto Edge,,,novo,True
-48,Para Motorola edge 70 fusion + 60 g100 pro g86 power g57 60s stylus 50 ultra Fusão,,,novo,Edge 70 Fusion,,novo,False,False,Motorola,Edge,,,novo,True
-49,Capa Armadura À Prova De Choque Para Motorola G17 G37 G47 G57 G67 G77 G56 G86 Edge 70 60 50 40 Fusion Protetor De Câmera,,,novo,Edge 70,,novo,False,False,Motorola,G17,,,novo,True
-50,Para Motorola Edge 60 70 Fusion Moto G67 G77 G17 G37 G47 G06 G56 G86 G75 Caso De Telefone Armadura Câmera Proteção Capa,,,novo,,,novo,True,False,Motorola,Edge,,,novo,True
+n,titulo,esperado_modelo,esperado_gb,esperado_condicao,regras_modelo,regras_gb,regras_condicao,regras_acertou,llm_celular,llm_marca,llm_modelo_resposta,llm_modelo,llm_gb,llm_condicao,llm_acertou,regras_filtro_modelo,regras_filtro_acertou
+1,Apple iPhone 17e 256gb rosa rosa,,256,novo,,256,novo,True,True,Apple,iPhone 17e,,256,novo,True,,True
+2,Apple iPhone 16 (256 GB) - Preto,iPhone 16,256,novo,iPhone 16,256,novo,True,True,Apple,iPhone 16,iPhone 16,256,novo,True,iPhone 16,True
+3,Apple iPhone 15 (256 GB) - Azul,iPhone 15,256,novo,iPhone 15,256,novo,True,True,Apple,iPhone 15,iPhone 15,256,novo,True,iPhone 15,True
+4,Apple iPhone 16 (256 GB) - Branco,iPhone 16,256,novo,iPhone 16,256,novo,True,True,Apple,iPhone 16,iPhone 16,256,novo,True,iPhone 16,True
+5,Apple iPhone 15 256GB Preto,iPhone 15,256,novo,iPhone 15,256,novo,True,True,Apple,iPhone 15,iPhone 15,256,novo,True,iPhone 15,True
+6,Apple iPhone 16 (256 GB) - Rosa,iPhone 16,256,novo,iPhone 16,256,novo,True,True,Apple,iPhone 16,iPhone 16,256,novo,True,iPhone 16,True
+7,Apple iPhone 16 256GB Branco,iPhone 16,256,novo,iPhone 16,256,novo,True,True,Apple,iPhone 16,iPhone 16,256,novo,True,iPhone 16,True
+8,Apple iPhone 16 Pro Max (256 GB) - Titânio branco,,256,novo,,256,novo,True,True,Apple,iPhone 16 Pro Max,,256,novo,True,,True
+9,Apple iPhone 16 256GB Ultramarino,iPhone 16,256,novo,iPhone 16,256,novo,True,True,Apple,iPhone 16,iPhone 16,256,novo,True,iPhone 16,True
+10,Apple iPhone 16 Pro Max (256 GB) - Titânio-preto,,256,novo,,256,novo,True,True,Apple,iPhone 16 Pro Max,,256,novo,True,,True
+11,Apple iPhone 16 Pro (somente Esim) (256 Gb) - preto titânio,,256,novo,,256,novo,True,True,Apple,iPhone 16 Pro,,256,novo,True,,True
+12,Apple iPhone 16 Pro Max (256 GB) - Titânio-deserto,,256,novo,,256,novo,True,True,Apple,iPhone 16 Pro Max,,256,novo,True,,True
+13,iPhone 18 Pro Max 256GB Bordô,,256,novo,,256,novo,True,True,Apple,iPhone 18 Pro Max,,256,novo,True,,True
+14,Apple iPhone 16 Pro Max (somente Esim) (256 Gb) - preto titânio,,256,novo,,256,novo,True,True,Apple,iPhone 16 Pro Max,,256,novo,True,,True
+15,iPhone 17 Pro Max 256 GB - Azul-profundo - somente eSIM,,256,novo,,256,novo,True,True,Apple,iPhone 17 Pro Max,,256,novo,True,,True
+16,iPhone 18 Pro de 256 GB — Preto,,256,novo,,256,novo,True,True,Apple,iPhone 18 Pro,,256,novo,True,,True
+17,iPhone 18 Pro de 256 GB — Bordô,,256,novo,,256,novo,True,True,Apple,iPhone 18 Pro,,256,novo,True,,True
+18,iPhone 18 Pro de 256 GB — Prateado,,256,novo,,256,novo,True,True,Apple,iPhone 18 Pro,,256,novo,True,,True
+19,iPhone 18 Pro de 256 GB — Glacial,,256,novo,,256,novo,True,True,Apple,iPhone 18 Pro,,256,novo,True,,True
+20,iPhone 17 Pro Max 256 GB - Prateado - somente eSIM,,256,novo,,256,novo,True,True,Apple,iPhone 17 Pro Max,,256,novo,True,,True
+21,iPhone 18 Pro Max 256GB Preto,,256,novo,,256,novo,True,True,Apple,iPhone 18 Pro Max,,256,novo,True,,True
+22,iPhone Duo de 256 GB — Branco-estrela,,256,novo,,256,novo,True,True,Apple,iPhone Duo,,256,novo,True,,True
+23,iPhone Duo de 256 GB — Céu noturno,,256,novo,,256,novo,True,True,Apple,iPhone Duo,,256,novo,True,,True
+24,Smartphone Samsung Galaxy A17 com IA 256GB 8GB RAM Câmera de 50MP Tela de 6.7 NFC IP54 - Cinza,Galaxy A17,256,novo,Galaxy A17,256,novo,True,True,Samsung,Galaxy A17,Galaxy A17,256,novo,True,Galaxy A17,True
+25,Smartphone Samsung Galaxy A17 5G 256GB 8GB RAM - Cinza,Galaxy A17 5G,256,novo,Galaxy A17 5G,256,novo,True,True,Samsung,Galaxy A17 5G,Galaxy A17 5G,256,novo,True,Galaxy A17 5G,True
+26,Smartphone Samsung Galaxy A17 4g Tela 6.7 256gb Câmera Tri Cinza,Galaxy A17,256,novo,Galaxy A17,256,novo,True,True,Samsung,Galaxy A17,Galaxy A17,256,novo,True,Galaxy A17,True
+27,Smartphone Samsung Galaxy A17 5g A17 256gb - Cinza Cinza,Galaxy A17 5G,256,novo,Galaxy A17 5G,256,novo,True,True,Samsung,Galaxy A17 5G,Galaxy A17 5G,256,novo,True,Galaxy A17 5G,True
+28,Smartphone Samsung Galaxy A17 4G 6.7 256GB 8GB Câmera Tripla,Galaxy A17,256,novo,Galaxy A17,256,novo,True,True,Samsung,Galaxy A17,Galaxy A17,256,novo,True,Galaxy A17,True
+29,"Smartphone Xiaomi Redmi 15C 4GB + 128GB – Tela 6.9"" Dual SIM LTE, Desempenho e Estilo Moderno",Redmi 15C,128,novo,Redmi 15C,128,novo,True,True,Xiaomi,Redmi 15C,Redmi 15C,128,novo,True,Redmi 15C,True
+30,Celular Xiaomi Redmi 15c 128gb 8gb Ram Dual Sim Azul Azul,Redmi 15C,128,novo,Redmi 15C,128,novo,True,True,Xiaomi,Redmi 15C,Redmi 15C,128,novo,True,Redmi 15C,True
+31,Smartphone Xiaomi Redmi 15C 4G 128GB 4GB RAM + 4GB Memoria Virtual 50MP 8MP Preto Verde Azul,Redmi 15C,128,novo,Redmi 15C,128,novo,True,True,Xiaomi,Redmi 15C,Redmi 15C,128,novo,True,Redmi 15C,True
+32,"Smartphone Xiaomi Redmi 15C de 128 GB com 6 GB de RAM, Verde Menta",Redmi 15C,128,novo,Redmi 15C,128,novo,True,True,Xiaomi,Redmi 15C,Redmi 15C,128,novo,True,Redmi 15C,True
+33,Câmera Redmi 15c 6+6 128 Gb Azul Azul,Redmi 15C,128,novo,Redmi 15C,128,novo,True,True,Xiaomi,Redmi 15C,Redmi 15C,128,novo,True,Redmi 15C,True
+34,"Smartphone Motorola Moto G06 - 64GB 4GB RAM + 8GB Ram Boost, Camera 50MP com AI, Bateria de 5200 mAh e Tela 6.9"" - Bege",Moto G06,64,novo,Moto G06,64,novo,True,True,Motorola,Moto G06,Moto G06,64,novo,True,Moto G06,True
+35,"Smartphone Motorola Moto G06 - 64GB 4GB RAM + 8GB Ram Boost, Camera 50MP com AI, Bateria de 5200 mAh e Tela 6.9"" - Verde",Moto G06,64,novo,Moto G06,64,novo,True,True,Motorola,Moto G06,Moto G06,64,novo,True,Moto G06,True
+36,"Smartphone Motorola Moto G06 - 64GB 4GB RAM + 8GB Ram Boost, Camera 50MP com AI, Bateria de 5200 mAh e Tela 6.9"" - Azul Marinho",Moto G06,64,novo,Moto G06,64,novo,True,True,Motorola,Moto G06,Moto G06,64,novo,True,Moto G06,True
+37,"Smartphone Motorola Moto G06 - 64GB 4GB RAM + 8GB Ram Boost, Camera 50MP com AI, Bateria de 5200 mAh e Tela 6.9"" - Laranja",Moto G06,64,novo,Moto G06,64,novo,True,True,Motorola,Moto G06,Moto G06,64,novo,True,Moto G06,True
+38,Capinha Para Motorola Moto Edge 70 60 40 50 Fusion Plus Pro Neo 5G De Capa 5594 TYB,,,novo,Edge 70,,novo,False,False,Motorola,Edge 70 Fusion Plus Pro Neo,,,novo,True,,True
+39,Capinha Para Motorola Moto Edge 70 60 40 50 Fusion Plus Pro Neo 5G Capa Preto Macia Silicone Case TYB 7597,,,novo,Edge 70,,novo,False,False,Motorola,Edge 70 Fusion Plus Pro Neo,,,novo,True,,True
+40,Capinha Para Motorola Moto Edge 70 60 40 50 Fusion Plus Pro Neo 5G De Capa 7204 TYB,,,novo,Edge 70,,novo,False,False,Motorola,Edge 70 Fusion Plus Pro Neo,,,novo,True,,True
+41,Capinha de Silicone Preta Para Motorola Moto Edge 70 60 40 50 Fusion Plus Pro Neo 5G Capa de Celular Macia TY7619,,,novo,Edge 70,,novo,False,False,Motorola,Edge 70 Fusion Plus Pro Neo,,,novo,True,,True
+42,Motorola Edge 70 Fusion Capa De Telefone Para Ultra 60 Pro Stylus 5G 4G Traseira À Prova De Choque,,,novo,Edge 70 Fusion,,novo,False,False,Motorola,Edge 70 Fusion,,,novo,True,Edge 70 Fusion,False
+43,Capinha Para Motorola Moto Edge 70 Fusion Plus 5G Capa De Silicone Macia Estilo Simples Macaron Case 0388,,,novo,Edge 70 Fusion,,novo,False,False,Motorola,Edge 70 Fusion Plus,,,novo,True,,True
+44,Capinha Para Motorola Moto Edge 70 60 40 50 Fusion Plus Pro Neo 5G Capa De Silicone Anti-impacto Macia Case MKL0562,,,novo,Edge 70,,novo,False,False,Motorola,Edge 70 Fusion Plus Pro Neo,,,novo,True,,True
+45,Capinha Para Motorola Moto Edge 70 60 40 50 Fusion Plus Pro Neo 5G Capa De Silicone Case MKL0325,,,novo,Edge 70,,novo,False,False,Motorola,Edge 70 Fusion Plus Pro Neo,,,novo,True,,True
+46,Película Protetora Hidrogel  TPU Motorola Moto Linha Edge 70 60 50 40 30 20 Pro+ Pro Fusion Plus S Neo,,,novo,Edge 70,,novo,False,False,Motorola,Moto Edge,,,novo,True,,True
+47,Capinha Para Motorola Moto Edge 70 60 40 50 Fusion Plus Pro Neo 5G Capa Anti Impacto Transparente Macia Case FS1269,,,novo,Edge 70,,novo,False,False,Motorola,Moto Edge,,,novo,True,,True
+48,Para Motorola edge 70 fusion + 60 g100 pro g86 power g57 60s stylus 50 ultra Fusão,,,novo,Edge 70 Fusion,,novo,False,False,Motorola,Edge,,,novo,True,,True
+49,Capa Armadura À Prova De Choque Para Motorola G17 G37 G47 G57 G67 G77 G56 G86 Edge 70 60 50 40 Fusion Protetor De Câmera,,,novo,Edge 70,,novo,False,False,Motorola,G17,,,novo,True,,True
+50,Para Motorola Edge 60 70 Fusion Moto G67 G77 G17 G37 G47 G06 G56 G86 G75 Caso De Telefone Armadura Câmera Proteção Capa,,,novo,,,novo,True,False,Motorola,Edge,,,novo,True,,True
