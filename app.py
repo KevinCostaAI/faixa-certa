@@ -28,13 +28,31 @@ CACHE_SEGUNDOS = 15 * 60  # o resultado de uma busca bem-sucedida é reutilizado
 MINIMO_OFERTAS = 3  # abaixo disso, a faixa de preço não é exibida
 MAXIMO_POR_LOJA = 30
 FUSO = ZoneInfo("America/Fortaleza")
-LLM_URL = os.environ.get("LLM_BASE_URL", "https://generativelanguage.googleapis.com/v1beta/openai").rstrip("/")
-LLM_MODELO = os.environ.get("LLM_MODEL", "gemini-3.1-flash-lite")
-LLM_MODELO_RESERVA = os.environ.get("LLM_MODEL_FALLBACK", "gemini-3.5-flash-lite")
 COMPARELIVRE = os.environ.get("COMPARELIVRE_URL", "https://comparelivre.com.br").rstrip("/")
 KABUM = os.environ.get("KABUM_URL", "https://www.kabum.com.br").rstrip("/")
 GAZIN = os.environ.get("GAZIN_URL", "https://www.gazin.com.br").rstrip("/")
 NOVOMUNDO = os.environ.get("NOVOMUNDO_URL", "https://www.novomundo.com.br").rstrip("/")
+
+
+def configuracao(nome, padrao=None):
+    """Valor de uma variável de ambiente ou dos Secrets do Streamlit (ex.: LLM_API_KEY, LLM_MODEL)."""
+    valor = os.environ.get(nome)
+    if valor:
+        return valor
+    try:
+        return st.secrets.get(nome) or padrao
+    except Exception:
+        return padrao
+
+
+# O provedor de IA vem da chave: as do Groq começam com "gsk_"; as demais usam o Gemini.
+# LLM_BASE_URL, LLM_MODEL e LLM_MODEL_FALLBACK nos Secrets trocam o provedor ou o modelo sem mudar o código.
+LLM_CHAVE = configuracao("LLM_API_KEY")
+GROQ = str(LLM_CHAVE or "").startswith("gsk_")
+LLM_URL = configuracao("LLM_BASE_URL", "https://api.groq.com/openai/v1" if GROQ
+                       else "https://generativelanguage.googleapis.com/v1beta/openai").rstrip("/")
+LLM_MODELO = configuracao("LLM_MODEL", "openai/gpt-oss-120b" if GROQ else "gemini-3.1-flash-lite")
+LLM_MODELO_RESERVA = configuracao("LLM_MODEL_FALLBACK", "openai/gpt-oss-20b" if GROQ else "gemini-3.5-flash-lite")
 
 
 CONDICOES = ["novo", "usado", "recondicionado"]
@@ -313,19 +331,6 @@ Para cada texto, na mesma ordem, devolva celular, marca, modelo, armazenamento_g
 Responda somente com JSON no formato {"itens": [{"celular": true, "marca": "Apple", "modelo": "iPhone 13", "armazenamento_gb": 128, "condicao": "novo"}]}."""
 
 
-def chave_llm():
-    chave = os.environ.get("LLM_API_KEY")
-    if chave:
-        return chave
-    try:
-        return st.secrets.get("LLM_API_KEY")
-    except Exception:
-        return None
-
-
-LLM_CHAVE = chave_llm()
-
-
 def chamar_llm(textos, modelo, formato_json=True, tempo=TEMPO_LLM):
     corpo = {
         "model": modelo,
@@ -337,6 +342,8 @@ def chamar_llm(textos, modelo, formato_json=True, tempo=TEMPO_LLM):
     }
     if formato_json:
         corpo["response_format"] = {"type": "json_object"}
+    if "gpt-oss" in modelo:
+        corpo["reasoning_effort"] = "low"  # modelos com raciocínio (Groq): menos tokens e resposta mais rápida
     return requests.post(
         f"{LLM_URL}/chat/completions",
         headers={"Authorization": f"Bearer {LLM_CHAVE}"},
