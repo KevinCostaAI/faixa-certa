@@ -163,8 +163,9 @@ LINHAS_IMPLICITAS = {"galaxy", "moto"}
 
 
 def chave_modelo(modelo, sem_rede=False):
+    """Chave para comparar modelos. "4G" nunca muda o modelo (Galaxy A17 4G = Galaxy A17); "5G" só é ignorado com sem_rede."""
     palavras = [p for p in limpar(modelo or "").split()
-                if p not in MARCAS and p not in LINHAS_IMPLICITAS and not (sem_rede and p in ("4g", "5g"))]
+                if p not in MARCAS and p not in LINHAS_IMPLICITAS and p != "4g" and not (sem_rede and p == "5g")]
     return re.sub(r"[^a-z0-9]", "", "".join(palavras))
 
 
