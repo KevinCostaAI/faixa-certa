@@ -11,8 +11,7 @@ import time
 import unicodedata
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
-from urllib.parse import quote, quote_plus, urljoin, urlparse
-from urllib.robotparser import RobotFileParser
+from urllib.parse import parse_qs, quote, quote_plus, urljoin, urlparse
 from zoneinfo import ZoneInfo
 
 import pandas as pd
@@ -152,13 +151,16 @@ TITULOS_TESTE = [
 # Correção de digitação da busca
 MARCAS = {
     "apple", "samsung", "motorola", "xiaomi", "realme", "asus", "nokia", "oppo", "honor", "huawei",
-    "google", "infinix", "tecno", "multilaser", "positivo", "sony", "oneplus", "lenovo",
+    "google", "infinix", "tecno", "itel", "multilaser", "positivo", "sony", "oneplus", "lenovo", "lg",
+    "zte", "nubia", "tcl", "semp", "alcatel", "philco", "nothing", "vivo", "jovi", "iqoo", "meizu", "blu",
+    "hmd", "fairphone", "blackview", "ulefone", "doogee", "oukitel", "cubot", "umidigi",
 }
 LINHAS = {
     "iphone", "galaxy", "moto", "redmi", "poco", "edge", "razr", "pixel", "zenfone", "note",
     "fusion", "neo", "narzo", "reno", "magic", "spark", "camon", "pova", "fold", "flip", "xperia", "nord",
+    "phone", "blade", "axon", "twist", "phantom", "xcover",
 }
-VARIANTES = {"pro", "max", "plus", "mini", "ultra", "lite", "fe", "prime", "power", "play", "stylus"}
+VARIANTES = {"pro", "max", "plus", "mini", "ultra", "lite", "fe", "prime", "power", "play", "stylus", "se"}
 VOCABULARIO = sorted(MARCAS | LINHAS | VARIANTES)
 APELIDOS = {
     "aifone": "iphone", "aifon": "iphone", "ifone": "iphone", "ifon": "iphone", "iphon": "iphone",
@@ -167,7 +169,9 @@ APELIDOS = {
     "sansung": "samsung", "samsumg": "samsung", "samsun": "samsung", "sansumg": "samsung", "sanzung": "samsung",
     "motorolla": "motorola", "motorla": "motorola", "mottorola": "motorola",
     "xiaome": "xiaomi", "xiaomy": "xiaomi", "xaomi": "xiaomi", "xiomi": "xiaomi", "chaomi": "xiaomi",
-    "redimi": "redmi", "redme": "redmi", "pocco": "poco", "realmi": "realme", "nokya": "nokia",
+    "shaomi": "xiaomi", "xaiomi": "xiaomi", "redimi": "redmi", "redme": "redmi", "pocco": "poco",
+    "realmi": "realme", "realmy": "realme", "nokya": "nokia", "hauwei": "huawei", "huawai": "huawei",
+    "opo": "oppo", "filco": "philco", "infinity": "infinix", "infinics": "infinix",
 }
 NEUTRAS = {
     "de", "da", "do", "das", "dos", "com", "sem", "para", "e", "o", "a", "os", "as", "em", "no", "na",
@@ -176,15 +180,20 @@ NEUTRAS = {
     "rosa", "roxo", "roxa", "vermelho", "vermelha", "amarelo", "amarela", "cinza", "prata", "prateado",
     "dourado", "dourada", "grafite", "titanio", "meia", "noite", "estelar", "lilas", "creme", "bege",
     "laranja", "ram", "dual", "chip", "tela", "camera", "bateria", "original", "lacrado", "barato",
-    "barata", "promocao", "oferta", "esim",
+    "barata", "promocao", "oferta", "esim", "black", "white", "blue", "green", "gold", "silver", "pink",
+    "purple", "gray", "grey", "midnight", "starlight", "teal", "anatel", "homologado", "sempre", "fone", "fones",
+    "intel",
 }
 EXIBIR = {
-    "iphone": "iPhone", "moto": "Moto", "rog": "ROG", "oneplus": "OnePlus", "fe": "FE",
+    "iphone": "iPhone", "moto": "Moto", "rog": "ROG", "oneplus": "OnePlus", "fe": "FE", "lg": "LG",
+    "zte": "ZTE", "tcl": "TCL", "hmd": "HMD", "blu": "BLU", "iqoo": "iQOO", "xcover": "XCover", "se": "SE",
+    "gt": "GT", "hot": "Hot",
 }
 ARMAZENAMENTOS_BUSCA = {32, 64, 128, 256, 512, 1000, 2000}
 
 
 def separar(texto):
+    texto = re.sub(r"\bone\s+plus\b", "oneplus", texto)
     texto = re.sub(r"\b(iphone|galaxy|redmi|moto|edge|note|pixel|poco|razr)(?=\d)", r"\1 ", texto)
     texto = re.sub(r"\bgalaxy(?=[asmzf]\d)", "galaxy ", texto)
     texto = re.sub(r"\b([a-z]{4,})(\d+)\b", r"\1 \2", texto)
@@ -252,8 +261,14 @@ def chave_modelo(modelo):
     return re.sub(r"[^a-z0-9]", "", "".join(palavras))
 
 
+# Submarcas contam como a fabricante (ex.: um POCO é um Xiaomi).
+MARCA_PRINCIPAL = {"poco": "xiaomi", "redmi": "xiaomi", "iqoo": "vivo", "jovi": "vivo", "nubia": "zte",
+                   "redmagic": "zte", "semp": "tcl", "semptcl": "tcl"}
+
+
 def chave_marca(marca):
-    return re.sub(r"[^a-z0-9]", "", normalizar(marca or ""))
+    chave = re.sub(r"[^a-z0-9]", "", normalizar(marca or ""))
+    return MARCA_PRINCIPAL.get(chave, chave)
 
 
 def palavras_do_modelo(busca):
@@ -400,6 +415,7 @@ def detalhe_do_erro(resposta):
 
 @st.cache_resource
 def memoria():
+    """Guarda entre as buscas as páginas coletadas, as regras dos robots.txt e as classificações do LLM."""
     return {"paginas": {}, "robots": {}, "classificacoes": {}, "trava": threading.Lock()}
 
 
@@ -469,6 +485,18 @@ def preco_valido(preco):
     return preco is not None and 50 <= preco <= 50000
 
 
+LOJAS_CONHECIDAS = {
+    "mercadolivre": "Mercado Livre", "shopee": "Shopee", "amazon": "Amazon", "magazineluiza": "Magazine Luiza",
+    "casasbahia": "Casas Bahia", "americanas": "Americanas", "kabum": "KaBuM!", "carrefour": "Carrefour",
+    "fastshop": "Fast Shop", "pontofrio": "Ponto", "extra": "Extra", "aliexpress": "AliExpress",
+}
+
+
+def nome_da_loja(url):
+    dominio = urlparse(url).netloc.lower().removeprefix("www.")
+    return next((nome for chave, nome in LOJAS_CONHECIDAS.items() if chave in dominio.split(".")), dominio)
+
+
 def ler_comparelivre(conteudo, url):
     arvore = html.fromstring(conteudo)
     ofertas = []
@@ -477,18 +505,24 @@ def ler_comparelivre(conteudo, url):
         preco = preco_brl(cartao.xpath('normalize-space(string(.//*[contains(@class, "price")]))'))
         if preco is None:
             preco = preco_brl(cartao.text_content())
-        lojas = cartao.xpath('normalize-space(string(.//*[contains(@class, "noffers")]))')
         if not titulo or not preco_valido(preco):
             continue
+        pagina = urljoin(url, cartao.get("href"))
+        # O botão "ir à loja" ao lado do cartão traz o endereço da loja no parâmetro u.
+        botao = cartao.xpath('following-sibling::a[1][contains(@class, "gostore")]/@href')
+        destino = parse_qs(urlparse(botao[0]).query).get("u", [""])[0] if botao else ""
+        if not destino.startswith(("https://", "http://")):
+            destino = ""
+        lojas = cartao.xpath('normalize-space(string(.//*[contains(@class, "noffers")]))')
         quantidade = re.search(r"(\d+)\s+lojas?", lojas, re.I)
-        loja = lojas.split("·", 1)[1].strip() if "·" in lojas else ""
         total = int(quantidade[1]) if quantidade else 1
+        loja = lojas.split("·", 1)[1].strip() if "·" in lojas else (nome_da_loja(destino) if destino else "")
         if not loja:
             loja = f"{total} lojas" if total > 1 else "Loja não informada"
         elif total > 1:
             loja = f"{loja} e mais {total - 1}"
         ofertas.append({"titulo": titulo, "preco": preco, "loja": loja, "fonte": "Compare Livre",
-                        "link": urljoin(url, cartao.get("href"))})
+                        "link": destino or pagina, "pagina": pagina})
     return ofertas
 
 
@@ -520,8 +554,8 @@ def ler_kabum(conteudo, url):
                     preco = numero(atual.get("price"))
                 if preco_valido(preco):
                     link = f"{KABUM}/produto/{atual['code']}/{atual.get('friendlyName') or ''}".rstrip("/")
-                    ofertas.append({"titulo": atual["name"].strip(), "preco": preco,
-                                    "loja": atual.get("sellerName") or "KaBuM!", "fonte": "KaBuM!", "link": link})
+                    ofertas.append({"titulo": atual["name"].strip(), "preco": preco, "loja": atual.get("sellerName") or "KaBuM!",
+                                    "fonte": "KaBuM!", "link": link, "pagina": link})
     return ofertas
 
 
@@ -531,9 +565,39 @@ FONTES = {
 }
 CABECALHOS = {"User-Agent": USER_AGENT, "Accept": "text/html,application/xhtml+xml", "Accept-Language": "pt-BR,pt;q=0.9"}
 # O Compare Livre às vezes devolve só capinhas e películas para o nome do modelo (ex.: "moto g06").
-# Nesse caso a busca é refeita uma vez com "smartphone" na frente.
-REFAZ_COM_SMARTPHONE = {"Compare Livre"}
+# Por isso, nele a busca também é feita com "smartphone" na frente, e os resultados são somados.
+BUSCA_COM_SMARTPHONE = {"Compare Livre"}
 TIPOS_DE_APARELHO = {"celular", "smartphone", "telefone", "aparelho"}
+
+
+def regras_do_robots(texto):
+    """Lê o robots.txt como manda o RFC 9309: junta todos os grupos do nosso robô ou, se não houver, todos os de *."""
+    grupos, grupo, lendo_agentes = [], None, False
+    for linha in texto.splitlines():
+        campo, _, valor = linha.split("#", 1)[0].partition(":")
+        campo, valor = campo.strip().lower(), valor.strip()
+        if campo == "user-agent":
+            if not lendo_agentes:
+                grupo = {"agentes": set(), "regras": []}
+                grupos.append(grupo)
+            grupo["agentes"].add(valor.lower())
+            lendo_agentes = True
+        elif campo in ("allow", "disallow") and grupo is not None:
+            if valor:
+                grupo["regras"].append((len(valor), campo == "allow", valor))
+            lendo_agentes = False
+    meus = [g for g in grupos if ROBO.lower() in g["agentes"]] or [g for g in grupos if "*" in g["agentes"]]
+    return [regra for g in meus for regra in g["regras"]]
+
+
+def caminho_permitido(regras, caminho):
+    """Vale a regra mais longa que casar com o caminho; no empate, a que permite."""
+    melhor = (0, True)
+    for tamanho, permite, padrao in regras:
+        expressao = ".*".join(re.escape(parte) for parte in padrao.rstrip("$").split("*"))
+        if re.match(expressao + ("$" if padrao.endswith("$") else ""), caminho) and (tamanho, permite) > melhor:
+            melhor = (tamanho, permite)
+    return melhor[1]
 
 
 def robots_permite(url, mem):
@@ -541,28 +605,27 @@ def robots_permite(url, mem):
     dominio = f"{partes.scheme}://{partes.netloc}"
     guardado = mem["robots"].get(dominio)
     if not guardado or time.time() - guardado[0] > 24 * 3600:
-        try:
-            resposta = requests.get(f"{dominio}/robots.txt", headers=CABECALHOS, timeout=TEMPO_LOJA)
-            linhas = resposta.text.splitlines() if resposta.status_code < 400 else []
-            bloqueado = resposta.status_code >= 500
-        except requests.RequestException:
-            linhas, bloqueado = [], False
-        leitor = RobotFileParser()
-        leitor.parse(linhas)
-        guardado = (time.time(), leitor, bloqueado)
+        resposta = requests.get(f"{dominio}/robots.txt", headers=CABECALHOS, timeout=TEMPO_LOJA)
+        if resposta.status_code >= 500:
+            resposta.raise_for_status()  # robots.txt fora do ar: não coleta agora (RFC 9309)
+        guardado = (time.time(), regras_do_robots(resposta.text if resposta.status_code < 400 else ""))
         mem["robots"][dominio] = guardado
-    _, leitor, bloqueado = guardado
-    return not bloqueado and leitor.can_fetch(ROBO, url)
+    caminho = (partes.path or "/") + (f"?{partes.query}" if partes.query else "")
+    return caminho_permitido(guardado[1], caminho)
 
 
 def baixar(url, ler, mem):
-    """Baixa e lê uma página de busca. Devolve (ofertas, None) ou ([], motivo da falha)."""
+    """Baixa e lê uma página de busca, conferindo o robots.txt também em cada redirecionamento."""
     try:
-        if not robots_permite(url, mem):
-            return [], "o site não permite coleta automática (robots.txt)"
-        resposta = requests.get(url, headers=CABECALHOS, timeout=TEMPO_LOJA)
-        resposta.raise_for_status()
-        return ler(resposta.content, url), None
+        for _ in range(4):
+            if not robots_permite(url, mem):
+                return [], "o site não permite coleta automática (robots.txt)"
+            resposta = requests.get(url, headers=CABECALHOS, timeout=TEMPO_LOJA, allow_redirects=False)
+            if not resposta.is_redirect:
+                resposta.raise_for_status()
+                return ler(resposta.content, url), None
+            url = urljoin(url, resposta.headers["Location"])
+        return [], "redirecionamentos demais"
     except requests.HTTPError as erro:
         return [], f"erro HTTP {erro.response.status_code}"
     except requests.RequestException:
@@ -577,44 +640,33 @@ def coletar(nome, busca, mem):
     guardado = mem["paginas"].get(url)
     if guardado and time.time() - guardado["momento"] < CACHE_SEGUNDOS:
         return guardado
+    buscas = [busca]
+    com_smartphone = " ".join(["smartphone"] + [p for p in busca.split() if p not in TIPOS_DE_APARELHO])
+    if nome in BUSCA_COM_SMARTPHONE and com_smartphone != busca:
+        buscas.append(com_smartphone)
+    with ThreadPoolExecutor(max_workers=len(buscas)) as executor:
+        respostas = list(executor.map(lambda texto: baixar(montar_url(texto), ler, mem), buscas))
     resultado = {"fonte": nome, "url": url, "ofertas": [], "momento": time.time()}
-    ofertas, falha = baixar(url, ler, mem)
-    if falha:
-        resultado["status"] = falha
+    ofertas = [oferta for lista, _ in respostas for oferta in lista]
+    if not ofertas and respostas[0][1]:
+        resultado["status"] = respostas[0][1]
         return resultado
-    observacao = ""
-    celulares = sum(not ACESSORIO.search(limpar(oferta["titulo"])) for oferta in ofertas)
-    reserva = " ".join(["smartphone"] + [p for p in busca.split() if p not in TIPOS_DE_APARELHO])
-    if nome in REFAZ_COM_SMARTPHONE and celulares < MINIMO_OFERTAS and reserva != busca:
-        extras, _ = baixar(montar_url(reserva), ler, mem)
-        links = {oferta["link"] for oferta in ofertas}
-        novas = [oferta for oferta in extras if oferta["link"] not in links]
-        if novas:
-            ofertas += novas
-            observacao = f" (busca refeita como “{reserva}”)"
     vistos, unicas = set(), []
     for oferta in ofertas:
-        if oferta["link"] not in vistos:
-            vistos.add(oferta["link"])
+        if oferta["pagina"] not in vistos:
+            vistos.add(oferta["pagina"])
             unicas.append(oferta)
     resultado["ofertas"] = unicas[:MAXIMO_POR_LOJA]
-    resultado["status"] = f"{len(resultado['ofertas'])} ofertas{observacao}" if unicas else "nenhuma oferta encontrada"
+    resultado["status"] = f"{len(resultado['ofertas'])} ofertas" if unicas else "nenhuma oferta encontrada"
     resultado["coletado"] = datetime.now(FUSO).strftime("%H:%M")
     with mem["trava"]:
         mem["paginas"][url] = resultado
     return resultado
 
 
-def termos_para_lojas(busca):
-    """Busca nas lojas sem a marca quando há modelo (ex.: "motorola moto g06" vira "moto g06")."""
-    sem_marca = [p for p in busca.split() if p not in MARCAS]
-    return " ".join(sem_marca) if palavras_do_modelo(" ".join(sem_marca)) else busca
-
-
 def coletar_todas(busca, mem):
-    termos = termos_para_lojas(busca)
     with ThreadPoolExecutor(max_workers=len(FONTES)) as executor:
-        return list(executor.map(lambda nome: coletar(nome, termos, mem), FONTES))
+        return list(executor.map(lambda nome: coletar(nome, busca, mem), FONTES))
 
 
 # Exibição
@@ -655,12 +707,18 @@ def escapar(texto):
     return re.sub(r"([\\`*_\[\]<>|$#~])", r"\\\1", str(texto))
 
 
+def endereco(url):
+    """Deixa o link seguro dentro da tabela em Markdown (sem espaço, |, < ou >)."""
+    return quote(url, safe=":/?#[]@!$&'()*+,;=%")
+
+
 def tabela_de_ofertas(linhas, com_motivo=False):
-    colunas = ["Produto"] + (["Motivo"] if com_motivo else []) + ["Preço", "Loja", "Fonte", "Link"]
+    colunas = ["Produto"] + (["Motivo"] if com_motivo else []) + ["Preço", "Loja", "Fonte", "Compra"]
     tabela = ["| " + " | ".join(colunas) + " |", "|" + " --- |" * len(colunas)]
     for _, linha in linhas.iterrows():
         celulas = [escapar(linha["titulo"])] + ([escapar(linha["motivo"])] if com_motivo else [])
-        celulas += [escapar(reais(linha["preco"])), escapar(linha["loja"]), escapar(linha["fonte"]), f"[Abrir](<{linha['link']}>)"]
+        celulas += [escapar(reais(linha["preco"]).replace(" ", "\u00a0")), escapar(linha["loja"]),
+                    f"[{escapar(linha['fonte'])}](<{endereco(linha['pagina'])}>)", f"[Ir à loja](<{endereco(linha['link'])}>)"]
         tabela.append("| " + " | ".join(celulas) + " |")
     st.markdown("\n".join(tabela))
 
@@ -711,6 +769,10 @@ def mostrar_resultados(busca, coletas, mem):
         st.write("A busca não informou o armazenamento. Faixa por armazenamento:")
         st.table(pd.DataFrame(resumo), hide_index=True)
     if not iguais.empty:
+        melhor = iguais.iloc[0]
+        loja = re.sub(r" e mais \d+$", "", melhor["loja"])
+        st.markdown(f"**Oferta mais barata:** {escapar(melhor['titulo'])}, por **{escapar(reais(melhor['preco']))}** ({escapar(loja)}).")
+        st.link_button("Ir para a compra", endereco(melhor["link"]), type="primary")
         st.subheader("Ofertas equivalentes")
         tabela_de_ofertas(iguais)
     with st.expander(f"Ofertas descartadas ({len(descartadas)})"):
@@ -730,6 +792,10 @@ CORRECOES = [
     ("iphon 16", "iphone 16"), ("galaxy s25 ultra", "galaxy s25 ultra"), ("moto g06", "moto g06"),
     ("pocco x7 pro", "poco x7 pro"), ("realmi c75", "realme c75"), ("motorla razr 60", "motorola razr 60"),
     ("xaomi poco f7", "xiaomi poco f7"), ("ipone 14 plus", "iphone 14 plus"),
+    ("infinx hot 50", "infinix hot 50"), ("asuz zenfone 11", "asus zenfone 11"),
+    ("positvo twist 5", "positivo twist 5"), ("techno spark 30", "tecno spark 30"), ("honnor x8b", "honor x8b"),
+    ("googel pixel 9", "google pixel 9"), ("opo reno 13", "oppo reno 13"), ("nothin phone 3a", "nothing phone 3a"),
+    ("hauwei nova 13", "huawei nova 13"), ("lenovoo k14", "lenovo k14"),
 ]
 
 
@@ -777,6 +843,8 @@ def mostrar_validacao():
         f"Erros simulados (uma letra trocada, faltando, sobrando ou invertida): "
         f"{acertos_simulados} de {len(simulados)} palavras corrigidas."
     )
+    st.write(f"Marcas que o corretor conhece ({len(MARCAS)}): {', '.join(sorted(exibir(m) for m in MARCAS))}. "
+             "A busca nas lojas e a comparação funcionam com qualquer marca.")
     st.write("**Extração de atributos nos 50 títulos de teste**")
     total = len(TITULOS_TESTE)
     acertos_regras = 0
@@ -820,8 +888,8 @@ with st.form("busca"):
         st.session_state.update(digitado=st.session_state.campo_busca, sem_correcao=False)
 
 st.write("Exemplos:")
-colunas = st.columns(3)
-for coluna, exemplo in zip(colunas, ["epone 13 128gb", "galaxi a17 128gb", "motorolla moto g06"]):
+colunas = st.columns(4)
+for coluna, exemplo in zip(colunas, ["epone 13 128gb", "galaxi a17 128gb", "motorolla moto g06", "xiaome redmi 15c"]):
     coluna.button(exemplo, on_click=usar_exemplo, args=(exemplo,), width="stretch")
 
 digitado = (st.session_state.get("digitado") or "").strip()
