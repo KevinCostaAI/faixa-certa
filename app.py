@@ -11,7 +11,7 @@ import time
 import unicodedata
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
-from urllib.parse import parse_qs, quote_plus, urljoin, urlparse
+from urllib.parse import quote, quote_plus, urljoin, urlparse
 from urllib.robotparser import RobotFileParser
 from zoneinfo import ZoneInfo
 
@@ -30,8 +30,9 @@ MAXIMO_POR_LOJA = 30
 FUSO = ZoneInfo("America/Fortaleza")
 LLM_URL = os.environ.get("LLM_BASE_URL", "https://generativelanguage.googleapis.com/v1beta/openai").rstrip("/")
 LLM_MODELO = os.environ.get("LLM_MODEL", "gemini-3.1-flash-lite")
+LLM_MODELO_RESERVA = os.environ.get("LLM_MODEL_FALLBACK", "gemini-3.5-flash-lite")
 COMPARELIVRE = os.environ.get("COMPARELIVRE_URL", "https://comparelivre.com.br").rstrip("/")
-MAGALU = os.environ.get("MAGALU_URL", "https://www.magazineluiza.com.br").rstrip("/")
+KABUM = os.environ.get("KABUM_URL", "https://www.kabum.com.br").rstrip("/")
 
 
 # Regras de extração usadas como linha de base na validação (as mesmas da versão anterior, sem ajustes).
@@ -312,9 +313,9 @@ def chave_llm():
 LLM_CHAVE = chave_llm()
 
 
-def chamar_llm(textos, formato_json=True):
+def chamar_llm(textos, modelo, formato_json=True):
     corpo = {
-        "model": LLM_MODELO,
+        "model": modelo,
         "temperature": 0,
         "messages": [
             {"role": "system", "content": INSTRUCOES_LOTE},
@@ -346,16 +347,45 @@ def limpar_item(item):
     }
 
 
+ERROS_PASSAGEIROS = {429, 500, 502, 503, 504}
+
+
 def classificar_por_llm(textos):
-    resposta = chamar_llm(textos)
-    if resposta.status_code == 400:
-        resposta = chamar_llm(textos, formato_json=False)
-    resposta.raise_for_status()
-    conteudo = resposta.json()["choices"][0]["message"]["content"]
-    itens = json.loads(re.search(r"\{.*\}", conteudo, re.S)[0])["itens"]
-    if len(itens) != len(textos):
-        raise ValueError("A resposta não tem um item para cada texto.")
-    return [limpar_item(item) for item in itens]
+    """Tenta o modelo principal duas vezes e, se ele estiver sobrecarregado, o modelo reserva."""
+    inicio = time.monotonic()
+    ultima = None
+    for modelo in dict.fromkeys([LLM_MODELO, LLM_MODELO_RESERVA]):
+        for _ in range(2):
+            if time.monotonic() - inicio > TEMPO_LLM:
+                break
+            resposta = chamar_llm(textos, modelo)
+            if resposta.status_code == 400:
+                resposta = chamar_llm(textos, modelo, formato_json=False)
+            if resposta.status_code in ERROS_PASSAGEIROS or resposta.status_code == 404:
+                ultima = resposta
+                if resposta.status_code == 404:
+                    break
+                time.sleep(1.5)
+                continue
+            resposta.raise_for_status()
+            conteudo = resposta.json()["choices"][0]["message"]["content"]
+            itens = json.loads(re.search(r"\{.*\}", conteudo, re.S)[0])["itens"]
+            if len(itens) != len(textos):
+                raise ValueError("A resposta não tem um item para cada texto.")
+            return [limpar_item(item) for item in itens], modelo
+    if ultima is None:
+        raise requests.Timeout("Tempo esgotado.")
+    ultima.raise_for_status()
+    raise requests.HTTPError(f"Erro {ultima.status_code}", response=ultima)
+
+
+def detalhe_do_erro(resposta):
+    try:
+        dados = resposta.json()
+        dados = dados[0] if isinstance(dados, list) else dados
+        return str(dados.get("error", {}).get("message", ""))[:80]
+    except Exception:
+        return ""
 
 
 @st.cache_resource
@@ -368,13 +398,14 @@ def classificar(busca, titulos, mem):
         chave = (busca, tuple(titulos))
         guardado = mem["classificacoes"].get(chave)
         if guardado and time.time() - guardado[0] < CACHE_SEGUNDOS:
-            return guardado[1][0], guardado[1][1:], "LLM"
+            return guardado[1][0], guardado[1][1:], f"LLM ({guardado[2]})"
         try:
-            itens = classificar_por_llm([busca] + list(titulos))
-            mem["classificacoes"][chave] = (time.time(), itens)
-            return itens[0], itens[1:], "LLM"
+            itens, modelo = classificar_por_llm([busca] + list(titulos))
+            mem["classificacoes"][chave] = (time.time(), itens, modelo)
+            return itens[0], itens[1:], f"LLM ({modelo})"
         except requests.HTTPError as erro:
-            motivo = f"erro HTTP {erro.response.status_code}"
+            detalhe = detalhe_do_erro(erro.response)
+            motivo = f"erro HTTP {erro.response.status_code}" + (f", {detalhe}" if detalhe else "")
         except requests.RequestException:
             motivo = "sem resposta"
         except Exception:
@@ -451,93 +482,42 @@ def ler_comparelivre(conteudo, url):
     return ofertas
 
 
-def vendedor_magalu(dados, link):
-    vendedor = dados.get("seller")
-    if isinstance(vendedor, dict):
-        nome = vendedor.get("description") or vendedor.get("name") or vendedor.get("id")
-        if nome:
-            return "Magazine Luiza" if chave_marca(str(nome)) in {"magazineluiza", "magalu"} else f"Magalu: {nome}"
-    codigo = parse_qs(urlparse(link).query).get("seller_id", [""])[0]
-    if codigo:
-        return "Magazine Luiza" if codigo == "magazineluiza" else f"Magalu: {codigo}"
-    return "Magazine Luiza"
-
-
-def produtos_em_json(raiz, url, fonte):
-    pilha = [raiz]
-    while pilha:
-        atual = pilha.pop()
-        if isinstance(atual, list):
-            pilha.extend(atual)
-            continue
-        if not isinstance(atual, dict):
-            continue
-        pilha.extend(atual.values())
-        titulo = atual.get("title") or atual.get("name")
-        caminho = atual.get("url") or atual.get("path")
-        preco_bruto = atual.get("price")
-        if isinstance(preco_bruto, dict):
-            candidatos = [numero(preco_bruto.get(k)) for k in ("bestPrice", "price", "fullPrice", "value")]
-            candidatos = [c for c in candidatos if preco_valido(c)]
-            preco = min(candidatos) if candidatos else None
-        else:
-            preco = numero(preco_bruto)
-        if isinstance(titulo, str) and isinstance(caminho, str) and preco_valido(preco):
-            link = urljoin(url, caminho)
-            yield {"titulo": titulo.strip(), "preco": preco, "loja": vendedor_magalu(atual, link),
-                   "fonte": fonte, "link": link}
-
-
-def ler_jsonld(arvore, url, fonte):
-    ofertas = []
-    for bloco in arvore.xpath('//script[@type="application/ld+json"]/text()'):
-        try:
-            dados = json.loads(bloco)
-        except ValueError:
-            continue
-        pilha = [dados]
-        while pilha:
-            atual = pilha.pop()
-            if isinstance(atual, list):
-                pilha.extend(atual)
-            elif isinstance(atual, dict):
-                pilha.extend(atual.values())
-                ofertas_ld = atual.get("offers")
-                if isinstance(atual.get("name"), str) and isinstance(ofertas_ld, (dict, list)):
-                    lista = ofertas_ld if isinstance(ofertas_ld, list) else [ofertas_ld]
-                    precos = [numero(o.get("price") or o.get("lowPrice")) for o in lista if isinstance(o, dict)]
-                    precos = [p for p in precos if preco_valido(p)]
-                    if precos:
-                        link = urljoin(url, atual.get("url") or "")
-                        ofertas.append({"titulo": atual["name"].strip(), "preco": min(precos),
-                                        "loja": vendedor_magalu(atual, link), "fonte": fonte, "link": link})
-    return ofertas
-
-
-def ler_magalu(conteudo, url):
+def ler_kabum(conteudo, url):
     arvore = html.fromstring(conteudo)
     ofertas = []
     for bloco in arvore.xpath('//script[@id="__NEXT_DATA__"]/text()'):
         try:
-            ofertas.extend(produtos_em_json(json.loads(bloco), url, "Magazine Luiza"))
+            pilha = [json.loads(bloco)]
         except ValueError:
             continue
-    if not ofertas:
-        for cartao in arvore.xpath('//*[@data-testid="product-card-container"]'):
-            titulo = cartao.xpath('normalize-space(string(.//*[@data-testid="product-title"]))')
-            preco = preco_brl(cartao.xpath('normalize-space(string(.//*[@data-testid="price-value"]))'))
-            link = urljoin(url, cartao.get("href") or (cartao.xpath(".//a/@href") or [""])[0])
-            if titulo and preco_valido(preco):
-                ofertas.append({"titulo": titulo, "preco": preco, "loja": vendedor_magalu({}, link),
-                                "fonte": "Magazine Luiza", "link": link})
-    if not ofertas:
-        ofertas = ler_jsonld(arvore, url, "Magazine Luiza")
+        while pilha:
+            atual = pilha.pop()
+            if isinstance(atual, str) and len(atual) > 200 and atual.lstrip().startswith("{"):
+                try:
+                    pilha.append(json.loads(atual))
+                except ValueError:
+                    pass
+            elif isinstance(atual, list):
+                pilha.extend(atual)
+            elif isinstance(atual, dict):
+                pilha.extend(atual.values())
+                if not (isinstance(atual.get("name"), str) and atual.get("code") and "price" in atual):
+                    continue
+                if atual.get("available") is False:
+                    continue
+                preco = numero(atual.get("priceWithDiscount"))
+                if not preco_valido(preco):
+                    preco = numero(atual.get("price"))
+                if preco_valido(preco):
+                    link = f"{KABUM}/produto/{atual['code']}/{atual.get('friendlyName') or ''}".rstrip("/")
+                    ofertas.append({"titulo": atual["name"].strip(), "preco": preco,
+                                    "loja": atual.get("sellerName") or "KaBuM!", "fonte": "KaBuM!", "link": link})
     return ofertas
 
 
 FONTES = {
     "Compare Livre": (lambda busca: f"{COMPARELIVRE}/busca?q={quote_plus(busca)}", ler_comparelivre),
-    "Magazine Luiza": (lambda busca: f"{MAGALU}/busca/{quote_plus(busca)}/", ler_magalu),
+    "KaBuM!": (lambda busca: f"{KABUM}/busca/{quote('-'.join(busca.split()))}", ler_kabum),
 }
 CABECALHOS = {"User-Agent": USER_AGENT, "Accept": "text/html,application/xhtml+xml", "Accept-Language": "pt-BR,pt;q=0.9"}
 
@@ -653,6 +633,17 @@ def tabela_de_ofertas(linhas, com_motivo=False):
     )
 
 
+def marcar_fora_do_padrao(linhas):
+    """Descarta preços com menos da metade ou mais do dobro da mediana do grupo (kits, defeitos, erros)."""
+    grupos = linhas["armazenamento_gb"].fillna(0).astype(int)
+    for gb in grupos[linhas["motivo"].isna()].unique():
+        grupo = linhas["motivo"].isna() & (grupos == gb)
+        if grupo.sum() >= MINIMO_OFERTAS:
+            mediana = linhas.loc[grupo, "preco"].median()
+            fora = grupo & ((linhas["preco"] < mediana * 0.5) | (linhas["preco"] > mediana * 2))
+            linhas.loc[fora, "motivo"] = "preço fora do padrão (menos da metade ou mais do dobro da mediana)"
+
+
 def mostrar_resultados(busca, coletas, mem):
     situacao = " · ".join(f"{c['fonte']}: {c['status']}" for c in coletas)
     horarios = sorted({c["coletado"] for c in coletas if c.get("coletado")})
@@ -670,6 +661,7 @@ def mostrar_resultados(busca, coletas, mem):
     linhas["motivo"] = [motivo_descarte(alvo, item) for item in itens]
     linhas["armazenamento_gb"] = [item["armazenamento_gb"] for item in itens]
     linhas["loja_base"] = linhas["loja"].str.replace(r" e mais \d+$", "", regex=True)
+    marcar_fora_do_padrao(linhas)
     iguais = linhas[linhas["motivo"].isna()].sort_values("preco")
     descartadas = linhas[linhas["motivo"].notna()].sort_values("preco")
     st.subheader(f"Faixa de preço: {descrever(alvo)}")
@@ -764,10 +756,10 @@ def mostrar_validacao():
     if LLM_CHAVE and st.button("Medir o LLM nos 50 títulos (uma chamada)"):
         inicio = time.perf_counter()
         try:
-            itens = classificar_por_llm([t[0] for t in TITULOS_TESTE])
+            itens, modelo = classificar_por_llm([t[0] for t in TITULOS_TESTE])
             acertos = sum(como_rotulo(i) == rotulo_teste(*t[1:]) for i, t in zip(itens, TITULOS_TESTE))
             st.session_state.medicao_llm = (
-                f"LLM: {acertos} de {total} títulos corretos ({acertos / total:.0%}), "
+                f"LLM ({modelo}): {acertos} de {total} títulos corretos ({acertos / total:.0%}), "
                 f"em {time.perf_counter() - inicio:.1f} s. Diferença para as regras: "
                 f"{(acertos - acertos_regras) / total * 100:.0f} pontos percentuais."
             )
