@@ -3,7 +3,6 @@
 import difflib
 import json
 import os
-import random
 import re
 import statistics
 import threading
@@ -35,14 +34,6 @@ COMPARELIVRE = os.environ.get("COMPARELIVRE_URL", "https://comparelivre.com.br")
 KABUM = os.environ.get("KABUM_URL", "https://www.kabum.com.br").rstrip("/")
 
 
-# Regras de extração usadas como linha de base na validação (as mesmas da versão anterior, sem ajustes).
-MODELOS = {
-    "iPhone 11": "Apple", "iPhone 13": "Apple", "iPhone 14": "Apple", "iPhone 15": "Apple", "iPhone 16": "Apple",
-    "Galaxy A17": "Samsung", "Galaxy A17 5G": "Samsung",
-    "Moto G06": "Motorola", "Edge 60 Fusion": "Motorola", "Edge 60 Pro": "Motorola", "Edge 70 Fusion": "Motorola", "Edge 70": "Motorola",
-    "Redmi 15C": "Xiaomi", "Redmi 15C 5G": "Xiaomi",
-}
-ARMAZENAMENTOS = [64, 128, 256, 512, 1000]
 CONDICOES = ["novo", "usado", "recondicionado"]
 
 
@@ -51,101 +42,12 @@ def normalizar(texto):
     return " ".join("".join(c for c in texto if not unicodedata.combining(c)).split())
 
 
-def modelo_por_regras(t):
-    iphone = re.search(r"\biphone\s*(11|13|14|15|16)\b(?!\s*(?:pro|plus|max|mini|e)\b)", t)
-    if iphone:
-        return f"iPhone {iphone[1]}"
-    if re.search(r"\b(?:galaxy\s*)?a17\b", t):
-        return "Galaxy A17 5G" if re.search(r"\b5g\b", t) else "Galaxy A17"
-    if re.search(r"\bmoto\s*g\s*06\b|\bmotorola\s*g\s*06\b", t):
-        return "Moto G06"
-    if re.search(r"\bredmi\s*15\s*c\b", t):
-        return "Redmi 15C 5G" if re.search(r"\b5g\b", t) else "Redmi 15C"
-    edge = re.search(r"\bedge\s*(60|70)(?:\s+(fusion|pro))?\b", t)
-    if edge:
-        if edge[2]:
-            nome = f"Edge {edge[1]} {edge[2].capitalize()}"
-            return nome if nome in MODELOS else None
-        return "Edge 70" if edge[1] == "70" else None
-    return None
-
-
-def armazenamento_por_regras(t):
-    valores = set()
-    for numero, unidade in re.findall(r"(?<![\d.,])(\d{1,4})\s*(gb|tb)\b", t):
-        valor = int(numero) * (1000 if unidade == "tb" else 1)
-        if valor in ARMAZENAMENTOS:
-            valores.add(valor)
-    return valores.pop() if len(valores) == 1 else None
-
-
 def condicao_por_regras(t):
     if re.search(r"\b(?:recondicionad[oa]|refurbished|remanufaturad[oa])\b", t):
         return "recondicionado"
     if re.search(r"\b(?:usad[oa]|semi\s*-?nov[oa]|vitrine|mostruario|excelente|bom estado)\b", t):
         return "usado"
     return "novo"
-
-
-def extrair_por_regras(titulo):
-    t = normalizar(titulo)
-    modelo = modelo_por_regras(t)
-    return {"marca": MODELOS.get(modelo), "modelo": modelo, "armazenamento_gb": armazenamento_por_regras(t), "condicao": condicao_por_regras(t)}
-
-
-# Títulos de teste rotulados à parte (modelo, armazenamento em GB e condição), usados só na validação.
-TITULOS_TESTE = [
-    ('Apple iPhone 17e 256gb rosa rosa', None, 256, 'novo'),
-    ('Apple iPhone 16 (256 GB) - Preto', 'iPhone 16', 256, 'novo'),
-    ('Apple iPhone 15 (256 GB) - Azul', 'iPhone 15', 256, 'novo'),
-    ('Apple iPhone 16 (256 GB) - Branco', 'iPhone 16', 256, 'novo'),
-    ('Apple iPhone 15 256GB Preto', 'iPhone 15', 256, 'novo'),
-    ('Apple iPhone 16 (256 GB) - Rosa', 'iPhone 16', 256, 'novo'),
-    ('Apple iPhone 16 256GB Branco', 'iPhone 16', 256, 'novo'),
-    ('Apple iPhone 16 Pro Max (256 GB) - Titânio branco', None, 256, 'novo'),
-    ('Apple iPhone 16 256GB Ultramarino', 'iPhone 16', 256, 'novo'),
-    ('Apple iPhone 16 Pro Max (256 GB) - Titânio-preto', None, 256, 'novo'),
-    ('Apple iPhone 16 Pro (somente Esim) (256 Gb) - preto titânio', None, 256, 'novo'),
-    ('Apple iPhone 16 Pro Max (256 GB) - Titânio-deserto', None, 256, 'novo'),
-    ('iPhone 18 Pro Max 256GB Bordô', None, 256, 'novo'),
-    ('Apple iPhone 16 Pro Max (somente Esim) (256 Gb) - preto titânio', None, 256, 'novo'),
-    ('iPhone 17 Pro Max 256 GB - Azul-profundo - somente eSIM', None, 256, 'novo'),
-    ('iPhone 18 Pro de 256 GB — Preto', None, 256, 'novo'),
-    ('iPhone 18 Pro de 256 GB — Bordô', None, 256, 'novo'),
-    ('iPhone 18 Pro de 256 GB — Prateado', None, 256, 'novo'),
-    ('iPhone 18 Pro de 256 GB — Glacial', None, 256, 'novo'),
-    ('iPhone 17 Pro Max 256 GB - Prateado - somente eSIM', None, 256, 'novo'),
-    ('iPhone 18 Pro Max 256GB Preto', None, 256, 'novo'),
-    ('iPhone Duo de 256 GB — Branco-estrela', None, 256, 'novo'),
-    ('iPhone Duo de 256 GB — Céu noturno', None, 256, 'novo'),
-    ('Smartphone Samsung Galaxy A17 com IA 256GB 8GB RAM Câmera de 50MP Tela de 6.7 NFC IP54 - Cinza', 'Galaxy A17', 256, 'novo'),
-    ('Smartphone Samsung Galaxy A17 5G 256GB 8GB RAM - Cinza', 'Galaxy A17 5G', 256, 'novo'),
-    ('Smartphone Samsung Galaxy A17 4g Tela 6.7 256gb Câmera Tri Cinza', 'Galaxy A17', 256, 'novo'),
-    ('Smartphone Samsung Galaxy A17 5g A17 256gb - Cinza Cinza', 'Galaxy A17 5G', 256, 'novo'),
-    ('Smartphone Samsung Galaxy A17 4G 6.7 256GB 8GB Câmera Tripla', 'Galaxy A17', 256, 'novo'),
-    ('Smartphone Xiaomi Redmi 15C 4GB + 128GB – Tela 6.9" Dual SIM LTE, Desempenho e Estilo Moderno', 'Redmi 15C', 128, 'novo'),
-    ('Celular Xiaomi Redmi 15c 128gb 8gb Ram Dual Sim Azul Azul', 'Redmi 15C', 128, 'novo'),
-    ('Smartphone Xiaomi Redmi 15C 4G 128GB 4GB RAM + 4GB Memoria Virtual 50MP 8MP Preto Verde Azul', 'Redmi 15C', 128, 'novo'),
-    ('Smartphone Xiaomi Redmi 15C de 128 GB com 6 GB de RAM, Verde Menta', 'Redmi 15C', 128, 'novo'),
-    ('Câmera Redmi 15c 6+6 128 Gb Azul Azul', 'Redmi 15C', 128, 'novo'),
-    ('Smartphone Motorola Moto G06 - 64GB 4GB RAM + 8GB Ram Boost, Camera 50MP com AI, Bateria de 5200 mAh e Tela 6.9" - Bege', 'Moto G06', 64, 'novo'),
-    ('Smartphone Motorola Moto G06 - 64GB 4GB RAM + 8GB Ram Boost, Camera 50MP com AI, Bateria de 5200 mAh e Tela 6.9" - Verde', 'Moto G06', 64, 'novo'),
-    ('Smartphone Motorola Moto G06 - 64GB 4GB RAM + 8GB Ram Boost, Camera 50MP com AI, Bateria de 5200 mAh e Tela 6.9" - Azul Marinho', 'Moto G06', 64, 'novo'),
-    ('Smartphone Motorola Moto G06 - 64GB 4GB RAM + 8GB Ram Boost, Camera 50MP com AI, Bateria de 5200 mAh e Tela 6.9" - Laranja', 'Moto G06', 64, 'novo'),
-    ('Capinha Para Motorola Moto Edge 70 60 40 50 Fusion Plus Pro Neo 5G De Capa 5594 TYB', None, None, 'novo'),
-    ('Capinha Para Motorola Moto Edge 70 60 40 50 Fusion Plus Pro Neo 5G Capa Preto Macia Silicone Case TYB 7597', None, None, 'novo'),
-    ('Capinha Para Motorola Moto Edge 70 60 40 50 Fusion Plus Pro Neo 5G De Capa 7204 TYB', None, None, 'novo'),
-    ('Capinha de Silicone Preta Para Motorola Moto Edge 70 60 40 50 Fusion Plus Pro Neo 5G Capa de Celular Macia TY7619', None, None, 'novo'),
-    ('Motorola Edge 70 Fusion Capa De Telefone Para Ultra 60 Pro Stylus 5G 4G Traseira À Prova De Choque', None, None, 'novo'),
-    ('Capinha Para Motorola Moto Edge 70 Fusion Plus 5G Capa De Silicone Macia Estilo Simples Macaron Case 0388', None, None, 'novo'),
-    ('Capinha Para Motorola Moto Edge 70 60 40 50 Fusion Plus Pro Neo 5G Capa De Silicone Anti-impacto Macia Case MKL0562', None, None, 'novo'),
-    ('Capinha Para Motorola Moto Edge 70 60 40 50 Fusion Plus Pro Neo 5G Capa De Silicone Case MKL0325', None, None, 'novo'),
-    ('Película Protetora Hidrogel  TPU Motorola Moto Linha Edge 70 60 50 40 30 20 Pro+ Pro Fusion Plus S Neo', None, None, 'novo'),
-    ('Capinha Para Motorola Moto Edge 70 60 40 50 Fusion Plus Pro Neo 5G Capa Anti Impacto Transparente Macia Case FS1269', None, None, 'novo'),
-    ('Para Motorola edge 70 fusion + 60 g100 pro g86 power g57 60s stylus 50 ultra Fusão', None, None, 'novo'),
-    ('Capa Armadura À Prova De Choque Para Motorola G17 G37 G47 G57 G67 G77 G56 G86 Edge 70 60 50 40 Fusion Protetor De Câmera', None, None, 'novo'),
-    ('Para Motorola Edge 60 70 Fusion Moto G67 G77 G17 G37 G47 G06 G56 G86 G75 Caso De Telefone Armadura Câmera Proteção Capa', None, None, 'novo'),
-]
 
 
 # Correção de digitação da busca
@@ -792,92 +694,6 @@ def mostrar_resultados(busca, coletas, mem):
             tabela_de_ofertas(descartadas, com_motivo=True)
 
 
-# Validação
-CORRECOES = [
-    ("epone 13", "iphone 13"), ("aifone 15 pro max", "iphone 15 pro max"), ("galaxi a17", "galaxy a17"),
-    ("sansung galaxi s24", "samsung galaxy s24"), ("motorolla moto g06", "motorola moto g06"),
-    ("xiaome redmi 15c", "xiaomi redmi 15c"), ("iphone13 128 gigas", "iphone 13 128gb"),
-    ("galaxy a17 128g", "galaxy a17 128gb"), ("ifone 11", "iphone 11"), ("redimi note 14", "redmi note 14"),
-    ("motorola edje 60 fusion", "motorola edge 60 fusion"), ("samsumg a56", "samsung a56"),
-    ("iphon 16", "iphone 16"), ("galaxy s25 ultra", "galaxy s25 ultra"), ("moto g06", "moto g06"),
-    ("pocco x7 pro", "poco x7 pro"), ("realmi c75", "realme c75"), ("motorla razr 60", "motorola razr 60"),
-    ("xaomi poco f7", "xiaomi poco f7"), ("ipone 14 plus", "iphone 14 plus"),
-    ("infinx hot 50", "infinix hot 50"), ("asuz zenfone 11", "asus zenfone 11"),
-    ("positvo twist 5", "positivo twist 5"), ("techno spark 30", "tecno spark 30"), ("honnor x8b", "honor x8b"),
-    ("googel pixel 9", "google pixel 9"), ("opo reno 13", "oppo reno 13"), ("nothin phone 3a", "nothing phone 3a"),
-    ("hauwei nova 13", "huawei nova 13"), ("lenovoo k14", "lenovo k14"),
-]
-
-
-def erros_simulados(quantidade=40, semente=7):
-    sorteio = random.Random(semente)
-    palavras = [p for p in VOCABULARIO if len(p) >= 5]
-    letras = "abcdefghijklmnopqrstuvwxyz"
-    erros = []
-    while len(erros) < quantidade:
-        palavra = sorteio.choice(palavras)
-        posicao = sorteio.randrange(len(palavra) - 1)
-        tipo = sorteio.choice(["troca", "falta", "sobra", "inverte"])
-        if tipo == "troca":
-            errada = palavra[:posicao] + sorteio.choice(letras) + palavra[posicao + 1:]
-        elif tipo == "falta":
-            errada = palavra[:posicao] + palavra[posicao + 1:]
-        elif tipo == "sobra":
-            errada = palavra[:posicao] + sorteio.choice(letras) + palavra[posicao:]
-        else:
-            errada = palavra[:posicao] + palavra[posicao + 1] + palavra[posicao] + palavra[posicao + 2:]
-        if errada != palavra and errada not in VOCABULARIO:
-            erros.append((errada, palavra))
-    return erros
-
-
-def rotulo_teste(modelo, armazenamento, condicao):
-    return {"modelo": modelo, "armazenamento_gb": armazenamento, "condicao": condicao}
-
-
-CHAVES_MODELOS = {chave_modelo(m): m for m in MODELOS}
-
-
-def como_rotulo(item):
-    modelo = CHAVES_MODELOS.get(chave_modelo(item["modelo"])) if item["celular"] and item["modelo"] else None
-    return rotulo_teste(modelo, item["armazenamento_gb"], item["condicao"])
-
-
-def mostrar_validacao():
-    st.write("**Correção de digitação**")
-    acertos_lista = sum(corrigir_busca(errada)[0] == certa for errada, certa in CORRECOES)
-    simulados = erros_simulados()
-    acertos_simulados = sum(corrigir_palavra(errada) == certa for errada, certa in simulados)
-    st.write(
-        f"Erros comuns escritos pela equipe: {acertos_lista} de {len(CORRECOES)} buscas corrigidas. "
-        f"Erros simulados (uma letra trocada, faltando, sobrando ou invertida): "
-        f"{acertos_simulados} de {len(simulados)} palavras corrigidas."
-    )
-    st.write(f"Marcas que o corretor conhece ({len(MARCAS)}): {', '.join(sorted(exibir(m) for m in MARCAS))}. "
-             "A busca nas lojas e a comparação funcionam com qualquer marca.")
-    st.write("**Extração de atributos nos 50 títulos de teste**")
-    total = len(TITULOS_TESTE)
-    acertos_regras = 0
-    for titulo, modelo, armazenamento, condicao in TITULOS_TESTE:
-        extraido = extrair_por_regras(titulo)
-        acertos_regras += rotulo_teste(extraido["modelo"], extraido["armazenamento_gb"], extraido["condicao"]) == rotulo_teste(modelo, armazenamento, condicao)
-    st.write(f"Regras: {acertos_regras} de {total} títulos corretos ({acertos_regras / total:.0%}).")
-    if LLM_CHAVE and st.button("Medir o LLM nos 50 títulos"):
-        inicio = time.perf_counter()
-        try:
-            _, itens, modelo = classificar_em_lotes("celular", [t[0] for t in TITULOS_TESTE])
-            acertos = sum(como_rotulo(i) == rotulo_teste(*t[1:]) for i, t in zip(itens, TITULOS_TESTE))
-            st.session_state.medicao_llm = (
-                f"LLM ({modelo}): {acertos} de {total} títulos corretos ({acertos / total:.0%}), "
-                f"em {time.perf_counter() - inicio:.1f} s. Diferença para as regras: "
-                f"{(acertos - acertos_regras) / total * 100:.0f} pontos percentuais."
-            )
-        except Exception as erro:
-            st.session_state.medicao_llm = f"Não foi possível medir o LLM agora ({type(erro).__name__})."
-    if "medicao_llm" in st.session_state:
-        st.write(st.session_state.medicao_llm)
-
-
 # Interface
 def usar_exemplo(texto):
     st.session_state.update(campo_busca=texto, digitado=texto, sem_correcao=False)
@@ -915,6 +731,3 @@ if digitado:
     with st.spinner(f"Buscando “{exibir(busca)}” nas lojas..."):
         coletas = coletar_todas(busca, mem)
         mostrar_resultados(busca, coletas, mem)
-
-with st.expander("Validação"):
-    mostrar_validacao()
