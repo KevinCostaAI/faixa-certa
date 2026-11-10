@@ -32,7 +32,6 @@ LLM_MODELO = os.environ.get("LLM_MODEL", "gemini-3.1-flash-lite")
 LLM_MODELO_RESERVA = os.environ.get("LLM_MODEL_FALLBACK", "gemini-3.5-flash-lite")
 COMPARELIVRE = os.environ.get("COMPARELIVRE_URL", "https://comparelivre.com.br").rstrip("/")
 KABUM = os.environ.get("KABUM_URL", "https://www.kabum.com.br").rstrip("/")
-MAGALU = os.environ.get("MAGALU_URL", "https://www.magazineluiza.com.br").rstrip("/")
 GAZIN = os.environ.get("GAZIN_URL", "https://www.gazin.com.br").rstrip("/")
 NOVOMUNDO = os.environ.get("NOVOMUNDO_URL", "https://www.novomundo.com.br").rstrip("/")
 
@@ -515,9 +514,17 @@ def ler_kabum(conteudo, url):
     return ofertas
 
 
+def arvore_utf8(conteudo):
+    """Lê a página como UTF-8: sem isso, páginas que não declaram a codificação mostram "CÃ¢mera" em vez de "Câmera"."""
+    try:
+        return html.fromstring(conteudo.decode("utf-8", errors="replace") if isinstance(conteudo, bytes) else conteudo)
+    except ValueError:
+        return html.fromstring(conteudo)
+
+
 def dados_next(conteudo):
     """JSON que as páginas feitas em Next.js trazem no script __NEXT_DATA__."""
-    bloco = html.fromstring(conteudo).xpath('//script[@id="__NEXT_DATA__"]/text()')
+    bloco = arvore_utf8(conteudo).xpath('//script[@id="__NEXT_DATA__"]/text()')
     return json.loads(bloco[0]) if bloco else {}
 
 
@@ -525,21 +532,6 @@ def campo(dados, *chaves):
     for chave in chaves:
         dados = dados.get(chave) if isinstance(dados, dict) else None
     return dados
-
-
-def ler_magalu(conteudo, url):
-    ofertas = []
-    for item in campo(dados_next(conteudo), "props", "pageProps", "data", "search", "items") or []:
-        oferta = (item.get("offers") or [{}])[0]
-        preco = numero(campo(oferta, "bestPrice", "totalAmount"))  # preço no Pix, como o da KaBuM!
-        if not preco_valido(preco):
-            preco = numero(oferta.get("price"))
-        if item.get("available") is False or not item.get("title") or not item.get("path") or not preco_valido(preco):
-            continue
-        link = MAGALU + item["path"]
-        ofertas.append({"titulo": item["title"].strip(), "preco": preco, "loja": "Magazine Luiza",
-                        "fonte": "Magazine Luiza", "link": link, "pagina": link})
-    return ofertas
 
 
 def ler_gazin(conteudo, url):
@@ -558,7 +550,7 @@ def ler_gazin(conteudo, url):
 def ler_novomundo(conteudo, url):
     """Lê a lista de produtos em JSON-LD (schema.org), que traz só os resultados da busca, sem as sugestões."""
     ofertas = []
-    for bloco in html.fromstring(conteudo).xpath('//script[@type="application/ld+json"]/text()'):
+    for bloco in arvore_utf8(conteudo).xpath('//script[@type="application/ld+json"]/text()'):
         try:
             dados = json.loads(bloco)
         except ValueError:
@@ -581,7 +573,6 @@ def ler_novomundo(conteudo, url):
 FONTES = {
     "Compare Livre": (lambda busca: f"{COMPARELIVRE}/busca?q={quote_plus(busca)}", ler_comparelivre),
     "KaBuM!": (lambda busca: f"{KABUM}/busca/{quote('-'.join(busca.split()))}", ler_kabum),
-    "Magazine Luiza": (lambda busca: f"{MAGALU}/busca/{quote_plus(busca)}/", ler_magalu),
     "Gazin": (lambda busca: f"{GAZIN}/busca/{quote('-'.join(busca.split()))}", ler_gazin),
     "Novo Mundo": (lambda busca: f"{NOVOMUNDO}/busca?busca={quote(busca)}", ler_novomundo),
 }
