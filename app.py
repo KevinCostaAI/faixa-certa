@@ -577,9 +577,16 @@ def coletar(nome, busca, mem):
     return resultado
 
 
+def termos_para_lojas(busca):
+    """Busca nas lojas sem a marca quando há modelo (ex.: "motorola moto g06" vira "moto g06")."""
+    sem_marca = [p for p in busca.split() if p not in MARCAS]
+    return " ".join(sem_marca) if palavras_do_modelo(" ".join(sem_marca)) else busca
+
+
 def coletar_todas(busca, mem):
+    termos = termos_para_lojas(busca)
     with ThreadPoolExecutor(max_workers=len(FONTES)) as executor:
-        return list(executor.map(lambda nome: coletar(nome, busca, mem), FONTES))
+        return list(executor.map(lambda nome: coletar(nome, termos, mem), FONTES))
 
 
 # Exibição
@@ -615,22 +622,18 @@ def mostrar_faixa(linhas):
     )
 
 
+def escapar(texto):
+    return re.sub(r"([\\`*_\[\]<>|$#~])", r"\\\1", str(texto))
+
+
 def tabela_de_ofertas(linhas, com_motivo=False):
-    tabela = pd.DataFrame({
-        "Produto": linhas["titulo"],
-        "Preço": linhas["preco"].map(reais),
-        "Loja": linhas["loja"],
-        "Link": linhas["link"],
-        "Fonte": linhas["fonte"],
-    })
-    if com_motivo:
-        tabela.insert(1, "Motivo", linhas["motivo"])
-    st.dataframe(
-        tabela,
-        hide_index=True,
-        column_config={"Produto": st.column_config.TextColumn(width="medium"),
-                       "Link": st.column_config.LinkColumn(display_text="Abrir")},
-    )
+    colunas = ["Produto"] + (["Motivo"] if com_motivo else []) + ["Preço", "Loja", "Fonte", "Link"]
+    tabela = ["| " + " | ".join(colunas) + " |", "|" + " --- |" * len(colunas)]
+    for _, linha in linhas.iterrows():
+        celulas = [escapar(linha["titulo"])] + ([escapar(linha["motivo"])] if com_motivo else [])
+        celulas += [escapar(reais(linha["preco"])), escapar(linha["loja"]), escapar(linha["fonte"]), f"[Abrir](<{linha['link']}>)"]
+        tabela.append("| " + " | ".join(celulas) + " |")
+    st.markdown("\n".join(tabela))
 
 
 def marcar_fora_do_padrao(linhas):
