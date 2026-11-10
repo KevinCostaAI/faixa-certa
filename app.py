@@ -10,7 +10,7 @@ import time
 import unicodedata
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
-from urllib.parse import parse_qs, quote, quote_plus, urljoin, urlparse
+from urllib.parse import parse_qs, parse_qsl, quote, quote_plus, urlencode, urljoin, urlparse
 from zoneinfo import ZoneInfo
 
 import pandas as pd
@@ -101,6 +101,7 @@ ARMAZENAMENTOS_BUSCA = {32, 64, 128, 256, 512, 1000, 2000}
 def separar(texto):
     texto = re.sub(r"\bone\s+plus\b", "oneplus", texto)
     texto = re.sub(r"\bi\s+(phone|fone|pone)\b", r"i\1", texto)
+    texto = re.sub(r"\b([45]g)(?=\d)", r"\1 ", texto)  # "4G128GB" = "4g 128gb"
     texto = re.sub(r"\b(iphone|galaxy|redmi|moto|edge|note|pixel|poco|razr)(?=\d)", r"\1 ", texto)
     texto = re.sub(r"\bgalaxy(?=[asmzf]\d)", "galaxy ", texto)
     texto = re.sub(r"\b([a-z]{4,})(\d+)\b", r"\1 \2", texto)
@@ -232,27 +233,56 @@ def menciona_o_modelo(titulo, busca):
     return all(codigo in compacto for codigo in codigos)
 
 
+# Linhas que já dizem a marca: quem escreve "galaxy" quer um Samsung; "iphone", um Apple.
+MARCA_DA_LINHA = {
+    "iphone": "apple", "galaxy": "samsung", "xcover": "samsung", "moto": "motorola", "razr": "motorola",
+    "redmi": "xiaomi", "poco": "xiaomi", "pixel": "google", "zenfone": "asus", "xperia": "sony", "narzo": "realme",
+    "reno": "oppo", "spark": "tecno", "camon": "tecno", "pova": "tecno", "nord": "oneplus", "blade": "zte",
+    "axon": "zte", "twist": "positivo",
+}
+
+
+def marca_em(texto):
+    """Primeira marca citada no texto, escrita direto ("samsung") ou pela linha ("galaxy")."""
+    for palavra in limpar(texto or "").split():
+        if palavra in MARCAS:
+            return palavra
+        if palavra in MARCA_DA_LINHA:
+            return MARCA_DA_LINHA[palavra]
+    return None
+
+
+def rede_em(texto):
+    """Versão de rede citada no texto: "5g", "4g" ou None. Vale o texto todo, não só a palavra depois do modelo,
+    porque muita loja escreve "Galaxy A17 128GB 5G"."""
+    palavras = limpar(texto or "").split()
+    return "5g" if "5g" in palavras else "4g" if "4g" in palavras else None
+
+
 def classificar_por_regras(busca, titulos):
     palavras = palavras_do_modelo(busca)
+    base = [p for p in palavras if p != "5g"]
     alvo = {
         "celular": True,
-        "marca": None,
+        "marca": marca_em(busca),
         "modelo": " ".join(palavras) or None,
         "armazenamento_gb": armazenamento_em(busca),
         "condicao": condicao_em(busca),
     }
-    if not palavras:
-        return alvo, [dict(alvo, modelo=None) for _ in titulos]
-    partes = [r"\s*".join(re.escape(pedaco) for pedaco in re.findall(r"[a-z]+|\d+", p)) for p in palavras]
-    proibidas = sorted(VARIANTES - set(palavras)) + ([] if "5g" in palavras else ["5g"])
+    if not base:
+        return alvo, [dict(alvo, modelo=None, marca=marca_em(titulo)) for titulo in titulos]
+    partes = [r"\s*".join(re.escape(pedaco) for pedaco in re.findall(r"[a-z]+|\d+", p)) for p in base]
+    proibidas = sorted(VARIANTES - set(base))
     padrao = re.compile(r"\b" + r"[\s-]*".join(partes) + r"\b(?![\s-]*(?:" + "|".join(proibidas) + r")\b)")
     itens = []
     for titulo in titulos:
         texto = limpar(titulo)
+        # O nome bateu: o modelo é o da busca, com "5g" quando o título é da versão 5G.
+        modelo = " ".join(base + (["5g"] if rede_em(texto) == "5g" else [])) if padrao.search(texto) else "outro modelo"
         itens.append({
             "celular": not ACESSORIO.search(texto),
-            "marca": None,
-            "modelo": alvo["modelo"] if padrao.search(texto) else "outro modelo",
+            "marca": marca_em(texto),
+            "modelo": modelo,
             "armazenamento_gb": armazenamento_em(titulo),
             "condicao": condicao_em(titulo),
         })
@@ -404,6 +434,8 @@ def mesmo_produto(alvo, item):
 def motivo_descarte(alvo, item, sem_rede=False):
     if not item["celular"]:
         return "acessório ou outro produto"
+    if alvo.get("rede") and item.get("rede") and item["rede"] != alvo["rede"]:
+        return f"outra versão ({item['rede'].upper()})"
     if not item["modelo"] or chave_modelo(item["modelo"], sem_rede) != chave_modelo(alvo["modelo"], sem_rede):
         return "outro modelo"
     if alvo["marca"] and item["marca"] and chave_marca(alvo["marca"]) != chave_marca(item["marca"]):
@@ -689,10 +721,12 @@ def reais(valor):
 
 
 def descrever(alvo):
-    modelo = alvo["modelo"] or ""
+    modelo, marca = alvo["modelo"] or "", alvo["marca"] or ""
     if modelo == modelo.lower():
         modelo = exibir(modelo)
-    partes = [" ".join(p for p in [alvo["marca"], modelo] if p) or "modelo buscado"]
+    if marca == marca.lower():
+        marca = exibir(marca)
+    partes = [" ".join(p for p in [marca, modelo] if p) or "modelo buscado"]
     if alvo["armazenamento_gb"]:
         partes.append(f"{alvo['armazenamento_gb']} GB" if alvo["armazenamento_gb"] < 1000 else f"{alvo['armazenamento_gb'] // 1000} TB")
     partes.append(alvo["condicao"])
@@ -737,13 +771,30 @@ def tabela_de_ofertas(linhas, com_motivo=False):
     st.markdown("\n".join(tabela))
 
 
+def chave_do_anuncio(url):
+    """Endereço do anúncio sem o que não muda o produto: parâmetros de rastreio e, na KaBuM!, o texto depois do código."""
+    partes = urlparse(url or "")
+    caminho = partes.path.rstrip("/").lower()
+    codigo = re.search(r"/produto/(\d+)", caminho)
+    if codigo:
+        caminho = f"/produto/{codigo[1]}"
+    parametros = sorted((k, v) for k, v in parse_qsl(partes.query) if not re.match(r"utm_|gclid|fbclid|ref$", k, re.I))
+    return partes.netloc.lower().removeprefix("www.") + caminho + ("?" + urlencode(parametros) if parametros else "")
+
+
 def marcar_repetidas(linhas):
-    """A mesma loja com o mesmo preço e armazenamento é a mesma oferta em outra cor (a KaBuM! lista cada cor
-    como um produto): conta uma vez só, para não encher a tabela nem pesar várias vezes na faixa."""
+    """Cada oferta conta uma vez na faixa e no mínimo de ofertas:
+    1) o mesmo anúncio achado duas vezes (ex.: pelo Compare Livre e na própria KaBuM!) fica só com a versão da loja;
+    2) a mesma loja com o mesmo preço e armazenamento é a mesma oferta, em outra cor ou vinda de outra fonte."""
     validas = linhas[linhas["motivo"].isna()]
-    chave = validas[["fonte", "loja", "preco"]].assign(gb=validas["armazenamento_gb"].fillna(0))
+    loja_primeiro = validas.assign(indireto=validas["link"] != validas["pagina"]).sort_values("indireto", kind="stable")
+    repetidas = loja_primeiro["link"].map(chave_do_anuncio).duplicated()
+    linhas.loc[repetidas[repetidas].index, "motivo"] = "mesmo anúncio já contado"
+    validas = linhas[linhas["motivo"].isna()]
+    chave = pd.DataFrame({"loja": validas["loja"].map(lambda nome: re.sub(r"[^a-z0-9]", "", normalizar(nome))),
+                          "preco": validas["preco"], "gb": validas["armazenamento_gb"].fillna(0)})
     repetidas = chave.duplicated()
-    linhas.loc[repetidas[repetidas].index, "motivo"] = "mesma oferta em outra cor (mesma loja e mesmo preço)"
+    linhas.loc[repetidas[repetidas].index, "motivo"] = "mesma oferta em outra cor ou fonte (mesma loja e mesmo preço)"
 
 
 def marcar_fora_do_padrao(linhas):
@@ -755,6 +806,25 @@ def marcar_fora_do_padrao(linhas):
             mediana = linhas.loc[grupo, "preco"].median()
             fora = grupo & ((linhas["preco"] < mediana * 0.5) | (linhas["preco"] > mediana * 2))
             linhas.loc[fora, "motivo"] = "preço fora do padrão (menos da metade ou mais do dobro da mediana)"
+
+
+def separar_ofertas(busca, ofertas, alvo, itens):
+    """Decide, oferta por oferta, se ela entra na faixa ou por que fica de fora (coluna "motivo")."""
+    # Marca e rede pedidas valem com o LLM e com as regras: se o LLM não disser a marca, vale a escrita no texto.
+    alvo = dict(alvo, marca=alvo["marca"] or marca_em(busca), rede=rede_em(busca))
+    itens = [dict(item, marca=item["marca"] or marca_em(oferta["titulo"]), rede=rede_em(oferta["titulo"]))
+             for item, oferta in zip(itens, ofertas)]
+    motivos = [motivo_descarte(alvo, item) for item in itens]
+    if all(motivos) and not alvo["rede"] and chave_modelo(alvo["modelo"]) == chave_modelo(alvo["modelo"], sem_rede=True):
+        # Nenhuma oferta com o mesmo nome e a busca não falou em 4G/5G: aceita a versão 4G ou 5G do modelo
+        # (ex.: quem busca "samsung a56" encontra o Galaxy A56 5G, que só existe em 5G).
+        motivos = [motivo_descarte(alvo, item, sem_rede=True) for item in itens]
+    linhas = pd.DataFrame(ofertas)
+    linhas["motivo"] = motivos
+    linhas["armazenamento_gb"] = [item["armazenamento_gb"] for item in itens]
+    marcar_repetidas(linhas)
+    marcar_fora_do_padrao(linhas)
+    return linhas, alvo
 
 
 def mostrar_resultados(busca, coletas, mem):
@@ -775,16 +845,7 @@ def mostrar_resultados(busca, coletas, mem):
     if not alvo["modelo"]:
         st.warning("Não identifiquei o modelo na busca. Escreva a marca e o modelo, por exemplo: iPhone 13 128GB.")
         return
-    linhas = pd.DataFrame(ofertas)
-    motivos = [motivo_descarte(alvo, item) for item in itens]
-    if all(motivos) and chave_modelo(alvo["modelo"]) == chave_modelo(alvo["modelo"], sem_rede=True):
-        # Nenhuma oferta com o mesmo nome e a busca não falou em 4G/5G: aceita a versão 4G ou 5G do modelo
-        # (ex.: quem busca "samsung a56" encontra o Galaxy A56 5G, que só existe em 5G).
-        motivos = [motivo_descarte(alvo, item, sem_rede=True) for item in itens]
-    linhas["motivo"] = motivos
-    linhas["armazenamento_gb"] = [item["armazenamento_gb"] for item in itens]
-    marcar_repetidas(linhas)
-    marcar_fora_do_padrao(linhas)
+    linhas, alvo = separar_ofertas(busca, ofertas, alvo, itens)
     iguais = linhas[linhas["motivo"].isna()].sort_values("preco")
     descartadas = linhas[linhas["motivo"].notna()].sort_values("preco")
     st.subheader(f"Faixa de preço: {descrever(alvo)}")
