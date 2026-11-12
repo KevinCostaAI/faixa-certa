@@ -899,7 +899,8 @@ def marcar_fora_do_padrao(linhas):
 def separar_ofertas(busca, ofertas, alvo, itens):
     """Decide, oferta por oferta, se ela entra na faixa ou por que fica de fora (coluna "motivo")."""
     # Marca e rede valem pelo que está escrito, com o LLM e com as regras: na busca e em cada título.
-    alvo = dict(alvo, marca=marca_em(busca) or alvo["marca"], rede=rede_em(busca))
+    # A versão escolhida na tela (5G) vale no lugar da escrita na busca.
+    alvo = dict(alvo, marca=marca_em(busca) or alvo["marca"], rede=alvo.get("rede") or rede_em(busca))
     itens = [dict(item, marca=marca_no_titulo(oferta["titulo"], alvo["marca"]), rede=rede_em(oferta["titulo"]))
              for item, oferta in zip(itens, ofertas)]
     motivos = [motivo_descarte(alvo, item) for item in itens]
@@ -913,6 +914,33 @@ def separar_ofertas(busca, ofertas, alvo, itens):
     marcar_repetidas(linhas)
     marcar_fora_do_padrao(linhas)
     return linhas, alvo
+
+
+def escolher_opcoes(busca, alvo, itens, ofertas):
+    """Condição, memória e versão (4G ou 5G) para trocar na tela. A faixa é refeita na hora, com as mesmas ofertas;
+    sem mexer nas opções, vale o que a busca pediu."""
+    chave = re.sub(r"\W+", "_", busca)
+    base = chave_modelo(alvo["modelo"], sem_rede=True)
+    do_modelo = [(item, oferta) for item, oferta in zip(itens, ofertas)
+                 if item["celular"] and item["modelo"] and chave_modelo(item["modelo"], sem_rede=True) == base]
+    pedida = alvo["condicao"] if alvo["condicao"] in CONDICOES else "novo"
+    condicao = st.radio("Condição", CONDICOES, index=CONDICOES.index(pedida), horizontal=True,
+                        format_func=str.capitalize, key=f"faixa_condicao_{chave}")
+    memorias = sorted({item["armazenamento_gb"] for item, _ in do_modelo if item["armazenamento_gb"] in ARMAZENAMENTOS_BUSCA}
+                      | ({alvo["armazenamento_gb"]} if alvo["armazenamento_gb"] else set())) + [None]
+    coluna_memoria, coluna_versao = st.columns([3, 2])
+    gb = coluna_memoria.selectbox("Memória (armazenamento)", memorias, index=memorias.index(alvo["armazenamento_gb"] or None),
+                                  key=f"faixa_gb_{chave}", format_func=lambda gb: "Todas as memórias" if gb is None else
+                                  f"{int(gb)} GB" if gb < 1000 else f"{int(gb) // 1000} TB")
+    escolhido = dict(alvo, condicao=condicao, armazenamento_gb=gb)
+    # A versão só vira opção quando a busca não falou em 4G ou 5G e as lojas têm as duas versões do modelo.
+    tem_5g = {rede_em(oferta["titulo"]) == "5g" for _, oferta in do_modelo}
+    if not rede_em(busca) and "5g" not in limpar(alvo["modelo"]).split() and tem_5g == {True, False}:
+        versao = coluna_versao.radio("Versão", ["4g", "5g"], horizontal=True, key=f"faixa_rede_{chave}",
+                                     format_func=lambda r: "5G" if r == "5g" else "4G (comum)")
+        if versao == "5g":
+            escolhido.update(modelo=f"{alvo['modelo']} 5G", rede="5g")
+    return escolhido
 
 
 def mostrar_resultados(busca, coletas, mem):
@@ -929,13 +957,21 @@ def mostrar_resultados(busca, coletas, mem):
     # Os títulos que citam o modelo vão para a classificação; os outros já ficam como "outro modelo".
     ofertas.sort(key=lambda oferta: not menciona_o_modelo(oferta["titulo"], busca))
     citam = sum(menciona_o_modelo(oferta["titulo"], busca) for oferta in ofertas)
-    alvo, itens, origem = classificar(busca, [o["titulo"] for o in ofertas[:citam]], mem)
+    titulos = [o["titulo"] for o in ofertas[:citam]]
+    # Ao trocar condição, memória ou versão, a mesma busca reaproveita a classificação, sem chamar o LLM de novo.
+    guardada = st.session_state.get("classificacao_atual")
+    if guardada and guardada[0] == (busca, tuple(titulos)):
+        alvo, itens, origem = dict(guardada[1]), [dict(item) for item in guardada[2]], guardada[3]
+    else:
+        alvo, itens, origem = classificar(busca, titulos, mem)
+        st.session_state.classificacao_atual = ((busca, tuple(titulos)), dict(alvo), [dict(item) for item in itens], origem)
     if not alvo["modelo"]:
         return False
     itens += [{"celular": True, "marca": None, "modelo": None, "armazenamento_gb": None, "condicao": "novo"}
               for _ in ofertas[citam:]]
     st.caption(lojas)
     st.caption(f"Ofertas comparadas por **{origem}**.")
+    alvo = escolher_opcoes(busca, alvo, itens, ofertas)
     linhas, alvo = separar_ofertas(busca, ofertas, alvo, itens)
     iguais = linhas[linhas["motivo"].isna()].sort_values("preco")
     descartadas = linhas[linhas["motivo"].notna()].sort_values("preco")
@@ -1306,9 +1342,10 @@ with st.form("busca"):
 
 # Numa busca nova, o resultado anterior sai da tela na hora e fica só o aviso "Buscando..." até a resposta.
 # Para isso, cada busca nova troca de lugar a área do resultado e um espaço vazio: o vazio ocupa o lugar do
-# resultado anterior e o apaga. Nas escolhas da tela de opções (marca, modelo, memória), nada muda de lugar e a tela não pisca.
+# resultado anterior e o apaga. Ao trocar condição, memória, marca ou modelo na tela, nada muda de lugar e a tela não pisca.
 if nova_busca:
     st.session_state.lugar = 1 - st.session_state.get("lugar", 0)
+    st.session_state.pop("classificacao_atual", None)
 if st.session_state.get("lugar", 0):
     st.empty()
     area = st.container()
@@ -1329,7 +1366,12 @@ with area:
         if not falta:
             mem = memoria()
             with st.spinner(f"Buscando “{exibir(busca)}” nas lojas..."):
-                coletas = coletar_todas(busca, mem)
+                guardada = st.session_state.get("coleta_atual")
+                if not nova_busca and guardada and guardada[0] == busca:
+                    coletas = guardada[1]  # troca de condição, memória ou versão: as mesmas ofertas, sem buscar de novo
+                else:
+                    coletas = coletar_todas(busca, mem)
+                    st.session_state.coleta_atual = (busca, coletas)
                 # Sem modelo reconhecido na busca ("quero um celular bom"), a pessoa escolhe entre os celulares das lojas.
                 falta = not mostrar_resultados(busca, coletas, mem)
         if falta:
