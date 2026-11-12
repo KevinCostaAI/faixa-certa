@@ -109,6 +109,16 @@ NEUTRAS = {
     "cubo", "mint", "lime", "fonte", "fontes", "envio", "space", "foto", "fotos", "oled", "amoled", "real", "reais",
     "primeira", "primeiro", "nome", "rede", "topo", "prazo", "lento", "poeira",
 }
+# Palavras de quem descreve o celular sem dizer o modelo ("celular mais barato para idoso"): não são modelo nem erro.
+PEDIDOS = {
+    "mais", "menos", "muito", "muita", "bem", "bom", "boa", "bons", "boas", "melhor", "melhores", "menor", "maior",
+    "um", "uma", "uns", "umas", "meu", "minha", "meus", "minhas", "pra", "por", "ate", "que", "qual", "quais",
+    "quero", "queria", "procuro", "procurando", "preciso", "comprar", "celulares", "smartphones", "telefones",
+    "aparelhos", "cel", "cell", "baratos", "baratas", "baratinho", "baratinha", "economico", "economica", "simples",
+    "basico", "basica", "facil", "idoso", "idosa", "idosos", "idosas", "vovo", "avo", "mae", "pai", "filho", "filha",
+    "custo", "beneficio", "valor",
+}
+NEUTRAS |= PEDIDOS
 EXIBIR = {
     "iphone": "iPhone", "moto": "Moto", "rog": "ROG", "oneplus": "OnePlus", "fe": "FE", "lg": "LG",
     "zte": "ZTE", "tcl": "TCL", "hmd": "HMD", "blu": "BLU", "iqoo": "iQOO", "xcover": "XCover", "se": "SE",
@@ -906,23 +916,26 @@ def separar_ofertas(busca, ofertas, alvo, itens):
 
 
 def mostrar_resultados(busca, coletas, mem):
+    """Mostra a faixa de preço da busca. Devolve False, sem mostrar nada, quando a busca não diz o modelo:
+    aí quem chamou mostra os celulares para a pessoa escolher."""
     situacao = " · ".join(f"{c['fonte']}: {c['status']}" for c in coletas)
     horarios = sorted({c["coletado"] for c in coletas if c.get("coletado")})
-    st.caption(f"Lojas consultadas: {situacao}." + (f" Preços coletados às {horarios[-1]}." if horarios else ""))
+    lojas = f"Lojas consultadas: {situacao}." + (f" Preços coletados às {horarios[-1]}." if horarios else "")
     ofertas = [oferta for coleta in coletas for oferta in coleta["ofertas"]]
     if not ofertas:
+        st.caption(lojas)
         st.warning("Nenhuma loja devolveu ofertas para esta busca. Tente escrever de outro jeito ou busque de novo em alguns minutos.")
-        return
+        return True
     # Os títulos que citam o modelo vão para a classificação; os outros já ficam como "outro modelo".
     ofertas.sort(key=lambda oferta: not menciona_o_modelo(oferta["titulo"], busca))
     citam = sum(menciona_o_modelo(oferta["titulo"], busca) for oferta in ofertas)
     alvo, itens, origem = classificar(busca, [o["titulo"] for o in ofertas[:citam]], mem)
+    if not alvo["modelo"]:
+        return False
     itens += [{"celular": True, "marca": None, "modelo": None, "armazenamento_gb": None, "condicao": "novo"}
               for _ in ofertas[citam:]]
+    st.caption(lojas)
     st.caption(f"Ofertas comparadas por **{origem}**.")
-    if not alvo["modelo"]:
-        st.warning("Não identifiquei o modelo na busca. Escreva a marca e o modelo, por exemplo: iPhone 13 128GB.")
-        return
     linhas, alvo = separar_ofertas(busca, ofertas, alvo, itens)
     iguais = linhas[linhas["motivo"].isna()].sort_values("preco")
     descartadas = linhas[linhas["motivo"].notna()].sort_values("preco")
@@ -954,6 +967,7 @@ def mostrar_resultados(busca, coletas, mem):
             st.write("Nenhuma oferta foi descartada.")
         else:
             tabela_de_ofertas(descartadas, com_motivo=True)
+    return True
 
 
 
@@ -963,8 +977,10 @@ ACESSORIO_NO_MEIO = re.compile(r"\b(?:capa|capas|capinha|capinhas|case|pelicula|
 
 
 def busca_das_opcoes(busca):
-    """Texto mandado às lojas quando a busca não diz o modelo: "smartphone" mais a marca, a linha ou a rede pedidas."""
-    return " ".join(["smartphone"] + [p for p in busca.split() if p not in NEUTRAS and p not in TIPOS_DE_APARELHO])
+    """Texto mandado às lojas quando a busca não diz o modelo: "smartphone" mais a marca, a linha, a rede e a memória
+    pedidas. As outras palavras ("mais", "idoso") ficam de fora, porque atrapalham a busca nas lojas."""
+    return " ".join(["smartphone"] + [p for p in busca.split()
+                                      if p in VOCABULARIO or p in ("4g", "5g") or re.fullmatch(r"\d+(?:gb|tb)", p)])
 
 
 def modelo_do_titulo(titulo):
@@ -1031,7 +1047,7 @@ def modelos_encontrados(ofertas):
 
 
 def escolher_celular(consulta):
-    st.session_state.update(digitado=consulta, campo_busca=consulta, sem_correcao=True)
+    st.session_state.update(digitado=consulta, campo_busca=consulta, sem_correcao=True, nova_busca=True)
 
 
 def mostrar_opcoes(busca):
@@ -1270,7 +1286,7 @@ def mostrar_avaliacao():
 
 # Interface
 def buscar_como_digitado():
-    st.session_state.sem_correcao = True
+    st.session_state.update(sem_correcao=True, nova_busca=True)
 
 
 st.set_page_config(page_title="Faixa Certa")
@@ -1281,25 +1297,40 @@ st.title("Faixa Certa")
 st.write("Compara o preço de um smartphone em várias lojas, com preços buscados na hora.")
 st.caption(f"Extrator principal: {'LLM' if LLM_CHAVE else 'regras (sem chave de IA configurada)'}. Fontes: {', '.join(FONTES)}.")
 
+nova_busca = st.session_state.pop("nova_busca", False)
 with st.form("busca"):
     st.text_input("Qual celular você procura?", placeholder="Ex.: iphone 13 128gb", key="campo_busca")
     if st.form_submit_button("Buscar", type="primary"):
         st.session_state.update(digitado=st.session_state.campo_busca, sem_correcao=False)
+        nova_busca = True
 
-digitado = (st.session_state.get("digitado") or "").strip()
-if digitado:
-    if st.session_state.get("sem_correcao"):
-        busca, mudou = limpar(digitado), False
-    else:
-        busca, mudou = corrigir_busca(digitado)
-    falta = falta_modelo(busca)
-    if mudou:
-        st.info(f"Você quis dizer **{exibir(busca)}**?" + ("" if falta else " Mostrando resultados para a busca corrigida."))
-        st.button(f"Buscar “{digitado}” como digitei", on_click=buscar_como_digitado)
-    if falta:
-        mostrar_opcoes(busca)
-    else:
-        mem = memoria()
-        with st.spinner(f"Buscando “{exibir(busca)}” nas lojas..."):
-            coletas = coletar_todas(busca, mem)
-            mostrar_resultados(busca, coletas, mem)
+# Numa busca nova, o resultado anterior sai da tela na hora e fica só o aviso "Buscando..." até a resposta.
+# Para isso, cada busca nova troca de lugar a área do resultado e um espaço vazio: o vazio ocupa o lugar do
+# resultado anterior e o apaga. Nas escolhas da tela de opções (marca, modelo, memória), nada muda de lugar e a tela não pisca.
+if nova_busca:
+    st.session_state.lugar = 1 - st.session_state.get("lugar", 0)
+if st.session_state.get("lugar", 0):
+    st.empty()
+    area = st.container()
+else:
+    area = st.container()
+    st.empty()
+with area:
+    digitado = (st.session_state.get("digitado") or "").strip()
+    if digitado:
+        if st.session_state.get("sem_correcao"):
+            busca, mudou = limpar(digitado), False
+        else:
+            busca, mudou = corrigir_busca(digitado)
+        falta = falta_modelo(busca)
+        if mudou:
+            st.info(f"Você quis dizer **{exibir(busca)}**?" + ("" if falta else " Mostrando resultados para a busca corrigida."))
+            st.button(f"Buscar “{digitado}” como digitei", on_click=buscar_como_digitado)
+        if not falta:
+            mem = memoria()
+            with st.spinner(f"Buscando “{exibir(busca)}” nas lojas..."):
+                coletas = coletar_todas(busca, mem)
+                # Sem modelo reconhecido na busca ("quero um celular bom"), a pessoa escolhe entre os celulares das lojas.
+                falta = not mostrar_resultados(busca, coletas, mem)
+        if falta:
+            mostrar_opcoes(busca)
