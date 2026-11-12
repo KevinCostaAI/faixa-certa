@@ -917,22 +917,20 @@ def separar_ofertas(busca, ofertas, alvo, itens):
 
 
 def escolher_opcoes(busca, alvo, itens, ofertas):
-    """Condição, memória e versão (4G ou 5G) para trocar na tela. A faixa é refeita na hora, com as mesmas ofertas;
-    sem mexer nas opções, vale o que a busca pediu."""
+    """Memória e versão (4G ou 5G) para trocar na tela. A faixa é refeita na hora, com as mesmas ofertas;
+    sem mexer nas opções, vale o que a busca pediu. A condição é a da busca (novo, se ela não disser outra)."""
     chave = re.sub(r"\W+", "_", busca)
     base = chave_modelo(alvo["modelo"], sem_rede=True)
     do_modelo = [(item, oferta) for item, oferta in zip(itens, ofertas)
-                 if item["celular"] and item["modelo"] and chave_modelo(item["modelo"], sem_rede=True) == base]
-    pedida = alvo["condicao"] if alvo["condicao"] in CONDICOES else "novo"
-    condicao = st.radio("Condição", CONDICOES, index=CONDICOES.index(pedida), horizontal=True,
-                        format_func=str.capitalize, key=f"faixa_condicao_{chave}")
+                 if item["celular"] and item["modelo"] and item["condicao"] == alvo["condicao"]
+                 and chave_modelo(item["modelo"], sem_rede=True) == base]
     memorias = sorted({item["armazenamento_gb"] for item, _ in do_modelo if item["armazenamento_gb"] in ARMAZENAMENTOS_BUSCA}
                       | ({alvo["armazenamento_gb"]} if alvo["armazenamento_gb"] else set())) + [None]
     coluna_memoria, coluna_versao = st.columns([3, 2])
     gb = coluna_memoria.selectbox("Memória (armazenamento)", memorias, index=memorias.index(alvo["armazenamento_gb"] or None),
                                   key=f"faixa_gb_{chave}", format_func=lambda gb: "Todas as memórias" if gb is None else
                                   f"{int(gb)} GB" if gb < 1000 else f"{int(gb) // 1000} TB")
-    escolhido = dict(alvo, condicao=condicao, armazenamento_gb=gb)
+    escolhido = dict(alvo, armazenamento_gb=gb)
     # A versão só vira opção quando a busca não falou em 4G ou 5G e as lojas têm as duas versões do modelo.
     tem_5g = {rede_em(oferta["titulo"]) == "5g" for _, oferta in do_modelo}
     if not rede_em(busca) and "5g" not in limpar(alvo["modelo"]).split() and tem_5g == {True, False}:
@@ -958,7 +956,7 @@ def mostrar_resultados(busca, coletas, mem):
     ofertas.sort(key=lambda oferta: not menciona_o_modelo(oferta["titulo"], busca))
     citam = sum(menciona_o_modelo(oferta["titulo"], busca) for oferta in ofertas)
     titulos = [o["titulo"] for o in ofertas[:citam]]
-    # Ao trocar condição, memória ou versão, a mesma busca reaproveita a classificação, sem chamar o LLM de novo.
+    # Ao trocar a memória ou a versão, a mesma busca reaproveita a classificação, sem chamar o LLM de novo.
     guardada = st.session_state.get("classificacao_atual")
     if guardada and guardada[0] == (busca, tuple(titulos)):
         alvo, itens, origem = dict(guardada[1]), [dict(item) for item in guardada[2]], guardada[3]
@@ -1087,7 +1085,7 @@ def escolher_celular(consulta):
 
 
 def mostrar_opcoes(busca):
-    """Mostra os celulares que as lojas têm para uma busca sem modelo, com modelo, memória, condição e versão para escolher."""
+    """Mostra os celulares que as lojas têm para uma busca sem modelo, com marca, modelo, memória e versão para escolher."""
     mem = memoria()
     with st.spinner(f"Procurando celulares “{exibir(busca)}” nas lojas..."):
         coletas = coletar_todas(busca_das_opcoes(busca), mem)
@@ -1103,14 +1101,12 @@ def mostrar_opcoes(busca):
             "para ver a faixa de preço.")
     chave = re.sub(r"\W+", "_", busca)
     st.subheader("Escolha o celular")
-    pedida = condicao_em(busca)
-    condicao = st.radio("Condição", CONDICOES, index=CONDICOES.index(pedida), horizontal=True,
-                        format_func=str.capitalize, key=f"opcao_condicao_{chave}")
+    condicao = condicao_em(busca)  # novo, a não ser que a busca peça usado ou recondicionado
     grupos = [dict(g, ofertas=[o for o in g["ofertas"] if o["condicao"] == condicao]) for g in grupos]
     grupos = sorted([dict(g, menor=min(o["preco"] for o in g["ofertas"])) for g in grupos if g["ofertas"]],
                     key=lambda g: g["menor"])
     if not grupos:
-        st.warning(f"Não encontrei celulares na condição “{condicao}” para esta busca. Escolha outra condição.")
+        st.warning(f"Não encontrei celulares na condição “{condicao}” para esta busca.")
         st.caption(f"Lojas consultadas: {situacao}.")
         return
     marcas = sorted({g["marca"] for g in grupos}, key=exibir)
@@ -1342,7 +1338,7 @@ with st.form("busca"):
 
 # Numa busca nova, o resultado anterior sai da tela na hora e fica só o aviso "Buscando..." até a resposta.
 # Para isso, cada busca nova troca de lugar a área do resultado e um espaço vazio: o vazio ocupa o lugar do
-# resultado anterior e o apaga. Ao trocar condição, memória, marca ou modelo na tela, nada muda de lugar e a tela não pisca.
+# resultado anterior e o apaga. Ao trocar marca, modelo, memória ou versão na tela, nada muda de lugar e a tela não pisca.
 if nova_busca:
     st.session_state.lugar = 1 - st.session_state.get("lugar", 0)
     st.session_state.pop("classificacao_atual", None)
@@ -1368,7 +1364,7 @@ with area:
             with st.spinner(f"Buscando “{exibir(busca)}” nas lojas..."):
                 guardada = st.session_state.get("coleta_atual")
                 if not nova_busca and guardada and guardada[0] == busca:
-                    coletas = guardada[1]  # troca de condição, memória ou versão: as mesmas ofertas, sem buscar de novo
+                    coletas = guardada[1]  # troca de memória ou versão: as mesmas ofertas, sem buscar de novo
                 else:
                     coletas = coletar_todas(busca, mem)
                     st.session_state.coleta_atual = (busca, coletas)
