@@ -1445,7 +1445,8 @@ CAMPOS_DO_ROTULO = ["rotulo_tipo", "rotulo_marca", "rotulo_modelo", "rotulo_arma
 COLUNAS_DA_TABELA = {"n": "Nº", "titulo": "Título", "fonte": "Fonte", "url": "URL", "busca": "Busca de referência",
                      "rotulo_tipo": "Tipo", "rotulo_marca": "Marca", "rotulo_modelo": "Modelo",
                      "rotulo_armazenamento": "Armazenamento", "rotulo_condicao": "Condição", "rotulo_rede": "Rede",
-                     "rotulo_defeito": "Defeito anunciado", "rotulo_decisao": "Decisão", "rotulo_motivo": "Motivo da exclusão",
+                     "rotulo_defeito": "Defeito anunciado", "rotulo_mesmo_modelo": "Mesmo modelo da busca",
+                     "rotulo_decisao": "Decisão (oferta equivalente)", "rotulo_motivo": "Motivo da exclusão",
                      "rotulo_observacao": "Observação"}
 
 
@@ -1474,6 +1475,13 @@ def mostrar_titulos(tabela):
         horas = sorted(h.strip() for h in tabela["coletado_em"] if h.strip())
         if horas and horas[0][:10] == horas[-1][:10]:
             st.caption(f"Coletados em {horas[0][:10]}, das {horas[0][11:16]} às {horas[-1][11:16]}.")
+    rotulados = [linha for linha in tabela.to_dict("records") if rotulo_completo(linha)]
+    if rotulados:
+        celulares = [linha for linha in rotulados if rotulo_tipo(linha["rotulo_tipo"]) == "celular"]
+        usados = sum(normalizar(linha["rotulo_condicao"]) == "usado" for linha in celulares)
+        recondicionados = sum(normalizar(linha["rotulo_condicao"]) == "recondicionado" for linha in celulares)
+        st.caption(f"Pelos rótulos: {usados} usados, {recondicionados} recondicionados, {len(rotulados) - len(celulares)} "
+                   f"acessórios e outros produtos e {len(celulares) - usados - recondicionados} sem indicação de uso no título.")
     st.dataframe(vista, hide_index=True, column_config=config, height=35 * (len(vista) + 1) + 3)
 
 
