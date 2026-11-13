@@ -9,7 +9,7 @@ import statistics
 import threading
 import time
 import unicodedata
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import FIRST_COMPLETED, ThreadPoolExecutor, wait
 from datetime import datetime
 from urllib.parse import parse_qs, parse_qsl, quote, quote_plus, urlencode, urljoin, urlparse
 from zoneinfo import ZoneInfo
@@ -22,7 +22,9 @@ from lxml import html
 USER_AGENT = "Mozilla/5.0 (compatible; FaixaCerta/1.0; +https://github.com/KevinCostaAI/faixa-certa)"
 ROBO = "FaixaCerta"
 TEMPO_LOJA = 10  # segundos de espera por loja
-TEMPO_LLM = 12  # segundos, no total, para o LLM classificar os títulos de uma busca; depois disso, o app segue por regras
+TEMPO_LLM = 15  # segundos, no total, para o LLM classificar os títulos de uma busca; depois disso, o app segue por regras
+ESPERA_REPETIR = 5  # segundos sem resposta do LLM até o mesmo pedido sair de novo; vale a resposta que chegar primeiro
+COPIAS_LLM = 3  # no máximo, pedidos iguais ao mesmo tempo para cada lote de títulos
 LOTE_LLM = 15  # títulos por chamada ao LLM; com mais títulos, as chamadas são feitas em paralelo
 CACHE_SEGUNDOS = 15 * 60  # o resultado de uma busca bem-sucedida é reutilizado por 15 minutos e depois apagado
 MINIMO_OFERTAS = 3  # abaixo disso, a faixa de preço não é exibida
@@ -358,6 +360,9 @@ Responda somente com JSON no formato {"itens": [{"celular": true, "marca": "Appl
 
 
 def chamar_llm(textos, modelo, formato_json=True, tempo=TEMPO_LLM, rapido=True):
+    """Faz o pedido ao LLM e devolve a primeira resposta que chegar. No Gemini, parte dos pedidos demora 15 s ou mais,
+    e o mesmo pedido feito de novo costuma voltar em poucos segundos. Por isso, sem resposta em ESPERA_REPETIR
+    segundos, ou se a conexão falhar, o mesmo pedido sai de novo, até COPIAS_LLM pedidos, tudo dentro de `tempo`."""
     corpo = {
         "model": modelo,
         "temperature": 0,
@@ -373,12 +378,35 @@ def chamar_llm(textos, modelo, formato_json=True, tempo=TEMPO_LLM, rapido=True):
     elif rapido and "gemini" in modelo:
         # No Gemini 3 o raciocínio não desliga; no nível mínimo, a classificação dos títulos sai bem mais rápido.
         corpo["reasoning_effort"] = "minimal"
-    return requests.post(
-        f"{LLM_URL}/chat/completions",
-        headers={"Authorization": f"Bearer {LLM_CHAVE}"},
-        json=corpo,
-        timeout=tempo,
-    )
+    fim = time.monotonic() + tempo
+
+    def pedir():
+        return requests.post(f"{LLM_URL}/chat/completions", headers={"Authorization": f"Bearer {LLM_CHAVE}"},
+                             json=corpo, timeout=max(fim - time.monotonic(), 0.5))
+
+    executor = ThreadPoolExecutor(max_workers=COPIAS_LLM)
+    pendentes, erros, enviados, proximo = set(), [], 0, time.monotonic()
+    try:
+        while True:
+            agora = time.monotonic()
+            if enviados < COPIAS_LLM and agora >= proximo and (enviados == 0 or fim - agora >= 3):
+                pendentes.add(executor.submit(pedir))
+                enviados, proximo = enviados + 1, agora + ESPERA_REPETIR
+            if not pendentes:
+                raise erros[0] if erros else requests.Timeout("Tempo esgotado.")
+            pode_repetir = enviados < COPIAS_LLM and fim - time.monotonic() >= 3
+            espera = (proximo if pode_repetir else fim + 1) - time.monotonic()
+            prontos, pendentes = wait(pendentes, timeout=max(espera, 0), return_when=FIRST_COMPLETED)
+            for futuro in prontos:
+                if futuro.exception() is None:
+                    return futuro.result()
+                erros.append(futuro.exception())
+            if prontos and not pendentes:
+                proximo = time.monotonic()  # todos os pedidos enviados falharam na conexão: o próximo sai já
+            elif not prontos and not pode_repetir:
+                raise requests.Timeout("Tempo esgotado.")
+    finally:
+        executor.shutdown(wait=False, cancel_futures=True)
 
 
 def limpar_item(item):
