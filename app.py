@@ -357,7 +357,7 @@ Para cada texto, na mesma ordem, devolva celular, marca, modelo, armazenamento_g
 Responda somente com JSON no formato {"itens": [{"celular": true, "marca": "Apple", "modelo": "iPhone 13", "armazenamento_gb": 128, "condicao": "novo"}]}."""
 
 
-def chamar_llm(textos, modelo, formato_json=True, tempo=TEMPO_LLM):
+def chamar_llm(textos, modelo, formato_json=True, tempo=TEMPO_LLM, rapido=True):
     corpo = {
         "model": modelo,
         "temperature": 0,
@@ -370,6 +370,9 @@ def chamar_llm(textos, modelo, formato_json=True, tempo=TEMPO_LLM):
         corpo["response_format"] = {"type": "json_object"}
     if "gpt-oss" in modelo:
         corpo["reasoning_effort"] = "low"  # modelos com raciocínio (Groq): menos tokens e resposta mais rápida
+    elif rapido and "gemini" in modelo:
+        # No Gemini 3 o raciocínio não desliga; no nível mínimo, a classificação dos títulos sai bem mais rápido.
+        corpo["reasoning_effort"] = "minimal"
     return requests.post(
         f"{LLM_URL}/chat/completions",
         headers={"Authorization": f"Bearer {LLM_CHAVE}"},
@@ -408,7 +411,8 @@ def classificar_por_llm(textos, tempo=TEMPO_LLM):
                 break
             resposta = chamar_llm(textos, modelo, tempo=resta())
             if resposta.status_code == 400 and resta() >= 1.5:
-                resposta = chamar_llm(textos, modelo, formato_json=False, tempo=resta())
+                # Pedido recusado: repete sem o formato JSON e sem o nível de raciocínio, que nem todo modelo aceita.
+                resposta = chamar_llm(textos, modelo, formato_json=False, tempo=resta(), rapido=False)
             if resposta.status_code in ERROS_PASSAGEIROS or resposta.status_code == 404:
                 ultima = resposta
                 if resposta.status_code == 404:
