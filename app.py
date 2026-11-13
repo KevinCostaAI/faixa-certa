@@ -1039,6 +1039,7 @@ def escolher_opcoes(busca, alvo, itens, ofertas):
     if not rede_em(busca) and "5g" not in limpar(alvo["modelo"]).split() and tem_5g == {True, False}:
         versao = coluna_versao.radio("Versão", ["4g", "5g"], horizontal=True, key=f"faixa_rede_{chave}",
                                      format_func=lambda r: "5G" if r == "5g" else "4G (comum)")
+        escolhido["rede"] = versao
         if versao == "5g":
             escolhido.update(modelo=f"{alvo['modelo']} 5G", rede="5g")
     return escolhido
