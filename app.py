@@ -1440,6 +1440,43 @@ def resumo_da_avaliacao(resultado):
             "decisao": (decisao("llm"), decisao("regras"))}
 
 
+CAMPOS_DO_ROTULO = ["rotulo_tipo", "rotulo_marca", "rotulo_modelo", "rotulo_armazenamento", "rotulo_condicao",
+                    "rotulo_rede", "rotulo_defeito", "rotulo_decisao"]
+COLUNAS_DA_TABELA = {"n": "Nº", "titulo": "Título", "fonte": "Fonte", "url": "URL", "busca": "Busca de referência",
+                     "rotulo_tipo": "Tipo", "rotulo_marca": "Marca", "rotulo_modelo": "Modelo",
+                     "rotulo_armazenamento": "Armazenamento", "rotulo_condicao": "Condição", "rotulo_rede": "Rede",
+                     "rotulo_defeito": "Defeito anunciado", "rotulo_decisao": "Decisão", "rotulo_motivo": "Motivo da exclusão",
+                     "rotulo_observacao": "Observação"}
+
+
+def rotulo_completo(linha):
+    """Rótulo pronto: todos os campos preenchidos e, quando a decisão é excluir, o motivo."""
+    if any(not str(linha.get(campo, "")).strip() for campo in CAMPOS_DO_ROTULO):
+        return False
+    return not normalizar(linha["rotulo_decisao"]).startswith("excl") or bool(str(linha.get("rotulo_motivo", "")).strip())
+
+
+def mostrar_titulos(tabela):
+    """Os títulos com fonte, endereço do anúncio e busca de referência, e os rótulos como estão no arquivo."""
+    colunas = [c for c in COLUNAS_DA_TABELA if c in tabela.columns]
+    vista = tabela[colunas].copy()
+    config = {c: st.column_config.TextColumn(COLUNAS_DA_TABELA[c]) for c in colunas}
+    if "n" in vista:
+        vista["n"] = pd.to_numeric(vista["n"], errors="coerce")
+        config["n"] = st.column_config.NumberColumn("Nº", format="%d")
+    if "titulo" in vista:
+        config["titulo"] = st.column_config.TextColumn("Título", width="large")
+    if "url" in vista:
+        config["url"] = st.column_config.LinkColumn("URL", width="medium", display_text=r"https?://(?:www\.)?(.+)")
+    if "busca" in vista:
+        config["busca"] = st.column_config.TextColumn("Busca de referência", width="medium")
+    if "coletado_em" in tabela:
+        horas = sorted(h.strip() for h in tabela["coletado_em"] if h.strip())
+        if horas and horas[0][:10] == horas[-1][:10]:
+            st.caption(f"Coletados em {horas[0][:10]}, das {horas[0][11:16]} às {horas[-1][11:16]}.")
+    st.dataframe(vista, hide_index=True, column_config=config, height=35 * (len(vista) + 1) + 3)
+
+
 def mostrar_avaliacao():
     st.title("Faixa Certa: avaliação dos métodos")
     st.write("Os 50 títulos novos passam pelos dois métodos, cada um com a busca de referência do título, como no app. "
@@ -1455,7 +1492,14 @@ def mostrar_avaliacao():
         st.info("O arquivo com os 50 títulos novos e os rótulos ainda não foi publicado.")
         return
     tabela = pd.read_csv(arquivo, dtype=str, keep_default_na=False)
-    st.write(f"{len(tabela)} títulos em {tabela['busca'].nunique()} buscas de referência.")
+    faltam = sum(not rotulo_completo(linha) for linha in tabela.to_dict("records"))
+    st.subheader("Títulos e rótulos")
+    st.write(f"{len(tabela)} títulos em {tabela['busca'].nunique()} buscas de referência. Rótulos preenchidos: "
+             f"{len(tabela) - faltam} de {len(tabela)}. Os rótulos pendentes aparecem em branco.")
+    mostrar_titulos(tabela)
+    if faltam:
+        st.info(f"Os dois métodos só rodam quando os {len(tabela)} títulos estiverem rotulados. Faltam {faltam}.")
+        return
     erro = None
     if not LLM_CHAVE:
         st.warning("Sem chave de IA configurada: não dá para rodar o LLM.")
@@ -1492,7 +1536,7 @@ def buscar_como_digitado():
     st.session_state.update(sem_correcao=True, nova_busca=True)
 
 
-st.set_page_config(page_title="Faixa Certa")
+st.set_page_config(page_title="Faixa Certa", layout="wide" if st.query_params.get("avaliar") == "1" else "centered")
 if st.query_params.get("avaliar") == "1":
     mostrar_avaliacao()  # reprodução dos testes de extração; não aparece na tela de busca
     st.stop()
