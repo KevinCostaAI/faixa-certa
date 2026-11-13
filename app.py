@@ -22,7 +22,7 @@ from lxml import html
 USER_AGENT = "Mozilla/5.0 (compatible; FaixaCerta/1.0; +https://github.com/KevinCostaAI/faixa-certa)"
 ROBO = "FaixaCerta"
 TEMPO_LOJA = 10  # segundos de espera por loja
-TEMPO_LLM = 30  # segundos para classificar os títulos de uma busca
+TEMPO_LLM = 12  # segundos, no total, para o LLM classificar os títulos de uma busca; depois disso, o app segue por regras
 LOTE_LLM = 15  # títulos por chamada ao LLM; com mais títulos, as chamadas são feitas em paralelo
 CACHE_SEGUNDOS = 15 * 60  # o resultado de uma busca bem-sucedida é reutilizado por 15 minutos e depois apagado
 MINIMO_OFERTAS = 3  # abaixo disso, a faixa de preço não é exibida
@@ -221,6 +221,22 @@ ACESSORIO = re.compile(
 )
 
 
+# Aparelho com defeito, bloqueio ou função indisponível anunciados no título fica fora da faixa de aparelhos funcionais.
+# Vale para o LLM e para as regras. Termos como "desbloqueado", "livre de iCloud" e "garantia contra defeitos" não contam.
+DEFEITO = re.compile(
+    r"\bcom\s+defeitos?\b|\bdefeitos?\s+n[ao]s?\b|\bdefeituos[oa]s?\b|\bapresenta\s+defeito|\bavariad[oa]s?\b|"
+    r"\b(?:tela|vidro|traseira|camera)\s+(?:quebrad|trincad|rachad|queimad)[oa]s?\b|\b(?:quebrad|trincad|rachad)[oa]s?\b|"
+    r"\bmanchas?\s+na\s+tela\b|\bnao\s+(?:liga|funciona|carrega|reconhece)\b|\bsem\s+funcionar\b|"
+    r"\bsem\s+(?:face\s*id|touch\s*id|biometria)\b|\b(?:retirada|retirar)\s+(?:de\s+)?pecas\b|\bpara\s+pecas\b|\bsucata\b|"
+    r"\bbloquead[oa]s?\b|\bicloud\s+(?:bloqueado|ativo|vinculado)\b|\bcom\s+icloud\b|"
+    r"\bconta\s+google\s+(?:bloqueada|vinculada|ativa)\b|\bimei\s+bloqueado\b"
+)
+
+
+def defeito_anunciado(titulo):
+    return bool(DEFEITO.search(normalizar(re.sub(r"[^\w\s]", " ", titulo or ""))))
+
+
 # Linhas que muita gente omite ao digitar: todo Samsung é Galaxy ("samsung a56") e "motorola g06" é o Moto G06.
 LINHAS_IMPLICITAS = {"galaxy", "moto"}
 
@@ -381,16 +397,18 @@ ERROS_PASSAGEIROS = {429, 500, 502, 503, 504}
 
 
 def classificar_por_llm(textos, tempo=TEMPO_LLM):
-    """Tenta o modelo principal duas vezes e, se ele estiver sobrecarregado, o modelo reserva."""
+    """Tenta o modelo principal duas vezes e, se ele estiver sobrecarregado, o modelo reserva. Tudo cabe em `tempo`
+    segundos: cada chamada só usa o tempo que sobrou, e o que passar disso segue por regras."""
     inicio = time.monotonic()
+    resta = lambda: tempo - (time.monotonic() - inicio)
     ultima = None
     for modelo in dict.fromkeys([LLM_MODELO, LLM_MODELO_RESERVA]):
         for _ in range(2):
-            if time.monotonic() - inicio > tempo:
+            if resta() < 1.5:
                 break
-            resposta = chamar_llm(textos, modelo, tempo=tempo)
-            if resposta.status_code == 400:
-                resposta = chamar_llm(textos, modelo, formato_json=False, tempo=tempo)
+            resposta = chamar_llm(textos, modelo, tempo=resta())
+            if resposta.status_code == 400 and resta() >= 1.5:
+                resposta = chamar_llm(textos, modelo, formato_json=False, tempo=resta())
             if resposta.status_code in ERROS_PASSAGEIROS or resposta.status_code == 404:
                 ultima = resposta
                 if resposta.status_code == 404:
@@ -464,6 +482,8 @@ def mesmo_produto(alvo, item):
 def motivo_descarte(alvo, item, sem_rede=False):
     if not item["celular"]:
         return "acessório ou outro produto"
+    if item.get("defeito"):
+        return "defeito anunciado"
     if alvo.get("rede") and item.get("rede") and item["rede"] != alvo["rede"]:
         return f"outra versão ({item['rede'].upper()})"
     # Com 4G ou 5G na busca, a rede é conferida à parte, e o modelo é comparado sem ela.
@@ -547,9 +567,26 @@ def ler_comparelivre(conteudo, url):
             loja = f"{total} lojas" if total > 1 else "Loja não informada"
         elif total > 1:
             loja = f"{loja} e mais {total - 1}"
+        # O cartão do Compare Livre mostra só "a partir de", sem dizer se o preço é à vista ou parcelado.
         ofertas.append({"titulo": titulo, "preco": preco, "loja": loja, "fonte": "Compare Livre",
-                        "link": destino or pagina, "pagina": pagina})
+                        "link": destino or pagina, "pagina": pagina, "pagamento": "não informada"})
     return ofertas
+
+
+def preco_da_campanha(produto, agora=None):
+    """Preço de uma campanha da KaBuM! que está valendo para todos: é o preço que o site mostra no lugar do normal.
+    Campanha exclusiva de assinante (Prime) ou de cliente logado não conta, porque não vale para qualquer comprador."""
+    oferta = produto.get("offer")
+    if not isinstance(oferta, dict) or oferta.get("isPrimeExclusive") or oferta.get("isLoggedUserExclusive"):
+        return None
+    agora = time.time() if agora is None else agora
+    comeco, fim = numero(oferta.get("startsAt")), numero(oferta.get("endsAt"))
+    if (comeco and agora < comeco) or (fim and agora > fim) or numero(oferta.get("quantityAvailable")) == 0:
+        return None
+    preco = numero(oferta.get("priceWithDiscount"))
+    if not preco_valido(preco):
+        preco = numero(oferta.get("price"))
+    return preco if preco_valido(preco) else None
 
 
 def ler_kabum(conteudo, url):
@@ -575,13 +612,15 @@ def ler_kabum(conteudo, url):
                     continue
                 if atual.get("available") is False:
                     continue
-                preco = numero(atual.get("priceWithDiscount"))
+                # O site mostra "No PIX ou 10x de R$ ...": priceWithDiscount é o preço no Pix; price é o total em 10x.
+                # O preço Prime (primePrice) é de assinatura e não entra.
+                preco, pagamento = preco_da_campanha(atual) or numero(atual.get("priceWithDiscount")), "Pix"
                 if not preco_valido(preco):
-                    preco = numero(atual.get("price"))
+                    preco, pagamento = numero(atual.get("price")), "não informada"
                 if preco_valido(preco):
                     link = f"{KABUM}/produto/{atual['code']}/{atual.get('friendlyName') or ''}".rstrip("/")
                     ofertas.append({"titulo": atual["name"].strip(), "preco": preco, "loja": atual.get("sellerName") or "KaBuM!",
-                                    "fonte": "KaBuM!", "link": link, "pagina": link})
+                                    "fonte": "KaBuM!", "link": link, "pagina": link, "pagamento": pagamento})
     return ofertas
 
 
@@ -613,8 +652,9 @@ def ler_gazin(conteudo, url):
         if produto.get("status") != "AVAILABLE" or not produto.get("name") or not produto.get("url") or not preco_valido(preco):
             continue
         link = GAZIN + produto["url"]
+        # A Gazin mostra o preço "No Pix"; o parcelado tem total maior.
         ofertas.append({"titulo": produto["name"].strip(), "preco": preco, "loja": "Gazin", "fonte": "Gazin",
-                        "link": link, "pagina": link})
+                        "link": link, "pagina": link, "pagamento": "Pix"})
     return ofertas
 
 
@@ -636,8 +676,9 @@ def ler_novomundo(conteudo, url):
             if "OutOfStock" in str(oferta.get("availability", "")) or not produto.get("name") or not produto.get("url") or not preco_valido(preco):
                 continue
             link = urljoin(url, produto["url"])
+            # A Novo Mundo mostra o preço "Por" e parcela só com juros: o preço "Por" é o à vista.
             ofertas.append({"titulo": produto["name"].strip(), "preco": preco, "loja": "Novo Mundo", "fonte": "Novo Mundo",
-                            "link": link, "pagina": link})
+                            "link": link, "pagina": link, "pagamento": "à vista"})
     return ofertas
 
 
@@ -834,11 +875,12 @@ def sem_destino(linha):
 
 
 def tabela_de_ofertas(linhas, com_motivo=False):
-    colunas = ["Produto"] + (["Motivo"] if com_motivo else []) + ["Preço", "Loja", "Fonte", "Compra"]
+    colunas = ["Produto"] + (["Motivo"] if com_motivo else []) + ["Preço", "Pagamento", "Loja", "Fonte", "Compra"]
     tabela = ["| " + " | ".join(colunas) + " |", "|" + " --- |" * len(colunas)]
     for _, linha in linhas.iterrows():
         celulas = [escapar(linha["titulo"])] + ([escapar(linha["motivo"])] if com_motivo else [])
-        celulas += [escapar(reais(linha["preco"]).replace(" ", "\u00a0")), escapar(linha["loja"]),
+        celulas += [escapar(reais(linha["preco"]).replace(" ", "\u00a0")), escapar(linha.get("pagamento") or "não informada"),
+                    escapar(linha["loja"]),
                     f"[{escapar(linha['fonte'])}](<{endereco(linha['pagina'])}>)", f"[{'Ver no Compare Livre' if sem_destino(linha) else 'Ir à loja'}](<{endereco(linha['link'])}>)"]
         tabela.append("| " + " | ".join(celulas) + " |")
     st.markdown("\n".join(tabela))
@@ -901,7 +943,8 @@ def separar_ofertas(busca, ofertas, alvo, itens):
     # Marca e rede valem pelo que está escrito, com o LLM e com as regras: na busca e em cada título.
     # A versão escolhida na tela (5G) vale no lugar da escrita na busca.
     alvo = dict(alvo, marca=marca_em(busca) or alvo["marca"], rede=alvo.get("rede") or rede_em(busca))
-    itens = [dict(item, marca=marca_no_titulo(oferta["titulo"], alvo["marca"]), rede=rede_em(oferta["titulo"]))
+    itens = [dict(item, marca=marca_no_titulo(oferta["titulo"], alvo["marca"]), rede=rede_em(oferta["titulo"]),
+                  defeito=defeito_anunciado(oferta["titulo"]))
              for item, oferta in zip(itens, ofertas)]
     motivos = [motivo_descarte(alvo, item) for item in itens]
     if all(motivos) and not alvo["rede"] and chave_modelo(alvo["modelo"]) == chave_modelo(alvo["modelo"], sem_rede=True):
@@ -939,6 +982,22 @@ def escolher_opcoes(busca, alvo, itens, ofertas):
         if versao == "5g":
             escolhido.update(modelo=f"{alvo['modelo']} 5G", rede="5g")
     return escolhido
+
+
+def avisar_condicao(busca, alvo, descartadas):
+    """A faixa de aparelhos novos deixa de fora usados e recondicionados; o aviso diz quantos e como compará-los."""
+    if alvo["condicao"] != "novo" or descartadas.empty:
+        return
+    usados = int((descartadas["motivo"] == "produto usado").sum())
+    recondicionados = int((descartadas["motivo"] == "produto recondicionado").sum())
+    if not usados and not recondicionados:
+        return
+    partes = ([f"{usados} {'anúncio usado' if usados == 1 else 'anúncios usados'}"] if usados else []) + \
+             ([f"{recondicionados} {'recondicionado' if recondicionados == 1 else 'recondicionados'}"] if recondicionados else [])
+    condicao = "usado" if usados else "recondicionado"
+    verbo = "ficou" if usados + recondicionados == 1 else "ficaram"
+    st.caption(f"Esta faixa considera aparelhos novos. {' e '.join(partes).capitalize()} {verbo} de fora. "
+               f"Para {'compará-lo' if usados + recondicionados == 1 else 'compará-los'}, busque “{exibir(busca)} {condicao}”.")
 
 
 def mostrar_resultados(busca, coletas, mem):
@@ -988,6 +1047,7 @@ def mostrar_resultados(busca, coletas, mem):
             })
         st.write("A busca não informou o armazenamento. Faixa por armazenamento:")
         st.table(pd.DataFrame(resumo), hide_index=True)
+    avisar_condicao(busca, alvo, descartadas)
     if not iguais.empty:
         melhor = iguais.iloc[0]
         loja = re.sub(r" e mais \d+$", "", melhor["loja"])
@@ -1061,7 +1121,7 @@ def modelos_encontrados(ofertas):
     grupos = {}
     for oferta in ofertas:
         titulo = oferta["titulo"]
-        if ACESSORIO.search(limpar(titulo)) or ACESSORIO_NO_MEIO.search(limpar(titulo)):
+        if ACESSORIO.search(limpar(titulo)) or ACESSORIO_NO_MEIO.search(limpar(titulo)) or defeito_anunciado(titulo):
             continue
         marca, modelo = modelo_do_titulo(titulo)
         if not modelo:
@@ -1326,12 +1386,16 @@ if st.query_params.get("avaliar") == "1":
     mostrar_avaliacao()  # reprodução dos testes de extração; não aparece na tela de busca
     st.stop()
 st.title("Faixa Certa")
-st.write("Compara o preço de um smartphone em várias lojas, com preços buscados na hora.")
+st.write("Compara o preço de um smartphone em várias lojas.")
+st.caption("Preços à vista ou no Pix, sem frete; quando a loja não informa a forma de pagamento, a tabela avisa. "
+           "Os preços são coletados nas lojas na hora da busca, e uma busca repetida em até 15 minutos reaproveita o resultado.")
 st.caption(f"Extrator principal: {'LLM' if LLM_CHAVE else 'regras (sem chave de IA configurada)'}. Fontes: {', '.join(FONTES)}.")
 
 nova_busca = st.session_state.pop("nova_busca", False)
 with st.form("busca"):
     st.text_input("Qual celular você procura?", placeholder="Ex.: iphone 13 128gb", key="campo_busca")
+    st.caption("Sem indicação, a busca compara aparelhos novos. Para usados ou recondicionados, escreva “usado” ou "
+               "“recondicionado”, como em “iphone 13 128gb usado”.")
     if st.form_submit_button("Buscar", type="primary"):
         st.session_state.update(digitado=st.session_state.campo_busca, sem_correcao=False)
         nova_busca = True
