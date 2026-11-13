@@ -28,6 +28,7 @@ COPIAS_LLM = 3  # no máximo, pedidos iguais ao mesmo tempo para cada lote de t�
 LOTE_LLM = 15  # títulos por chamada ao LLM; com mais títulos, as chamadas são feitas em paralelo
 CACHE_SEGUNDOS = 15 * 60  # o resultado de uma busca bem-sucedida é reutilizado por 15 minutos e depois apagado
 MINIMO_OFERTAS = 3  # abaixo disso, a faixa de preço não é exibida
+PAGAMENTOS_DA_FAIXA = {"Pix", "à vista"}  # só entram na faixa ofertas com uma dessas formas de pagamento confirmada
 MAXIMO_POR_LOJA = 30
 FUSO = ZoneInfo("America/Fortaleza")
 COMPARELIVRE = os.environ.get("COMPARELIVRE_URL", "https://comparelivre.com.br").rstrip("/")
@@ -606,7 +607,8 @@ def ler_comparelivre(conteudo, url):
 
 
 def preco_da_campanha(produto, agora=None):
-    """Preço de uma campanha da KaBuM! que está valendo para todos: é o preço que o site mostra no lugar do normal.
+    """Preço e forma de pagamento de uma campanha da KaBuM! que está valendo para todos: é o preço que o site mostra
+    no lugar do normal. No cartão da campanha, priceWithDiscount aparece como preço "No PIX" e price como total em 10x.
     Campanha exclusiva de assinante (Prime) ou de cliente logado não conta, porque não vale para qualquer comprador."""
     oferta = produto.get("offer")
     if not isinstance(oferta, dict) or oferta.get("isPrimeExclusive") or oferta.get("isLoggedUserExclusive"):
@@ -615,10 +617,11 @@ def preco_da_campanha(produto, agora=None):
     comeco, fim = numero(oferta.get("startsAt")), numero(oferta.get("endsAt"))
     if (comeco and agora < comeco) or (fim and agora > fim) or numero(oferta.get("quantityAvailable")) == 0:
         return None
-    preco = numero(oferta.get("priceWithDiscount"))
-    if not preco_valido(preco):
-        preco = numero(oferta.get("price"))
-    return preco if preco_valido(preco) else None
+    if preco_valido(numero(oferta.get("priceWithDiscount"))):
+        return numero(oferta.get("priceWithDiscount")), "Pix"
+    if preco_valido(numero(oferta.get("price"))):
+        return numero(oferta.get("price")), "não informada"  # sem o preço no Pix, o total não confirma a forma de pagamento
+    return None
 
 
 def ler_kabum(conteudo, url):
@@ -644,9 +647,10 @@ def ler_kabum(conteudo, url):
                     continue
                 if atual.get("available") is False:
                     continue
-                # O site mostra "No PIX ou 10x de R$ ...": priceWithDiscount é o preço no Pix; price é o total em 10x.
-                # O preço Prime (primePrice) é de assinatura e não entra.
-                preco, pagamento = preco_da_campanha(atual) or numero(atual.get("priceWithDiscount")), "Pix"
+                # O cartão mostra "R$ ... No PIX ou 10x de R$ ...": priceWithDiscount é o preço no Pix; price é o total
+                # em 10x. Sem o preço no Pix, o total entra como forma de pagamento não informada. O preço Prime
+                # (primePrice) é de assinatura e não entra.
+                preco, pagamento = preco_da_campanha(atual) or (numero(atual.get("priceWithDiscount")), "Pix")
                 if not preco_valido(preco):
                     preco, pagamento = numero(atual.get("price")), "não informada"
                 if preco_valido(preco):
@@ -708,9 +712,9 @@ def ler_novomundo(conteudo, url):
             if "OutOfStock" in str(oferta.get("availability", "")) or not produto.get("name") or not produto.get("url") or not preco_valido(preco):
                 continue
             link = urljoin(url, produto["url"])
-            # A Novo Mundo mostra o preço "Por" e parcela só com juros: o preço "Por" é o à vista.
+            # A Novo Mundo mostra o preço "Por" e parcela com juros, sem dizer se o "Por" é à vista: pagamento não informado.
             ofertas.append({"titulo": produto["name"].strip(), "preco": preco, "loja": "Novo Mundo", "fonte": "Novo Mundo",
-                            "link": link, "pagina": link, "pagamento": "à vista"})
+                            "link": link, "pagina": link, "pagamento": "não informada"})
     return ofertas
 
 
@@ -877,7 +881,7 @@ def descrever(alvo):
 def mostrar_faixa(linhas):
     if len(linhas) < MINIMO_OFERTAS:
         st.warning(
-            f"Poucas ofertas equivalentes: encontrei {len(linhas)}. "
+            f"Poucas ofertas equivalentes com pagamento à vista ou no Pix confirmado: encontrei {len(linhas)}. "
             f"A faixa de preço só é exibida com pelo menos {MINIMO_OFERTAS} ofertas."
         )
         return
@@ -887,7 +891,7 @@ def mostrar_faixa(linhas):
     maior.metric("Maior preço", reais(linhas["preco"].max()))
     por_fonte = " · ".join(f"{fonte}: {total}" for fonte, total in linhas["fonte"].value_counts().items())
     st.caption(
-        f"Baseada em {len(linhas)} ofertas equivalentes ({por_fonte}). "
+        f"Baseada em {len(linhas)} ofertas equivalentes com pagamento à vista ou no Pix ({por_fonte}). "
         "É uma referência para comparação, não um preço recomendado."
     )
 
@@ -942,16 +946,25 @@ def titulo_sem_cor(titulo):
     return " ".join(p for p in limpar(titulo).split() if p not in CORES)
 
 
+def pagamento_confirmado(linhas):
+    if "pagamento" not in linhas:
+        return pd.Series(False, index=linhas.index)  # oferta sem forma de pagamento registrada conta como não informada
+    return linhas["pagamento"].isin(PAGAMENTOS_DA_FAIXA)
+
+
 def marcar_repetidas(linhas):
     """Cada oferta conta uma vez na faixa e no mínimo de ofertas:
     1) o mesmo anúncio achado duas vezes (ex.: pelo Compare Livre e na própria KaBuM!) fica só com a versão da loja;
     2) o mesmo título, sem contar a cor, na mesma loja, com o mesmo preço e armazenamento, é a mesma oferta.
+    Entre repetidas, fica a que tem pagamento à vista ou no Pix confirmado.
     Anúncios de títulos diferentes continuam separados, mesmo com loja e preço iguais."""
     validas = linhas[linhas["motivo"].isna()]
-    loja_primeiro = validas.assign(indireto=validas["link"] != validas["pagina"]).sort_values("indireto", kind="stable")
+    loja_primeiro = validas.assign(sem_pagamento=~pagamento_confirmado(validas), indireto=validas["link"] != validas["pagina"]) \
+                          .sort_values(["sem_pagamento", "indireto"], kind="stable")
     repetidas = loja_primeiro["link"].map(chave_do_anuncio).duplicated()
     linhas.loc[repetidas[repetidas].index, "motivo"] = "mesmo anúncio já contado"
     validas = linhas[linhas["motivo"].isna()]
+    validas = validas.loc[(~pagamento_confirmado(validas)).sort_values(kind="stable").index]
     chave = pd.DataFrame({"loja": validas["loja"].map(lambda nome: re.sub(r"[^a-z0-9]", "", normalizar(nome))),
                           "preco": validas["preco"], "gb": validas["armazenamento_gb"].fillna(0),
                           "titulo": validas["titulo"].map(titulo_sem_cor)})
@@ -960,10 +973,12 @@ def marcar_repetidas(linhas):
 
 
 def marcar_fora_do_padrao(linhas):
-    """Descarta preços com menos da metade ou mais do dobro da mediana do grupo (kits, defeitos, erros)."""
+    """Descarta preços com menos da metade ou mais do dobro da mediana do grupo (kits, defeitos, erros). Só as ofertas
+    com pagamento à vista ou no Pix confirmado entram na conta e no filtro: preço de pagamento desconhecido não mexe nele."""
     grupos = linhas["armazenamento_gb"].fillna(0).astype(int)
-    for gb in grupos[linhas["motivo"].isna()].unique():
-        grupo = linhas["motivo"].isna() & (grupos == gb)
+    contam = linhas["motivo"].isna() & pagamento_confirmado(linhas)
+    for gb in grupos[contam].unique():
+        grupo = contam & (grupos == gb)
         if grupo.sum() >= MINIMO_OFERTAS:
             mediana = linhas.loc[grupo, "preco"].median()
             fora = grupo & ((linhas["preco"] < mediana * 0.5) | (linhas["preco"] > mediana * 2))
@@ -1062,11 +1077,16 @@ def mostrar_resultados(busca, coletas, mem):
     st.caption(f"Ofertas comparadas por **{origem}**.")
     alvo = escolher_opcoes(busca, alvo, itens, ofertas)
     linhas, alvo = separar_ofertas(busca, ofertas, alvo, itens)
-    iguais = linhas[linhas["motivo"].isna()].sort_values("preco")
+    # Só ofertas equivalentes com pagamento à vista ou no Pix confirmado entram na faixa e no destaque da mais barata;
+    # as de pagamento não informado ficam à parte, para consulta.
+    equivalentes = linhas[linhas["motivo"].isna()]
+    iguais = equivalentes[pagamento_confirmado(equivalentes)].sort_values("preco")
+    sem_pagamento = equivalentes[~pagamento_confirmado(equivalentes)].sort_values("preco")
     descartadas = linhas[linhas["motivo"].notna()].sort_values("preco")
     st.subheader(f"Faixa de preço: {descrever(alvo)}")
     if alvo["armazenamento_gb"] or iguais.empty:
         mostrar_faixa(iguais)
+        na_faixa = iguais if len(iguais) >= MINIMO_OFERTAS else iguais.iloc[0:0]
     else:
         resumo = []
         for gb, grupo in iguais.groupby(iguais["armazenamento_gb"].fillna(0).astype(int)):
@@ -1077,17 +1097,24 @@ def mostrar_resultados(busca, coletas, mem):
                 "Mediana": reais(statistics.median(grupo["preco"])) if len(grupo) >= MINIMO_OFERTAS else "",
                 "Maior": reais(grupo["preco"].max()) if len(grupo) >= MINIMO_OFERTAS else "",
             })
-        st.write("A busca não informou o armazenamento. Faixa por armazenamento:")
+        st.write("A busca não informou o armazenamento. Faixa por armazenamento, com as ofertas de pagamento à vista ou no Pix:")
         st.table(pd.DataFrame(resumo), hide_index=True)
+        tamanhos = iguais.groupby(iguais["armazenamento_gb"].fillna(0).astype(int))["preco"].transform("size")
+        na_faixa = iguais[tamanhos >= MINIMO_OFERTAS]
     avisar_condicao(busca, alvo, descartadas)
-    if not iguais.empty:
-        melhor = iguais.iloc[0]
+    if not na_faixa.empty:
+        melhor = na_faixa.iloc[0]
         loja = re.sub(r" e mais \d+$", "", melhor["loja"])
         st.markdown(f"**Oferta mais barata:** {escapar(melhor['titulo'])}, por **{escapar(reais(melhor['preco']))}** ({escapar(loja)}).")
         st.link_button("Ver a oferta no Compare Livre" if sem_destino(melhor) else "Ir para a compra",
                        endereco(melhor["link"]), type="primary")
-        st.subheader("Ofertas equivalentes")
+    if not iguais.empty:
+        st.subheader("Ofertas equivalentes à vista ou no Pix")
         tabela_de_ofertas(iguais)
+    if not sem_pagamento.empty:
+        st.subheader("Fora da faixa: pagamento não informado")
+        st.caption("Ofertas equivalentes em que a loja não informa se o preço é à vista ou parcelado. Ficam aqui para consulta.")
+        tabela_de_ofertas(sem_pagamento)
     with st.expander(f"Ofertas descartadas ({len(descartadas)})"):
         if descartadas.empty:
             st.write("Nenhuma oferta foi descartada.")
@@ -1419,8 +1446,9 @@ if st.query_params.get("avaliar") == "1":
     st.stop()
 st.title("Faixa Certa")
 st.write("Compara o preço de um smartphone em várias lojas.")
-st.caption("Preços à vista ou no Pix, sem frete; quando a loja não informa a forma de pagamento, a tabela avisa. "
-           "Os preços são coletados nas lojas na hora da busca, e uma busca repetida em até 15 minutos reaproveita o resultado.")
+st.caption("A faixa usa só preços à vista ou no Pix confirmados pela loja, sem frete; ofertas sem forma de pagamento informada "
+           "aparecem à parte. Os preços são coletados nas lojas na hora da busca, e uma busca repetida em até 15 minutos "
+           "reaproveita o resultado.")
 st.caption(f"Extrator principal: {'LLM' if LLM_CHAVE else 'regras (sem chave de IA configurada)'}. Fontes: {', '.join(FONTES)}.")
 
 nova_busca = st.session_state.pop("nova_busca", False)
