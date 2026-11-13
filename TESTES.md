@@ -18,7 +18,7 @@ Com o filtro de acessórios, a diferença entre o LLM e as regras cai para 2 pon
 
 O LLM rodou no app publicado em 10/11/2026, às 14:04, e levou 25,6 s. Respondeu o modelo reserva, `gemini-3.5-flash-lite`, porque o principal, `gemini-3.1-flash-lite`, não respondeu naquele momento. As instruções e os lotes de 15 títulos são os mesmos da busca.
 
-Para refazer, abra <https://faixa-certa.streamlit.app/?avaliar=1> e clique em "Rodar o LLM nos 50 títulos". A página mostra a versão do código e o modelo usado e baixa a mesma planilha, sem as colunas `regras_filtro_*`.
+Este teste de desenvolvimento não é mais refeito pelo app. Desde 13/11/2026, a página de avaliação (`?avaliar=1`) roda a avaliação independente prevista no protocolo, com 50 títulos novos, as regras do próprio app e o LLM da busca. Esta planilha fica como registro do desenvolvimento.
 
 Colunas: `esperado_*` é o rótulo; `regras_*` é a saída do extrator por regras; `llm_modelo_resposta` é o texto devolvido pelo LLM, e `llm_modelo` é esse modelo na grafia da base de teste (vazio quando é outro modelo); `llm_celular` é falso para acessórios; `regras_filtro_*` é a saída das regras com o filtro de acessórios.
 

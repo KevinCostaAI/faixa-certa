@@ -351,13 +351,15 @@ def classificar_por_regras(busca, titulos):
 
 INSTRUCOES_LOTE = """Você classifica smartphones a partir de textos de lojas.
 O primeiro texto é a busca do usuário e os demais são títulos de anúncios.
-Para cada texto, na mesma ordem, devolva celular, marca, modelo, armazenamento_gb e condicao.
+Para cada texto, na mesma ordem, devolva celular, marca, modelo, armazenamento_gb, condicao, rede e defeito.
 - celular: false para acessórios (capa, película, carregador, cabo, fone, suporte), peças, kits sem o aparelho ou produtos que não são smartphones; true nos demais casos e sempre na busca.
 - marca: fabricante, como Apple, Samsung, Motorola ou Xiaomi, ou null.
 - modelo: nome do modelo sem a marca e sem armazenamento, cor ou memória RAM, por exemplo "iPhone 13", "Galaxy A17 5G", "Moto G06" ou "Redmi 15C". Use exatamente a mesma grafia para o mesmo modelo. Inclua Pro, Max, Plus, Ultra, Lite, FE, 5G ou letras como e e C somente quando fizerem parte do nome. Use null se não houver modelo.
 - armazenamento_gb: armazenamento interno em GB (1 TB = 1000), ou null. Não confunda com memória RAM.
 - condicao: novo, usado ou recondicionado. Sem indicação, novo.
-Responda somente com JSON no formato {"itens": [{"celular": true, "marca": "Apple", "modelo": "iPhone 13", "armazenamento_gb": 128, "condicao": "novo"}]}."""
+- rede: "4G" ou "5G" quando o texto disser, ou null. Não deduza a rede pelo modelo.
+- defeito: true quando o texto anunciar defeito, bloqueio (iCloud, conta Google, IMEI) ou função que não funciona, como tela quebrada, não liga ou retirada de peças; false nos demais casos e sempre na busca.
+Responda somente com JSON no formato {"itens": [{"celular": true, "marca": "Apple", "modelo": "iPhone 13", "armazenamento_gb": 128, "condicao": "novo", "rede": null, "defeito": false}]}."""
 
 
 def chamar_llm(textos, modelo, formato_json=True, tempo=TEMPO_LLM, rapido=True):
@@ -422,6 +424,10 @@ def limpar_item(item):
         "modelo": modelo if isinstance(modelo, str) and modelo.strip() else None,
         "armazenamento_gb": armazenamento,
         "condicao": item.get("condicao") if item.get("condicao") in CONDICOES else "novo",
+        # Rede e defeito lidos pelo LLM: o defeito também tira a oferta da faixa; a rede só entra na avaliação
+        # dos métodos, porque na faixa vale a rede escrita no título.
+        "rede_llm": rede_em(str(item.get("rede") or "")),
+        "defeito_llm": item.get("defeito") is True,
     }
 
 
@@ -985,19 +991,26 @@ def marcar_fora_do_padrao(linhas):
             linhas.loc[fora, "motivo"] = "preço fora do padrão (menos da metade ou mais do dobro da mediana)"
 
 
-def separar_ofertas(busca, ofertas, alvo, itens):
-    """Decide, oferta por oferta, se ela entra na faixa ou por que fica de fora (coluna "motivo")."""
-    # Marca e rede valem pelo que está escrito, com o LLM e com as regras: na busca e em cada título.
-    # A versão escolhida na tela (5G) vale no lugar da escrita na busca.
+def motivos_da_busca(busca, alvo, itens, titulos):
+    """Motivo de cada título ficar de fora da busca (None quando é oferta equivalente), antes dos filtros de preço.
+    Marca e rede valem pelo que está escrito, com o LLM e com as regras: na busca e em cada título.
+    A versão escolhida na tela (5G) vale no lugar da escrita na busca. O defeito vale pelas regras e, com o LLM,
+    também pelo que ele leu."""
     alvo = dict(alvo, marca=marca_em(busca) or alvo["marca"], rede=alvo.get("rede") or rede_em(busca))
-    itens = [dict(item, marca=marca_no_titulo(oferta["titulo"], alvo["marca"]), rede=rede_em(oferta["titulo"]),
-                  defeito=defeito_anunciado(oferta["titulo"]))
-             for item, oferta in zip(itens, ofertas)]
+    itens = [dict(item, marca=marca_no_titulo(titulo, alvo["marca"]), rede=rede_em(titulo),
+                  defeito=defeito_anunciado(titulo) or bool(item.get("defeito_llm")))
+             for item, titulo in zip(itens, titulos)]
     motivos = [motivo_descarte(alvo, item) for item in itens]
     if all(motivos) and not alvo["rede"] and chave_modelo(alvo["modelo"]) == chave_modelo(alvo["modelo"], sem_rede=True):
         # Nenhuma oferta com o mesmo nome e a busca não falou em 4G/5G: aceita a versão 4G ou 5G do modelo
         # (ex.: quem busca "samsung a56" encontra o Galaxy A56 5G, que só existe em 5G).
         motivos = [motivo_descarte(alvo, item, sem_rede=True) for item in itens]
+    return alvo, itens, motivos
+
+
+def separar_ofertas(busca, ofertas, alvo, itens):
+    """Decide, oferta por oferta, se ela entra na faixa ou por que fica de fora (coluna "motivo")."""
+    alvo, itens, motivos = motivos_da_busca(busca, alvo, itens, [oferta["titulo"] for oferta in ofertas])
     linhas = pd.DataFrame(ofertas)
     linhas["motivo"] = motivos
     linhas["armazenamento_gb"] = [item["armazenamento_gb"] for item in itens]
@@ -1270,113 +1283,15 @@ def mostrar_opcoes(busca):
                "o celular, só com ofertas equivalentes.")
 
 
-# Reprodução do teste de extração (abre só pelo endereço ?avaliar=1; não aparece na tela de busca)
-# 50 títulos de anúncios lidos em 09/11/2026, rotulados um a um: modelo (None quando não é um dos 14 modelos
-# da base de teste ou é acessório), armazenamento em GB e condição. O extrator por regras é o ponto de comparação
-# do LLM: expressões regulares escritas para os 14 modelos da base de teste.
+# Avaliação dos métodos (abre só pelo endereço ?avaliar=1; não aparece na tela de busca)
+# Os 50 títulos novos ficam no arquivo avaliacao_50_titulos.csv, ao lado do app, com a busca de referência, os rótulos
+# definidos só pelo título e o que a página do anúncio confirma. Os dois métodos recebem só o título e a busca de
+# referência, como no app. O LLM é o da busca (mesmas instruções, modelos e lotes). As regras são as funções do app:
+# filtro de acessórios, marca e modelo lidos no título (os mesmos da tela de escolha), armazenamento, condição, rede e
+# defeito. A decisão de aceitar ou excluir é a da tela de resultado, antes dos filtros de preço.
 
-MODELOS_TESTE = {
-    "iPhone 11": "Apple", "iPhone 13": "Apple", "iPhone 14": "Apple", "iPhone 15": "Apple", "iPhone 16": "Apple",
-    "Galaxy A17": "Samsung", "Galaxy A17 5G": "Samsung",
-    "Moto G06": "Motorola", "Edge 60 Fusion": "Motorola", "Edge 60 Pro": "Motorola", "Edge 70 Fusion": "Motorola", "Edge 70": "Motorola",
-    "Redmi 15C": "Xiaomi", "Redmi 15C 5G": "Xiaomi",
-}
-ARMAZENAMENTOS_TESTE = [64, 128, 256, 512, 1000]
-
-
-def modelo_por_regras(t):
-    iphone = re.search(r"\biphone\s*(11|13|14|15|16)\b(?!\s*(?:pro|plus|max|mini|e)\b)", t)
-    if iphone:
-        return f"iPhone {iphone[1]}"
-    if re.search(r"\b(?:galaxy\s*)?a17\b", t):
-        return "Galaxy A17 5G" if re.search(r"\b5g\b", t) else "Galaxy A17"
-    if re.search(r"\bmoto\s*g\s*06\b|\bmotorola\s*g\s*06\b", t):
-        return "Moto G06"
-    if re.search(r"\bredmi\s*15\s*c\b", t):
-        return "Redmi 15C 5G" if re.search(r"\b5g\b", t) else "Redmi 15C"
-    edge = re.search(r"\bedge\s*(60|70)(?:\s+(fusion|pro))?\b", t)
-    if edge:
-        if edge[2]:
-            nome = f"Edge {edge[1]} {edge[2].capitalize()}"
-            return nome if nome in MODELOS_TESTE else None
-        return "Edge 70" if edge[1] == "70" else None
-    return None
-
-
-def armazenamento_por_regras(t):
-    valores = set()
-    for numero, unidade in re.findall(r"(?<![\d.,])(\d{1,4})\s*(gb|tb)\b", t):
-        valor = int(numero) * (1000 if unidade == "tb" else 1)
-        if valor in ARMAZENAMENTOS_TESTE:
-            valores.add(valor)
-    return valores.pop() if len(valores) == 1 else None
-
-
-def extrair_por_regras(titulo):
-    t = normalizar(titulo)
-    modelo = modelo_por_regras(t)
-    return {"marca": MODELOS_TESTE.get(modelo), "modelo": modelo, "armazenamento_gb": armazenamento_por_regras(t), "condicao": condicao_por_regras(t)}
-
-
-TITULOS_TESTE = [
-    ('Apple iPhone 17e 256gb rosa rosa', None, 256, 'novo'),
-    ('Apple iPhone 16 (256 GB) - Preto', 'iPhone 16', 256, 'novo'),
-    ('Apple iPhone 15 (256 GB) - Azul', 'iPhone 15', 256, 'novo'),
-    ('Apple iPhone 16 (256 GB) - Branco', 'iPhone 16', 256, 'novo'),
-    ('Apple iPhone 15 256GB Preto', 'iPhone 15', 256, 'novo'),
-    ('Apple iPhone 16 (256 GB) - Rosa', 'iPhone 16', 256, 'novo'),
-    ('Apple iPhone 16 256GB Branco', 'iPhone 16', 256, 'novo'),
-    ('Apple iPhone 16 Pro Max (256 GB) - Titânio branco', None, 256, 'novo'),
-    ('Apple iPhone 16 256GB Ultramarino', 'iPhone 16', 256, 'novo'),
-    ('Apple iPhone 16 Pro Max (256 GB) - Titânio-preto', None, 256, 'novo'),
-    ('Apple iPhone 16 Pro (somente Esim) (256 Gb) - preto titânio', None, 256, 'novo'),
-    ('Apple iPhone 16 Pro Max (256 GB) - Titânio-deserto', None, 256, 'novo'),
-    ('iPhone 18 Pro Max 256GB Bordô', None, 256, 'novo'),
-    ('Apple iPhone 16 Pro Max (somente Esim) (256 Gb) - preto titânio', None, 256, 'novo'),
-    ('iPhone 17 Pro Max 256 GB - Azul-profundo - somente eSIM', None, 256, 'novo'),
-    ('iPhone 18 Pro de 256 GB — Preto', None, 256, 'novo'),
-    ('iPhone 18 Pro de 256 GB — Bordô', None, 256, 'novo'),
-    ('iPhone 18 Pro de 256 GB — Prateado', None, 256, 'novo'),
-    ('iPhone 18 Pro de 256 GB — Glacial', None, 256, 'novo'),
-    ('iPhone 17 Pro Max 256 GB - Prateado - somente eSIM', None, 256, 'novo'),
-    ('iPhone 18 Pro Max 256GB Preto', None, 256, 'novo'),
-    ('iPhone Duo de 256 GB — Branco-estrela', None, 256, 'novo'),
-    ('iPhone Duo de 256 GB — Céu noturno', None, 256, 'novo'),
-    ('Smartphone Samsung Galaxy A17 com IA 256GB 8GB RAM Câmera de 50MP Tela de 6.7 NFC IP54 - Cinza', 'Galaxy A17', 256, 'novo'),
-    ('Smartphone Samsung Galaxy A17 5G 256GB 8GB RAM - Cinza', 'Galaxy A17 5G', 256, 'novo'),
-    ('Smartphone Samsung Galaxy A17 4g Tela 6.7 256gb Câmera Tri Cinza', 'Galaxy A17', 256, 'novo'),
-    ('Smartphone Samsung Galaxy A17 5g A17 256gb - Cinza Cinza', 'Galaxy A17 5G', 256, 'novo'),
-    ('Smartphone Samsung Galaxy A17 4G 6.7 256GB 8GB Câmera Tripla', 'Galaxy A17', 256, 'novo'),
-    ('Smartphone Xiaomi Redmi 15C 4GB + 128GB – Tela 6.9" Dual SIM LTE, Desempenho e Estilo Moderno', 'Redmi 15C', 128, 'novo'),
-    ('Celular Xiaomi Redmi 15c 128gb 8gb Ram Dual Sim Azul Azul', 'Redmi 15C', 128, 'novo'),
-    ('Smartphone Xiaomi Redmi 15C 4G 128GB 4GB RAM + 4GB Memoria Virtual 50MP 8MP Preto Verde Azul', 'Redmi 15C', 128, 'novo'),
-    ('Smartphone Xiaomi Redmi 15C de 128 GB com 6 GB de RAM, Verde Menta', 'Redmi 15C', 128, 'novo'),
-    ('Câmera Redmi 15c 6+6 128 Gb Azul Azul', 'Redmi 15C', 128, 'novo'),
-    ('Smartphone Motorola Moto G06 - 64GB 4GB RAM + 8GB Ram Boost, Camera 50MP com AI, Bateria de 5200 mAh e Tela 6.9" - Bege', 'Moto G06', 64, 'novo'),
-    ('Smartphone Motorola Moto G06 - 64GB 4GB RAM + 8GB Ram Boost, Camera 50MP com AI, Bateria de 5200 mAh e Tela 6.9" - Verde', 'Moto G06', 64, 'novo'),
-    ('Smartphone Motorola Moto G06 - 64GB 4GB RAM + 8GB Ram Boost, Camera 50MP com AI, Bateria de 5200 mAh e Tela 6.9" - Azul Marinho', 'Moto G06', 64, 'novo'),
-    ('Smartphone Motorola Moto G06 - 64GB 4GB RAM + 8GB Ram Boost, Camera 50MP com AI, Bateria de 5200 mAh e Tela 6.9" - Laranja', 'Moto G06', 64, 'novo'),
-    ('Capinha Para Motorola Moto Edge 70 60 40 50 Fusion Plus Pro Neo 5G De Capa 5594 TYB', None, None, 'novo'),
-    ('Capinha Para Motorola Moto Edge 70 60 40 50 Fusion Plus Pro Neo 5G Capa Preto Macia Silicone Case TYB 7597', None, None, 'novo'),
-    ('Capinha Para Motorola Moto Edge 70 60 40 50 Fusion Plus Pro Neo 5G De Capa 7204 TYB', None, None, 'novo'),
-    ('Capinha de Silicone Preta Para Motorola Moto Edge 70 60 40 50 Fusion Plus Pro Neo 5G Capa de Celular Macia TY7619', None, None, 'novo'),
-    ('Motorola Edge 70 Fusion Capa De Telefone Para Ultra 60 Pro Stylus 5G 4G Traseira À Prova De Choque', None, None, 'novo'),
-    ('Capinha Para Motorola Moto Edge 70 Fusion Plus 5G Capa De Silicone Macia Estilo Simples Macaron Case 0388', None, None, 'novo'),
-    ('Capinha Para Motorola Moto Edge 70 60 40 50 Fusion Plus Pro Neo 5G Capa De Silicone Anti-impacto Macia Case MKL0562', None, None, 'novo'),
-    ('Capinha Para Motorola Moto Edge 70 60 40 50 Fusion Plus Pro Neo 5G Capa De Silicone Case MKL0325', None, None, 'novo'),
-    ('Película Protetora Hidrogel  TPU Motorola Moto Linha Edge 70 60 50 40 30 20 Pro+ Pro Fusion Plus S Neo', None, None, 'novo'),
-    ('Capinha Para Motorola Moto Edge 70 60 40 50 Fusion Plus Pro Neo 5G Capa Anti Impacto Transparente Macia Case FS1269', None, None, 'novo'),
-    ('Para Motorola edge 70 fusion + 60 g100 pro g86 power g57 60s stylus 50 ultra Fusão', None, None, 'novo'),
-    ('Capa Armadura À Prova De Choque Para Motorola G17 G37 G47 G57 G67 G77 G56 G86 Edge 70 60 50 40 Fusion Protetor De Câmera', None, None, 'novo'),
-    ('Para Motorola Edge 60 70 Fusion Moto G67 G77 G17 G37 G47 G06 G56 G86 G75 Caso De Telefone Armadura Câmera Proteção Capa', None, None, 'novo'),
-]
-
-
-def rotulo_do_llm(item):
-    """Resposta do LLM no formato do rótulo: modelo com a grafia da base de teste (None se for outro), GB e condição."""
-    chaves = {chave_modelo(m): m for m in MODELOS_TESTE}
-    modelo = chaves.get(chave_modelo(item["modelo"])) if item["celular"] and item["modelo"] else None
-    return modelo, item["armazenamento_gb"], item["condicao"]
+ARQUIVO_AVALIACAO = "avaliacao_50_titulos.csv"  # na mesma pasta do app.py
+DIFERENCA_MINIMA = 10  # pontos percentuais que o LLM precisa ganhar das regras para continuar como método principal
 
 
 def versao_do_codigo():
@@ -1387,52 +1302,188 @@ def versao_do_codigo():
         return "desconhecida"
 
 
-def mostrar_avaliacao():
-    st.title("Faixa Certa: teste de extração")
-    st.write("Os 50 títulos rotulados passam pelo extrator por regras e, com o botão, pelo LLM. Um título conta como "
-             "acerto quando modelo, armazenamento e condição batem com o rótulo.")
-    erro = None
-    if LLM_CHAVE and st.button("Rodar o LLM nos 50 títulos", type="primary"):
-        inicio = time.perf_counter()
+def versao_do_prompt():
+    return hashlib.sha256(INSTRUCOES_LOTE.encode("utf-8")).hexdigest()[:12]
+
+
+def rotulo_tipo(valor):
+    return "celular" if normalizar(valor).startswith("celular") else "outro"
+
+
+def rotulo_gb(valor):
+    numero = re.search(r"\d+", normalizar(valor))
+    return None if not numero else int(numero[0]) * (1000 if "tb" in normalizar(valor) else 1)
+
+
+def rotulo_condicao(valor):
+    return condicao_por_regras(normalizar(valor)) if normalizar(valor) not in ("", "nao se aplica") else "novo"
+
+
+def extracao_das_regras(titulo):
+    texto = limpar(titulo)
+    marca, modelo = modelo_do_titulo(titulo)
+    return {"tipo": "outro" if ACESSORIO.search(texto) or ACESSORIO_NO_MEIO.search(texto) else "celular",
+            "marca": marca, "modelo": modelo, "armazenamento": armazenamento_em(titulo), "condicao": condicao_em(titulo),
+            "rede": rede_em(titulo), "defeito": defeito_anunciado(titulo)}
+
+
+def extracao_do_llm(item):
+    return {"tipo": "celular" if item["celular"] else "outro", "marca": item["marca"], "modelo": item["modelo"],
+            "armazenamento": item["armazenamento_gb"], "condicao": item["condicao"], "rede": item.get("rede_llm"),
+            "defeito": item.get("defeito_llm")}
+
+
+def conferir_extracao(rotulo, saida):
+    """Acerto de cada campo pelos critérios do protocolo: sem diferença de maiúsculas, acentos, marca escrita junto do
+    modelo e 4G; o 5G é cobrado na rede, não no nome do modelo. Em acessório ou outro produto, só o tipo é cobrado."""
+    certo = {
+        "tipo": rotulo_tipo(rotulo["rotulo_tipo"]) == saida["tipo"],
+        "marca": chave_marca(rotulo["rotulo_marca"] if normalizar(rotulo["rotulo_marca"]) not in ("nao informado", "nao se aplica") else "")
+                 == chave_marca(saida["marca"]),
+        "modelo": chave_modelo(rotulo["rotulo_modelo"] if normalizar(rotulo["rotulo_modelo"]) not in ("nao informado", "nao se aplica") else "", sem_rede=True)
+                  == chave_modelo(saida["modelo"], sem_rede=True),
+        "armazenamento": rotulo_gb(rotulo["rotulo_armazenamento"]) == saida["armazenamento"],
+        "condicao": rotulo_condicao(rotulo["rotulo_condicao"]) == saida["condicao"],
+        "rede": rede_em(rotulo["rotulo_rede"]) == saida["rede"],
+        "defeito": normalizar(rotulo["rotulo_defeito"]).startswith("s") == bool(saida["defeito"]),
+    }
+    celular = rotulo_tipo(rotulo["rotulo_tipo"]) == "celular"
+    certo["titulo"] = certo["tipo"] and (not celular or (certo["modelo"] and certo["armazenamento"] and certo["condicao"]))
+    return certo
+
+
+def decidir_grupo(busca, titulos, alvo, itens):
+    """Decisão da tela de resultado: só os títulos que citam o modelo da busca vão para a comparação; os outros ficam
+    como outro modelo, como no app."""
+    vazio = {"celular": True, "marca": None, "modelo": None, "armazenamento_gb": None, "condicao": "novo"}
+    if not alvo.get("modelo"):
+        return ["busca sem modelo reconhecido"] * len(titulos)
+    itens = [item if menciona_o_modelo(titulo, busca) else dict(vazio) for item, titulo in zip(itens, titulos)]
+    return motivos_da_busca(busca, alvo, itens, titulos)[2]
+
+
+def resultado_da_decisao(motivo, linha):
+    """Acerto, erro ou inconclusiva. Oferta aceita só é acerto se a página confirmar os atributos exigidos pela busca;
+    se a página contradisser, é erro; se não informar, é inconclusiva."""
+    aceitou, rotulo_aceita = motivo is None, normalizar(linha["rotulo_decisao"]).startswith("aceit")
+    if aceitou != rotulo_aceita:
+        return "erro"
+    if not aceitou:
+        return "acerto"
+    pagina = normalizar(linha["pagina_confirma"])
+    return "acerto" if pagina.startswith("sim") else "erro" if pagina.startswith("nao confirma") or pagina == "nao" else "inconclusiva"
+
+
+def avaliar_metodos(tabela, classificar_llm):
+    """Roda os dois métodos, busca por busca, e devolve uma linha por título e o registro da execução."""
+    linhas, respostas, falhas = [], [], []
+    inicio = time.perf_counter()
+    for busca, grupo in tabela.groupby("busca", sort=False):
+        titulos = grupo["titulo"].tolist()
+        alvo_r, itens_r = classificar_por_regras(limpar(busca), titulos)
+        decisao_r = decidir_grupo(limpar(busca), titulos, alvo_r, itens_r)
         try:
-            # Mesmas instruções, modelos e lotes da busca; aqui a espera por resposta pode chegar a 90 segundos.
-            _, itens, modelo = classificar_em_lotes("celular", [t[0] for t in TITULOS_TESTE], tempo=90)
-            st.session_state.avaliacao_llm = (itens, modelo, time.perf_counter() - inicio,
-                                              datetime.now(FUSO).strftime("%d/%m/%Y %H:%M"))
-        except requests.HTTPError as falha:
-            detalhe = detalhe_do_erro(falha.response) if falha.response is not None else ""
-            codigo = falha.response.status_code if falha.response is not None else "?"
-            erro = f"Não foi possível rodar o LLM agora (erro HTTP {codigo}{', ' + detalhe if detalhe else ''}). Tente de novo."
-        except Exception as falha:
-            erro = f"Não foi possível rodar o LLM agora ({type(falha).__name__}). Tente de novo."
-    if erro:
-        st.warning(erro)
-    llm = st.session_state.get("avaliacao_llm")
-    linhas = []
-    for numero, (titulo, modelo, gb, condicao) in enumerate(TITULOS_TESTE, 1):
-        esperado = (modelo, gb, condicao)
-        regras = extrair_por_regras(titulo)
-        saida = (regras["modelo"], regras["armazenamento_gb"], regras["condicao"])
-        linha = {"n": numero, "titulo": titulo, "esperado_modelo": modelo, "esperado_gb": gb, "esperado_condicao": condicao,
-                 "regras_modelo": saida[0], "regras_gb": saida[1], "regras_condicao": saida[2], "regras_acertou": saida == esperado}
-        if llm:
-            item = llm[0][numero - 1]
-            saida = rotulo_do_llm(item)
-            linha.update({"llm_celular": item["celular"], "llm_marca": item["marca"], "llm_modelo_resposta": item["modelo"],
-                          "llm_modelo": saida[0], "llm_gb": saida[1], "llm_condicao": saida[2], "llm_acertou": saida == esperado})
-        linhas.append(linha)
-    tabela = pd.DataFrame(linhas, dtype=object)
-    resumo = f"Regras: {int(tabela['regras_acertou'].sum())} de {len(tabela)} títulos corretos."
-    if llm:
-        resumo += (f" LLM ({llm[1]}): {int(tabela['llm_acertou'].sum())} de {len(tabela)} títulos corretos, "
-                   f"em {llm[2]:.1f} s, rodado em {llm[3]}.")
-    st.write(resumo)
-    st.caption(f"Versão do código (SHA-256 do app.py, 12 primeiros caracteres): {versao_do_codigo()}. "
-               f"Modelo principal configurado: {LLM_MODELO}; reserva: {LLM_MODELO_RESERVA}.")
-    st.dataframe(tabela.fillna("").astype(str), hide_index=True)
-    csv = tabela.to_csv(index=False)
-    st.download_button("Baixar a tabela (CSV)", csv.encode("utf-8"), "extracao_50_titulos.csv", "text/csv")
-    st.code(csv, language=None)
+            alvo_l, itens_l, modelo = classificar_llm(limpar(busca), titulos)
+            respostas.append(modelo)
+            decisao_l, falha = decidir_grupo(limpar(busca), titulos, alvo_l, itens_l), None
+        except Exception as erro:
+            itens_l, decisao_l = [None] * len(titulos), ["falha da IA"] * len(titulos)
+            falha = f"falha da IA ({detalhe_da_falha(erro)})"
+            falhas.append(busca)
+        for k, (_, linha) in enumerate(grupo.iterrows()):
+            saida_r = extracao_das_regras(linha["titulo"])
+            certo_r = conferir_extracao(linha, saida_r)
+            registro = {"n": linha["n"], "busca": busca, "titulo": linha["titulo"],
+                        **{c: linha[c] for c in tabela.columns if c.startswith("rotulo_") or c.startswith("pagina_")}}
+            if itens_l[k] is None:
+                registro.update({"llm_falha": falha, "llm_acertou": False, "llm_decisao": "falha da IA", "llm_resultado_decisao": "erro"})
+            else:
+                saida_l = extracao_do_llm(itens_l[k])
+                certo_l = conferir_extracao(linha, saida_l)
+                registro.update({f"llm_{c}": saida_l[c] for c in saida_l})
+                registro.update({f"llm_{c}_certo": certo_l[c] for c in ("tipo", "modelo", "armazenamento", "condicao", "rede", "defeito")})
+                registro.update({"llm_falha": "", "llm_acertou": certo_l["titulo"],
+                                 "llm_decisao": decisao_l[k] or "aceitar", "llm_resultado_decisao": resultado_da_decisao(decisao_l[k], linha)})
+            registro.update({f"regras_{c}": saida_r[c] for c in saida_r})
+            registro.update({f"regras_{c}_certo": certo_r[c] for c in ("tipo", "modelo", "armazenamento", "condicao", "rede", "defeito")})
+            registro.update({"regras_acertou": certo_r["titulo"], "regras_decisao": decisao_r[k] or "aceitar",
+                             "regras_resultado_decisao": resultado_da_decisao(decisao_r[k], linha)})
+            linhas.append(registro)
+    resultado = pd.DataFrame(linhas, dtype=object).sort_values("n", key=lambda n: pd.to_numeric(n, errors="coerce"))
+    execucao = {"quando": datetime.now(FUSO).strftime("%d/%m/%Y %H:%M"), "segundos": time.perf_counter() - inicio,
+                "respondeu": ", ".join(dict.fromkeys(m for r in respostas for m in r.split(", "))) or "nenhum",
+                "buscas_com_falha": falhas}
+    return resultado, execucao
+
+
+def detalhe_da_falha(erro):
+    if isinstance(erro, requests.HTTPError) and erro.response is not None:
+        detalhe = detalhe_do_erro(erro.response)
+        return f"erro HTTP {erro.response.status_code}" + (f", {detalhe}" if detalhe else "")
+    return "sem resposta" if isinstance(erro, requests.RequestException) else "resposta inválida"
+
+
+def resumo_da_avaliacao(resultado):
+    total = len(resultado)
+    llm, regras = int(resultado["llm_acertou"].astype(bool).sum()), int(resultado["regras_acertou"].astype(bool).sum())
+    diferenca = (llm - regras) / total * 100
+    celulares = resultado[resultado["rotulo_tipo"].map(rotulo_tipo) == "celular"]
+    por_campo = lambda metodo, campo: (f"{int(celulares.get(f'{metodo}_{campo}_certo', pd.Series(dtype=object)).fillna(False).astype(bool).sum())}"
+                                       f" de {len(celulares)}")
+    decisao = lambda metodo: " · ".join(f"{n} {r}" for r, n in resultado[f"{metodo}_resultado_decisao"].value_counts().items())
+    principal = "LLM" if diferenca >= DIFERENCA_MINIMA else "regras"
+    return {"total": total, "llm": llm, "regras": regras, "diferenca": diferenca, "principal": principal,
+            "falhas": int((resultado["llm_falha"].astype(str) != "").sum()),
+            "rede": (por_campo("llm", "rede"), por_campo("regras", "rede")),
+            "defeito": (por_campo("llm", "defeito"), por_campo("regras", "defeito")),
+            "decisao": (decisao("llm"), decisao("regras"))}
+
+
+def mostrar_avaliacao():
+    st.title("Faixa Certa: avaliação dos métodos")
+    st.write("Os 50 títulos novos passam pelos dois métodos, cada um com a busca de referência do título, como no app. "
+             "Um título está correto quando tipo, modelo completo, armazenamento e condição batem com o rótulo; em "
+             f"acessório, basta o tipo. Se o LLM não superar as regras em pelo menos {DIFERENCA_MINIMA} pontos "
+             "percentuais, as regras passam a ser o método principal. Resultado das regras não conta como acerto do LLM.")
+    st.caption(f"Versão congelada: código {versao_do_codigo()} (SHA-256 do app.py, 12 primeiros caracteres), prompt "
+               f"{versao_do_prompt()}, LLM principal {LLM_MODELO}, reserva {LLM_MODELO_RESERVA}, {LOTE_LLM} títulos por "
+               f"chamada. Regras: filtro de acessórios, marca e modelo como na tela de escolha, armazenamento, condição, "
+               "rede e defeito lidos no título.")
+    arquivo = os.path.join(os.path.dirname(os.path.abspath(__file__)), ARQUIVO_AVALIACAO)
+    if not os.path.exists(arquivo):
+        st.info("O arquivo com os 50 títulos novos e os rótulos ainda não foi publicado.")
+        return
+    tabela = pd.read_csv(arquivo, dtype=str, keep_default_na=False)
+    st.write(f"{len(tabela)} títulos em {tabela['busca'].nunique()} buscas de referência.")
+    erro = None
+    if not LLM_CHAVE:
+        st.warning("Sem chave de IA configurada: não dá para rodar o LLM.")
+    elif st.button("Rodar os dois métodos", type="primary"):
+        with st.spinner("Rodando os dois métodos, busca por busca..."):
+            # Aqui a espera do LLM pode chegar a 90 segundos por busca; na tela de busca, o limite é TEMPO_LLM.
+            st.session_state.avaliacao = avaliar_metodos(tabela, lambda busca, titulos: classificar_em_lotes(busca, titulos, tempo=90))
+    if "avaliacao" not in st.session_state:
+        return
+    resultado, execucao = st.session_state.avaliacao
+    r = resumo_da_avaliacao(resultado)
+    st.subheader("Resultado")
+    st.write(f"Extração: LLM {r['llm']} de {r['total']} títulos corretos ({r['llm'] / r['total']:.0%}); regras "
+             f"{r['regras']} de {r['total']} ({r['regras'] / r['total']:.0%}). Diferença: {r['diferenca']:+.0f} pontos. "
+             f"Método principal pelo critério de {DIFERENCA_MINIMA} pontos: **{r['principal']}**.")
+    st.write(f"Falhas da IA: {r['falhas']} títulos, contados como erro do LLM. Rede nos celulares: LLM {r['rede'][0]}, "
+             f"regras {r['rede'][1]}. Defeito nos celulares: LLM {r['defeito'][0]}, regras {r['defeito'][1]}.")
+    st.write(f"Decisão de aceitar ou excluir: LLM {r['decisao'][0]}; regras {r['decisao'][1]}.")
+    st.caption(f"Rodado em {execucao['quando']}, em {execucao['segundos']:.0f} s. Modelo do LLM que respondeu: "
+               f"{execucao['respondeu']}." + (f" Buscas com falha da IA: {', '.join(execucao['buscas_com_falha'])}."
+                                               if execucao["buscas_com_falha"] else ""))
+    erros = resultado[~resultado["llm_acertou"].astype(bool) | ~resultado["regras_acertou"].astype(bool)
+                      | (resultado["llm_resultado_decisao"] != "acerto") | (resultado["regras_resultado_decisao"] != "acerto")]
+    st.subheader(f"Erros caso a caso ({len(erros)} títulos)")
+    st.dataframe(erros.fillna("").astype(str), hide_index=True)
+    st.subheader("Todos os títulos")
+    st.dataframe(resultado.fillna("").astype(str), hide_index=True)
+    csv = resultado.to_csv(index=False)
+    st.download_button("Baixar o resultado (CSV)", csv.encode("utf-8"), "avaliacao_50_titulos_resultado.csv", "text/csv")
 
 
 # Interface
