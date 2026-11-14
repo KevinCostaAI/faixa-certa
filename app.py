@@ -22,6 +22,8 @@ from lxml import html
 USER_AGENT = "Mozilla/5.0 (compatible; FaixaCerta/1.0; +https://github.com/KevinCostaAI/faixa-certa)"
 ROBO = "FaixaCerta"
 TEMPO_LOJA = 10  # segundos de espera por loja
+TEMPO_TOTAL_COLETA = 12  # orçamento compartilhado por todas as lojas, incluindo robots e redirecionamentos
+LIMITE_HTML = 8 * 1024 * 1024  # evita carregar páginas sem limite de tamanho
 TEMPO_LLM = 15  # segundos, no total, para o LLM classificar os títulos de uma busca; depois disso, o app segue por regras
 ESPERA_REPETIR = 5  # segundos sem resposta do LLM até o mesmo pedido sair de novo; vale a resposta que chegar primeiro
 COPIAS_LLM = 3  # no máximo, pedidos iguais ao mesmo tempo para cada lote de títulos
@@ -36,6 +38,7 @@ COMPARELIVRE = os.environ.get("COMPARELIVRE_URL", "https://comparelivre.com.br")
 KABUM = os.environ.get("KABUM_URL", "https://www.kabum.com.br").rstrip("/")
 GAZIN = os.environ.get("GAZIN_URL", "https://www.gazin.com.br").rstrip("/")
 NOVOMUNDO = os.environ.get("NOVOMUNDO_URL", "https://www.novomundo.com.br").rstrip("/")
+MAGALU = os.environ.get("MAGALU_URL", "https://www.magazineluiza.com.br").rstrip("/")
 
 
 def configuracao(nome, padrao=None):
@@ -776,11 +779,50 @@ def ler_novomundo(conteudo, url):
     return ofertas
 
 
+def ler_magalu(conteudo, url):
+    """Lê os mesmos produtos e as condições de pagamento que a lista pública mostra, sem usar APIs privadas."""
+    produtos = campo(dados_next(conteudo), "props", "pageProps", "data", "search", "items") or []
+    ofertas = []
+    for produto in produtos:
+        if produto.get("available") is not True or not produto.get("title") or not produto.get("path"):
+            continue
+        for oferta in produto.get("offers") or []:
+            if oferta.get("currency", "BRL") != "BRL":
+                continue
+            melhor = oferta.get("bestPrice") or {}
+            metodo = normalizar(melhor.get("paymentMethodDescription", ""))
+            identificador = normalizar(melhor.get("paymentMethodId", ""))
+            # Desconto de cartão, cupom, aplicativo ou clube não comprova Pix nem preço à vista para todos.
+            restrito = re.search(r"cupom|clube|assinante|aplicativo|superapp|magalupay|cartao", metodo)
+            pagamento = "Pix" if not restrito and identificador == "pix" and "pix" in metodo else (
+                "à vista" if not restrito and "a vista" in metodo else "não informada")
+            preco = numero(melhor.get("totalAmount")) if pagamento in PAGAMENTOS_DA_FAIXA else numero(oferta.get("price"))
+            if not preco_valido(preco):
+                continue
+            link = urljoin(url, produto["path"])
+            if urlparse(link).netloc != urlparse(MAGALU).netloc:
+                continue
+            vendedor = campo(oferta, "seller", "id") or "não informado"
+            if vendedor != "não informado":
+                partes = urlparse(link)
+                parametros = dict(parse_qsl(partes.query))
+                parametros["seller_id"] = vendedor
+                link = partes._replace(query=urlencode(parametros)).geturl()
+            # O título é o da loja, inclusive quando a referência detalha um kit vendido junto com o aparelho.
+            titulo = produto["title"].strip()
+            if produto.get("type") == "bundle" and produto.get("reference"):
+                titulo += " · " + produto["reference"].strip()
+            ofertas.append({"titulo": titulo, "preco": preco, "loja": f"Magazine Luiza · {vendedor}",
+                            "fonte": "Magazine Luiza", "link": link, "pagina": link, "pagamento": pagamento})
+    return ofertas
+
+
 FONTES = {
     "Compare Livre": (lambda busca: f"{COMPARELIVRE}/busca?q={quote_plus(busca)}", ler_comparelivre),
     "KaBuM!": (lambda busca: f"{KABUM}/busca/{quote('-'.join(busca.split()))}", ler_kabum),
     "Gazin": (lambda busca: f"{GAZIN}/busca/{quote('-'.join(busca.split()))}", ler_gazin),
     "Novo Mundo": (lambda busca: f"{NOVOMUNDO}/busca?busca={quote(busca)}", ler_novomundo),
+    "Magazine Luiza": (lambda busca: f"{MAGALU}/busca/{quote_plus(busca)}/", ler_magalu),
 }
 CABECALHOS = {"User-Agent": USER_AGENT, "Accept": "text/html,application/xhtml+xml", "Accept-Language": "pt-BR,pt;q=0.9"}
 # O Compare Livre às vezes devolve só capinhas e películas para o nome do modelo (ex.: "moto g06").
@@ -831,58 +873,179 @@ def caminho_permitido(regras, caminho):
     return melhor[1]
 
 
-def robots_permite(url, mem):
+def tempo_restante(prazo):
+    restante = prazo - time.monotonic()
+    if restante <= 0:
+        raise requests.Timeout("tempo total da coleta esgotado")
+    return restante
+
+
+def baixar_conteudo(url, prazo, sessao=None):
+    """O timeout de requests mede inatividade, não o tempo total. Confere também o prazo ao ler o corpo."""
+    restante = tempo_restante(prazo)
+    cliente = sessao if sessao is not None else requests
+    with cliente.get(url, headers=CABECALHOS, timeout=min(TEMPO_LOJA, restante),
+                     allow_redirects=False, stream=True) as resposta:
+        partes, tamanho = [], 0
+        for parte in resposta.iter_content(chunk_size=32768):
+            tempo_restante(prazo)
+            tamanho += len(parte)
+            if tamanho > LIMITE_HTML:
+                raise ValueError("página excede o tamanho permitido")
+            partes.append(parte)
+        tempo_restante(prazo)
+        return resposta, b"".join(partes)
+
+
+def robots_permite(url, mem, prazo=None, sessao=None):
+    prazo = prazo if prazo is not None else time.monotonic() + TEMPO_TOTAL_COLETA
     partes = urlparse(url)
     dominio = f"{partes.scheme}://{partes.netloc}"
-    guardado = mem["robots"].get(dominio)
-    if not guardado or time.time() - guardado[0] > 24 * 3600:
-        resposta = requests.get(f"{dominio}/robots.txt", headers=CABECALHOS, timeout=TEMPO_LOJA)
-        if resposta.status_code >= 500:
-            resposta.raise_for_status()  # robots.txt fora do ar: não coleta agora (RFC 9309)
-        # O RFC 9309 manda ler o robots.txt como UTF-8, mesmo quando o servidor não informa a codificação.
-        texto = resposta.content.decode("utf-8-sig", errors="replace") if resposta.status_code < 400 else ""
-        guardado = (time.time(), regras_do_robots(texto))
-        mem["robots"][dominio] = guardado
+    # Duas buscas da mesma fonte compartilham um único pedido de robots.txt.
+    with mem["trava"]:
+        trava = mem.setdefault("travas_robots", {}).setdefault(dominio, threading.Lock())
+    if not trava.acquire(timeout=tempo_restante(prazo)):
+        raise requests.Timeout("tempo de espera pelo robots.txt esgotado")
+    try:
+        guardado = mem["robots"].get(dominio)
+        if not guardado or time.time() - guardado[0] > 24 * 3600:
+            resposta, conteudo = baixar_conteudo(f"{dominio}/robots.txt", prazo, sessao)
+            if resposta.status_code >= 500:
+                resposta.raise_for_status()  # robots.txt fora do ar: não coleta agora (RFC 9309)
+            texto = conteudo.decode("utf-8-sig", errors="replace") if resposta.status_code < 400 else ""
+            guardado = (time.time(), regras_do_robots(texto))
+            mem["robots"][dominio] = guardado
+    finally:
+        trava.release()
     caminho = (partes.path or "/") + (f"?{partes.query}" if partes.query else "")
     return caminho_permitido(guardado[1], normalizar_caminho(caminho))
 
 
-def baixar(url, ler, mem):
-    """Baixa e lê uma página de busca, conferindo o robots.txt também em cada redirecionamento."""
+def baixar(url, ler, mem, prazo=None, sessao=None):
+    """Lê uma página pública, conferindo o robots.txt também em cada redirecionamento."""
+    prazo = prazo if prazo is not None else time.monotonic() + TEMPO_TOTAL_COLETA
+    propria = sessao is None
+    sessao = requests.Session() if propria else sessao
     try:
         for _ in range(4):
-            if not robots_permite(url, mem):
+            if not robots_permite(url, mem, prazo, sessao):
                 return [], "o site não permite coleta automática (robots.txt)"
-            resposta = requests.get(url, headers=CABECALHOS, timeout=TEMPO_LOJA, allow_redirects=False)
+            resposta, conteudo = baixar_conteudo(url, prazo, sessao)
             if not resposta.is_redirect:
                 resposta.raise_for_status()
-                return ler(resposta.content, url), None
+                return ler(conteudo, url), None
             url = urljoin(url, resposta.headers["Location"])
         return [], "redirecionamentos demais"
     except requests.HTTPError as erro:
         return [], f"erro HTTP {erro.response.status_code}"
+    except requests.Timeout:
+        return [], "tempo limite da coleta"
     except requests.RequestException:
         return [], "sem resposta"
     except Exception:
         return [], "página em formato não reconhecido"
+    finally:
+        if propria:
+            sessao.close()
 
 
-def coletar(nome, busca, mem):
+def rede_da_ficha(conteudo, url):
+    """Rede da ficha do próprio produto. Wi-Fi de 5 GHz e recomendações de outros produtos não valem."""
+    arvore = arvore_utf8(conteudo)
+    titulo = arvore.xpath('normalize-space(string(//h1[1]))')
+    campos = []
+    rotulos = {"rede", "rede movel", "redes moveis", "tipo de rede", "tecnologia de rede", "conexoes",
+               "conectividade", "conectividade e recursos", "conectividade celular"}
+    for linha in arvore.xpath('//tr'):
+        celulas = linha.xpath('./td|./th')
+        if len(celulas) == 2:
+            nome = normalizar(celulas[0].text_content()).rstrip(":")
+            if nome in rotulos:
+                campos.append((nome, " ".join(celulas[1].itertext())))
+    produto = campo(dados_next(conteudo), "props", "pageProps", "product") or {}
+    blocos = arvore.xpath('//*[@id="description" or @id="technicalInfoSection"] | '
+                         '//*[@id="description" or @id="technicalInfoSection"]//p | '
+                         '//*[@id="description" or @id="technicalInfoSection"]//li')
+    if produto.get("about"):
+        blocos += arvore_utf8(produto["about"]).xpath('//li')
+    for bloco in blocos:
+        texto = " ".join(bloco.itertext())
+        for nome in rotulos:
+            encontrado = re.search(r"\b" + re.escape(nome) + r"\s*:\s*([^\n]{1,120})", normalizar(texto))
+            if encontrado:
+                campos.append((nome, encontrado[1]))
+    resultados = []
+    if rede_em(titulo):
+        resultados.append((rede_em(titulo), titulo))
+    for nome, valor in campos:
+        # Só uma lista de redes no início do campo comprova a rede móvel; "Wi-Fi 5G" não comprova 5G celular.
+        prefixo = re.match(r"^\s*((?:[2345]\s*g\b[\s,;/|+\-]*)+)", normalizar(valor))
+        if not prefixo or re.match(r"^\s*[:=]?\s*(?:nao|n/a|indisponivel|ausente)\b", normalizar(valor)[prefixo.end():]):
+            continue
+        rede = rede_em(prefixo[1])
+        if rede:
+            resultados.append((rede, f"{nome}: {valor.strip()[:160]}"))
+    redes = {rede for rede, _ in resultados}
+    if len(redes) != 1 or not titulo:
+        return {}
+    return {"rede_confirmada": redes.pop(), "evidencia_rede": resultados[0][1],
+            "titulo_pagina": titulo, "pagina_rede": url}
+
+
+def confirmar_redes(busca, ofertas, mem, prazo, sessao):
+    """Consulta até três fichas por fonte, dentro do mesmo prazo. Título e extração permanecem intactos."""
+    alvo, itens = classificar_por_regras(busca, [oferta["titulo"] for oferta in ofertas])
+    conhecidas = versoes_conhecidas(alvo)
+    if not rede_em(busca) and (not conhecidas or len(conhecidas) == 1):
+        return ofertas
+    verificadas, consultas, vistos = list(ofertas), 0, set()
+    for k, (oferta, item) in enumerate(zip(ofertas, itens)):
+        if consultas >= 3 or prazo - time.monotonic() < 1.5:
+            break
+        if (oferta["fonte"] not in {"KaBuM!", "Magazine Luiza"} or rede_em(oferta["titulo"])
+                or oferta.get("pagamento") not in PAGAMENTOS_DA_FAIXA
+                or defeito_anunciado(oferta["titulo"]) or motivo_descarte(dict(alvo, rede=None), item, sem_rede=True)):
+            continue
+        chave = (titulo_sem_cor(oferta["titulo"]), oferta["loja"], oferta["preco"])
+        if chave in vistos:
+            continue
+        vistos.add(chave)
+        consultas += 1
+        ficha, erro = baixar(oferta["link"], rede_da_ficha, mem, prazo - 0.4, sessao)
+        if erro or not isinstance(ficha, dict) or not ficha.get("rede_confirmada"):
+            continue
+        marca, modelo = modelo_do_titulo(ficha["titulo_pagina"])
+        if (chave_marca(marca) != chave_marca(alvo["marca"])
+                or chave_modelo(modelo, sem_rede=True) != chave_modelo(alvo["modelo"], sem_rede=True)):
+            continue
+        verificadas[k] = dict(oferta, **ficha, rede_conferida_em=datetime.now(FUSO).isoformat(timespec="seconds"))
+    return verificadas
+
+
+def coletar(nome, busca, mem, prazo=None, usar_cache=True):
+    inicio = time.monotonic()
+    prazo = prazo if prazo is not None else inicio + TEMPO_TOTAL_COLETA
     montar_url, ler = FONTES[nome]
     url = montar_url(busca)
     guardado = mem["paginas"].get(url)
-    if guardado and time.time() - guardado["momento"] < CACHE_SEGUNDOS:
-        return guardado
+    if usar_cache and guardado and time.time() - guardado["momento"] < CACHE_SEGUNDOS:
+        return dict(guardado, cache=True, segundos=time.monotonic() - inicio)
     buscas = [busca]
     com_smartphone = " ".join(["smartphone"] + [p for p in busca.split() if p not in TIPOS_DE_APARELHO])
     if nome in BUSCA_COM_SMARTPHONE and com_smartphone != busca:
         buscas.append(com_smartphone)
-    with ThreadPoolExecutor(max_workers=len(buscas)) as executor:
-        respostas = list(executor.map(lambda texto: baixar(montar_url(texto), ler, mem), buscas))
-    resultado = {"fonte": nome, "url": url, "ofertas": [], "momento": time.time()}
+    sessao = requests.Session()
+    if len(buscas) == 1:
+        respostas = [baixar(url, ler, mem, prazo, sessao)]
+    else:
+        with ThreadPoolExecutor(max_workers=len(buscas)) as executor:
+            respostas = list(executor.map(lambda texto: baixar(montar_url(texto), ler, mem, prazo), buscas))
+    resultado = {"fonte": nome, "url": url, "ofertas": [], "momento": time.time(),
+                 "cache": False, "segundos": time.monotonic() - inicio}
     ofertas = [oferta for lista, _ in respostas for oferta in lista]
     if not ofertas and respostas[0][1]:
         resultado["status"] = respostas[0][1]
+        sessao.close()
         return resultado
     vistos, unicas = set(), []
     for oferta in ofertas:
@@ -895,6 +1058,14 @@ def coletar(nome, busca, mem):
     resultado["coletado"] = datetime.now(FUSO).strftime("%H:%M")
     with mem["trava"]:
         mem["paginas"][url] = resultado
+    try:
+        if resultado["ofertas"]:
+            verificadas = confirmar_redes(busca, resultado["ofertas"], mem, prazo, sessao)
+            resultado = dict(resultado, ofertas=verificadas, segundos=time.monotonic() - inicio)
+            with mem["trava"]:
+                mem["paginas"][url] = resultado
+    finally:
+        sessao.close()
     return resultado
 
 
@@ -912,10 +1083,35 @@ def esquecer_vencidas(mem):
             mem["robots"].pop(dominio, None)
 
 
-def coletar_todas(busca, mem):
+def coletar_todas(busca, mem, forcar_coleta=False, tempo_limite=TEMPO_TOTAL_COLETA):
     esquecer_vencidas(mem)
-    with ThreadPoolExecutor(max_workers=len(FONTES)) as executor:
-        return list(executor.map(lambda nome: coletar(nome, busca, mem), FONTES))
+    iniciado_em = time.time()
+    prazo = time.monotonic() + tempo_limite
+    executor = ThreadPoolExecutor(max_workers=len(FONTES))
+    futuras = {nome: executor.submit(coletar, nome, busca, mem, prazo, not forcar_coleta) for nome in FONTES}
+    try:
+        concluidas, _ = wait(futuras.values(), timeout=max(0, prazo - time.monotonic()))
+        resultados = []
+        for nome, futura in futuras.items():
+            if futura in concluidas:
+                try:
+                    resultados.append(futura.result())
+                    continue
+                except Exception:
+                    status = "falha na coleta"
+            else:
+                status = "tempo limite da coleta"
+                guardado = mem["paginas"].get(FONTES[nome][0](busca))
+                if guardado and guardado["momento"] >= iniciado_em:
+                    # A busca já chegou; a fonte ainda está verificando fichas. Preserva a lista inicial, sem inventar rede.
+                    resultados.append(dict(guardado, aviso="tempo limite na conferência de detalhes"))
+                    continue
+            resultados.append({"fonte": nome, "url": FONTES[nome][0](busca), "ofertas": [],
+                               "momento": time.time(), "status": status, "cache": False})
+        return resultados
+    finally:
+        # Sair de `with ThreadPoolExecutor` esperaria pelas fontes atrasadas, anulando o prazo.
+        executor.shutdown(wait=False, cancel_futures=True)
 
 
 # Exibição
@@ -969,12 +1165,16 @@ def sem_destino(linha):
 
 
 def tabela_de_ofertas(linhas, com_motivo=False):
-    colunas = ["Produto"] + (["Motivo"] if com_motivo else []) + ["Preço", "Pagamento", "Loja", "Fonte", "Compra"]
+    tem_rede = "rede_confirmada" in linhas and linhas["rede_confirmada"].isin(["4g", "5g"]).any()
+    colunas = ["Produto"] + (["Motivo"] if com_motivo else []) + ["Preço", "Pagamento"] + (["Rede"] if tem_rede else []) + ["Loja", "Fonte", "Compra"]
     tabela = ["| " + " | ".join(colunas) + " |", "|" + " --- |" * len(colunas)]
     for _, linha in linhas.iterrows():
         celulas = [escapar(linha["titulo"])] + ([escapar(linha["motivo"])] if com_motivo else [])
-        celulas += [escapar(reais(linha["preco"]).replace(" ", "\u00a0")), escapar(linha.get("pagamento") or "não informada"),
-                    escapar(linha["loja"]),
+        celulas += [escapar(reais(linha["preco"]).replace(" ", "\u00a0")), escapar(linha.get("pagamento") or "não informada")]
+        if tem_rede:
+            rede = linha.get("rede_confirmada")
+            celulas += [f"{rede.upper()} (ficha)" if rede in ("4g", "5g") else (rede_em(linha["titulo"]) or "não informada").upper()]
+        celulas += [escapar(linha["loja"]),
                     f"[{escapar(linha['fonte'])}](<{endereco(linha['pagina'])}>)", f"[{'Ver no Compare Livre' if sem_destino(linha) else 'Ir à loja'}](<{endereco(linha['link'])}>)"]
         tabela.append("| " + " | ".join(celulas) + " |")
     st.markdown("\n".join(tabela))
@@ -1043,7 +1243,7 @@ def marcar_fora_do_padrao(linhas):
             linhas.loc[fora, "motivo"] = "preço fora do padrão (menos da metade ou mais do dobro da mediana)"
 
 
-def motivos_da_busca(busca, alvo, itens, titulos):
+def motivos_da_busca(busca, alvo, itens, titulos, redes_confirmadas=None):
     """Motivo de cada título ficar de fora da busca (None quando é oferta equivalente), antes dos filtros de preço.
     Marca e rede valem pelo que está escrito, com o LLM e com as regras: na busca e em cada título.
     A versão escolhida na tela (5G) vale no lugar da escrita na busca. O defeito vale pelas regras e, com o LLM,
@@ -1053,9 +1253,11 @@ def motivos_da_busca(busca, alvo, itens, titulos):
     unica = bool(alvo.get("versao_unica"))
     if unica:
         alvo["rede"] = None
-    itens = [dict(item, marca=marca_no_titulo(titulo, alvo["marca"]), rede=rede_em(titulo),
+    redes_confirmadas = redes_confirmadas or [None] * len(titulos)
+    itens = [dict(item, marca=marca_no_titulo(titulo, alvo["marca"]),
+                  rede=rede_em(titulo) or (rede if rede in ("4g", "5g") else None),
                   defeito=defeito_anunciado(titulo) or bool(item.get("defeito_llm")))
-             for item, titulo in zip(itens, titulos)]
+             for item, titulo, rede in zip(itens, titulos, redes_confirmadas)]
     motivos = [motivo_descarte(alvo, item, sem_rede=unica) for item in itens]
     if all(motivos) and not unica and not alvo["rede"] and chave_modelo(alvo["modelo"]) == chave_modelo(alvo["modelo"], sem_rede=True):
         # Nenhuma oferta com o mesmo nome e a busca não falou em 4G/5G: aceita a versão 4G ou 5G do modelo
@@ -1066,7 +1268,8 @@ def motivos_da_busca(busca, alvo, itens, titulos):
 
 def separar_ofertas(busca, ofertas, alvo, itens):
     """Decide, oferta por oferta, se ela entra na faixa ou por que fica de fora (coluna "motivo")."""
-    alvo, itens, motivos = motivos_da_busca(busca, alvo, itens, [oferta["titulo"] for oferta in ofertas])
+    alvo, itens, motivos = motivos_da_busca(busca, alvo, itens, [oferta["titulo"] for oferta in ofertas],
+                                         [oferta.get("rede_confirmada") for oferta in ofertas])
     linhas = pd.DataFrame(ofertas)
     linhas["motivo"] = motivos
     linhas["armazenamento_gb"] = [item["armazenamento_gb"] for item in itens]
@@ -1555,6 +1758,59 @@ def mostrar_titulos(tabela):
 
 ARQUIVO_RESULTADOS = "resultados_registrados.json"  # resultados já obtidos, publicados ao lado do app.py
 ARQUIVO_PROTOCOLO = "PROTOCOLO.md"  # protocolo de validação, publicado ao lado do app.py
+ARQUIVO_VALIDACAO = "validacao_tecnica.json"
+
+
+def mostrar_validacao_tecnica():
+    caminho = os.path.join(os.path.dirname(os.path.abspath(__file__)), ARQUIVO_VALIDACAO)
+    if not os.path.exists(caminho):
+        return
+    with open(caminho, encoding="utf-8") as arquivo:
+        registro = json.load(arquivo)
+    st.header("Reconferência técnica com a coleta atualizada")
+    st.caption(f"{registro['inicio']} a {registro['fim']} · código {registro['codigo_sha256'][:12]} · {registro['origem']}")
+    st.info("Resultados automáticos: a revisão humana dos rótulos e das ofertas, a medição no navegador "
+            "e os testes com os participantes continuam pendentes.")
+    resumo = registro["resumo"]
+    extracao = registro["extracao_regras"]
+    tabela_fixa([
+        {"Medida": "Extração pelas regras", "Resultado": f"{extracao['acertos']} de {extracao['total']} nos rótulos publicados",
+         "Meta": "90%; revisão humana pendente"},
+        {"Medida": "Cobertura automática com preços confirmados", "Resultado": f"{resumo['duas_lojas']} de {resumo['buscas']} buscas em duas lojas",
+         "Meta": "18 de 20; conferência humana pendente"},
+        {"Medida": "Tempo no servidor de testes", "Resultado": f"{resumo['ate_15s_servidor']} de {resumo['buscas']} em até 15 s",
+         "Meta": "18 de 20 do clique ao resultado no navegador"},
+        {"Medida": "Faixas geradas", "Resultado": f"{resumo['geraram_faixa']} de {resumo['buscas']}", "Meta": "Informada"},
+        {"Medida": "Equivalência das ofertas", "Resultado": f"{resumo['ofertas_para_conferencia']} ofertas aguardam conferência humana",
+         "Meta": "95%"},
+        {"Medida": "Digitação, redução do tempo e utilidade", "Resultado": "Testes com 5 lojistas e 5 consumidores pendentes",
+         "Meta": "Conforme protocolo publicado"},
+    ])
+    st.dataframe(pd.DataFrame([{
+        "Nº": busca["n"], "Entrada": busca["entrada"], "Tempo no servidor (s)": busca["segundos_servidor"],
+        "Lojas distintas": len(busca["lojas"]), "Ofertas com pagamento confirmado": busca["ofertas_confirmadas"],
+        "Gerou faixa?": "Sim" if busca["gerou_faixa"] else "Não",
+        "Falhas das fontes": "; ".join(f"{f['fonte']}: {f['status']}" for f in busca["fontes"]
+                                      if any(t in f["status"] for t in ("limite", "erro", "falha", "sem resposta"))),
+    } for busca in registro["buscas"]]), hide_index=True)
+    with st.expander("Ofertas e evidências para conferência humana"):
+        ofertas = [{"Busca": busca["entrada"], "Título": oferta["titulo"], "Preço": oferta["preco"],
+                    "Fonte": oferta["fonte"], "Pagamento": oferta["pagamento"], "URL": oferta["link"],
+                    "Rede na ficha": oferta.get("rede_confirmada", ""), "Evidência de rede": oferta.get("evidencia_rede", ""),
+                    "Conferida em": oferta.get("rede_conferida_em", "")}
+                   for busca in registro["buscas"] for oferta in busca["ofertas"] if oferta["na_faixa"]]
+        st.dataframe(pd.DataFrame(ofertas), hide_index=True, column_config={"URL": st.column_config.LinkColumn("URL")})
+    for limite in registro["limites"]:
+        st.caption(limite)
+    if registro.get("historico"):
+        with st.expander("Rodadas técnicas anteriores"):
+            for anterior in registro["historico"]:
+                resumo_anterior = anterior["resumo"]
+                st.write(f"{anterior['inicio']} · código {anterior['codigo_sha256'][:12]}: "
+                         f"{resumo_anterior['duas_lojas']} de {resumo_anterior['buscas']} buscas em duas lojas; "
+                         f"{resumo_anterior['ate_15s_servidor']} em até 15 s no servidor.")
+                st.markdown(f"[Registro completo](https://github.com/KevinCostaAI/faixa-certa/blob/main/{anterior['arquivo']})")
+    st.divider()
 
 
 def tabela_fixa(linhas):
@@ -1630,6 +1886,7 @@ def mostrar_avaliacao():
                f"{versao_do_prompt()}, LLM principal {LLM_MODELO}, reserva {LLM_MODELO_RESERVA}, {LOTE_LLM} títulos por "
                f"chamada. Regras: filtro de acessórios, marca e modelo como na tela de escolha, armazenamento, condição, "
                "rede e defeito lidos no título. Cada resultado registrado traz a versão em que foi obtido.")
+    mostrar_validacao_tecnica()
     mostrar_resultados_registrados()
     arquivo = os.path.join(os.path.dirname(os.path.abspath(__file__)), ARQUIVO_AVALIACAO)
     if not os.path.exists(arquivo):
@@ -1679,64 +1936,69 @@ def buscar_como_digitado():
     st.session_state.update(sem_correcao=True, nova_busca=True)
 
 
-st.set_page_config(page_title="Faixa Certa", layout="wide" if "1" in (st.query_params.get("avaliar"), st.query_params.get("protocolo"))
-                   else "centered")
-if st.query_params.get("protocolo") == "1":
-    mostrar_protocolo()  # protocolo de validação, aberto a qualquer pessoa pelo endereço ?protocolo=1
-    st.stop()
-if st.query_params.get("avaliar") == "1":
-    mostrar_avaliacao()  # reprodução dos testes de extração; não aparece na tela de busca
-    st.stop()
-st.title("Faixa Certa")
-st.write("Compara o preço de um smartphone em várias lojas.")
-st.caption("A faixa usa só preços à vista ou no Pix confirmados pela loja, sem frete; ofertas sem forma de pagamento informada "
-           "aparecem à parte. Os preços são coletados nas lojas na hora da busca, e uma busca repetida em até 15 minutos "
-           "reaproveita o resultado.")
-st.caption(f"Extrator principal: {'LLM' if LLM_CHAVE and METODO_PRINCIPAL == 'LLM' else 'regras' if LLM_CHAVE else 'regras (sem chave de IA configurada)'}. "
-           f"Fontes: {', '.join(FONTES)}.")
+def main():
+    st.set_page_config(page_title="Faixa Certa", layout="wide" if "1" in (st.query_params.get("avaliar"), st.query_params.get("protocolo"))
+                       else "centered")
+    if st.query_params.get("protocolo") == "1":
+        mostrar_protocolo()  # protocolo de validação, aberto a qualquer pessoa pelo endereço ?protocolo=1
+        st.stop()
+    if st.query_params.get("avaliar") == "1":
+        mostrar_avaliacao()  # reprodução dos testes de extração; não aparece na tela de busca
+        st.stop()
+    st.title("Faixa Certa")
+    st.write("Compara o preço de um smartphone em várias lojas.")
+    st.caption("A faixa usa só preços à vista ou no Pix confirmados pela loja, sem frete; ofertas sem forma de pagamento informada "
+               "aparecem à parte. Os preços são coletados nas lojas na hora da busca, e uma busca repetida em até 15 minutos "
+               "reaproveita o resultado.")
+    st.caption(f"Extrator principal: {'LLM' if LLM_CHAVE and METODO_PRINCIPAL == 'LLM' else 'regras' if LLM_CHAVE else 'regras (sem chave de IA configurada)'}. "
+               f"Fontes: {', '.join(FONTES)}.")
 
-nova_busca = st.session_state.pop("nova_busca", False)
-with st.form("busca"):
-    st.text_input("Qual celular você procura?", placeholder="Ex.: iphone 13 128gb", key="campo_busca")
-    st.caption("Sem indicação, a busca compara aparelhos novos. Para usados ou recondicionados, escreva “usado” ou "
-               "“recondicionado”, como em “iphone 13 128gb usado”.")
-    if st.form_submit_button("Buscar", type="primary"):
-        st.session_state.update(digitado=st.session_state.campo_busca, sem_correcao=False)
-        nova_busca = True
+    nova_busca = st.session_state.pop("nova_busca", False)
+    with st.form("busca"):
+        st.text_input("Qual celular você procura?", placeholder="Ex.: iphone 13 128gb", key="campo_busca")
+        st.caption("Sem indicação, a busca compara aparelhos novos. Para usados ou recondicionados, escreva “usado” ou "
+                   "“recondicionado”, como em “iphone 13 128gb usado”.")
+        if st.form_submit_button("Buscar", type="primary"):
+            st.session_state.update(digitado=st.session_state.campo_busca, sem_correcao=False)
+            nova_busca = True
 
-# Numa busca nova, o resultado anterior sai da tela na hora e fica só o aviso "Buscando..." até a resposta.
-# Para isso, cada busca nova troca de lugar a área do resultado e um espaço vazio: o vazio ocupa o lugar do
-# resultado anterior e o apaga. Ao trocar marca, modelo, memória ou versão na tela, nada muda de lugar e a tela não pisca.
-if nova_busca:
-    st.session_state.lugar = 1 - st.session_state.get("lugar", 0)
-    st.session_state.pop("classificacao_atual", None)
-if st.session_state.get("lugar", 0):
-    st.empty()
-    area = st.container()
-else:
-    area = st.container()
-    st.empty()
-with area:
-    digitado = (st.session_state.get("digitado") or "").strip()
-    if digitado:
-        if st.session_state.get("sem_correcao"):
-            busca, mudou = limpar(digitado), False
-        else:
-            busca, mudou = corrigir_busca(digitado)
-        falta = falta_modelo(busca)
-        if mudou:
-            st.info(f"Você quis dizer **{exibir(busca)}**?" + ("" if falta else " Mostrando resultados para a busca corrigida."))
-            st.button(f"Buscar “{digitado}” como digitei", on_click=buscar_como_digitado)
-        if not falta:
-            mem = memoria()
-            with st.spinner(f"Buscando “{exibir(busca)}” nas lojas..."):
-                guardada = st.session_state.get("coleta_atual")
-                if not nova_busca and guardada and guardada[0] == busca:
-                    coletas = guardada[1]  # troca de memória ou versão: as mesmas ofertas, sem buscar de novo
-                else:
-                    coletas = coletar_todas(busca, mem)
-                    st.session_state.coleta_atual = (busca, coletas)
-                # Sem modelo reconhecido na busca ("quero um celular bom"), a pessoa escolhe entre os celulares das lojas.
-                falta = not mostrar_resultados(busca, coletas, mem)
-        if falta:
-            mostrar_opcoes(busca)
+    # Numa busca nova, o resultado anterior sai da tela na hora e fica só o aviso "Buscando..." até a resposta.
+    # Para isso, cada busca nova troca de lugar a área do resultado e um espaço vazio: o vazio ocupa o lugar do
+    # resultado anterior e o apaga. Ao trocar marca, modelo, memória ou versão na tela, nada muda de lugar e a tela não pisca.
+    if nova_busca:
+        st.session_state.lugar = 1 - st.session_state.get("lugar", 0)
+        st.session_state.pop("classificacao_atual", None)
+    if st.session_state.get("lugar", 0):
+        st.empty()
+        area = st.container()
+    else:
+        area = st.container()
+        st.empty()
+    with area:
+        digitado = (st.session_state.get("digitado") or "").strip()
+        if digitado:
+            if st.session_state.get("sem_correcao"):
+                busca, mudou = limpar(digitado), False
+            else:
+                busca, mudou = corrigir_busca(digitado)
+            falta = falta_modelo(busca)
+            if mudou:
+                st.info(f"Você quis dizer **{exibir(busca)}**?" + ("" if falta else " Mostrando resultados para a busca corrigida."))
+                st.button(f"Buscar “{digitado}” como digitei", on_click=buscar_como_digitado)
+            if not falta:
+                mem = memoria()
+                with st.spinner(f"Buscando “{exibir(busca)}” nas lojas..."):
+                    guardada = st.session_state.get("coleta_atual")
+                    if not nova_busca and guardada and guardada[0] == busca:
+                        coletas = guardada[1]  # troca de memória ou versão: as mesmas ofertas, sem buscar de novo
+                    else:
+                        coletas = coletar_todas(busca, mem)
+                        st.session_state.coleta_atual = (busca, coletas)
+                    # Sem modelo reconhecido na busca ("quero um celular bom"), a pessoa escolhe entre os celulares das lojas.
+                    falta = not mostrar_resultados(busca, coletas, mem)
+            if falta:
+                mostrar_opcoes(busca)
+
+
+if __name__ == "__main__":
+    main()

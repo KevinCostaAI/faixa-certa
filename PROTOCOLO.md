@@ -349,3 +349,23 @@ Nas regras, o nº 38 (“Samsung A37”) passou a acerto. O nº 45 (“Samsung S
 - Na primeira correção (código f43279f1b93f), a busca 5 gerou faixa com os anúncios sem rede do A14, que são do A14 5G. Por isso a versão final abre em 4G os modelos com duas versões, mesmo sem anúncio 5G. Com essa regra, as buscas 12 e 13 deixaram de gerar faixa.
 - Algumas buscas usaram a primeira correção ou coleta reaproveitada, com a mesma regra para o caso; a página de avaliação traz a versão de cada uma.
 - Cobertura e tempo continuam como metas não atingidas: a reconferência refez só 9 buscas, 2 delas com ofertas em duas lojas, e o Compare Livre não respondeu em 4 das 9 coletas novas.
+
+## Atualização da coleta em 14/11/2026 — Codex
+
+Kevin autorizou a implementação e os testes no repositório existente `KevinCostaAI/faixa-certa`.
+
+- Entrou a Magazine Luiza, pela lista pública de produtos. Só o preço cujo campo de pagamento confirma Pix ou à vista entra na faixa. Preço de cartão, cupom, aplicativo ou assinatura não é convertido em preço à vista por suposição. Cada oferta mantém o vendedor e o endereço do produto com o vendedor selecionado; a Magazine Luiza conta como uma única loja.
+- A coleta tem um prazo total de 12 segundos para todas as fontes, incluindo robots.txt, redirecionamentos e fichas técnicas. Ofertas de fontes que responderam são preservadas quando outra fonte atrasa. Pedidos para a mesma loja reaproveitam a conexão HTTP. Coletas novas e resultados em cache são identificados separadamente.
+- A ausência de rede no título continua sem provar 4G. Quando necessário, a coleta consulta até três fichas de anúncios distintos por fonte, dentro do mesmo prazo. Só um campo de rede móvel explícito, de uma página do mesmo modelo, preenche `rede_confirmada`. Wi-Fi de 5 GHz não prova rede móvel 5G. Informação ausente, contraditória ou de outro modelo não é aproveitada. O título permanece intacto, e URL, trecho e horário da confirmação ficam registrados.
+- A avaliação dos 50 títulos continua recebendo apenas título e busca de referência, sem os dados complementares da página. As regras mantiveram 45 de 50 acertos na extração e 44 decisões corretas nos rótulos publicados. Esses rótulos ainda aguardam revisão humana. O prompt permanece inalterado.
+- A primeira rodada de desenvolvimento da coleta teve 17 de 20 buscas em duas lojas, 20 de 20 em até 15 segundos no servidor e 18 faixas geradas. A leitura de campos técnicos em negrito, separados por quebras de linha, foi corrigida depois dessa rodada. As rodadas ficam identificadas por data e hash; a execução anterior é arquivada antes de repetir a bateria.
+- `validar_mvp.py --coletar` executa uma vez cada uma das mesmas 20 buscas, com coleta nova de preços. O arquivo `validacao_tecnica.json` aparece na página pública de avaliação, separado dos resultados históricos. Não se trata de uma amostra independente.
+- O tempo no servidor de desenvolvimento não substitui a medida do clique ao resultado completo no navegador publicado. Cobertura automática não substitui a conferência humana da equivalência e dos preços. Os testes com os dez participantes continuam pendentes; nenhum participante nem resposta foi simulado.
+
+### Aplicação dos testes com pessoas
+
+O roteiro e as metas da seção “Correção de digitação e testes com usuários” permanecem os mesmos. Kevin aplica as sessões com os participantes reais, usando códigos L1 a L5 e C1 a C5, sem publicar nomes.
+
+Para cada participante, registrar: grupo; se é idoso; ordem das tarefas; modelo de cada tarefa; tempo e resultado da pesquisa manual; tempo e resultado no app; dificuldades; resposta “usaria?” e motivo; as 20 entradas do ditado e seus nomes esperados. Registrar também a autorização para usar as respostas. A conferência de produtos e preços deve ser feita no momento do teste.
+
+A redução individual é `100 × (tempo manual − tempo no app) ÷ tempo manual`. A mediana dessas reduções é calculada separadamente para lojistas e consumidores, usando apenas tarefas concluídas corretamente, como previsto no protocolo. A utilidade também é medida separadamente: pelo menos 4 de 5 respostas positivas em cada grupo.

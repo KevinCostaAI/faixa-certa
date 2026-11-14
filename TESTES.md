@@ -41,3 +41,15 @@ As listas foram escritas pela equipe junto com o vocabulário. Por isso, o teste
 
 - Cobertura das lojas, equivalência das ofertas e tempo de resposta: bateria de 20 buscas.
 - Redução do tempo de pesquisa e utilidade: testes com 5 lojistas.
+
+## Atualização de 14/11/2026
+
+As seções acima registram o desenvolvimento de 10/11. Os resultados posteriores e suas versões estão publicados em `?avaliar=1` e `?protocolo=1`.
+
+Instalação para desenvolvimento: `python -m pip install -r requirements-dev.txt`.
+
+- `python -m pytest -q`: testes da leitura de preços da Magazine Luiza, restrições de pagamento, prazo total da coleta, cache, robots.txt, confirmação de rede móvel e interface Streamlit. Inclui a troca 4G/5G e seus efeitos no menor preço, mediana, maior preço e destaque. Usa lojas simuladas nos testes de interface; não representa cobertura real nem pesquisa com usuários.
+- Os testes de regressão preservam o resultado das regras nos 50 rótulos publicados: 45 extrações corretas e 44 decisões corretas. A origem dos rótulos é IA, com revisão humana pendente.
+- `python validar_mvp.py --coletar`: rodada real das 20 buscas, sem cache de preços, com tempo medido no servidor de desenvolvimento. Publica títulos, URLs, preços, descartes e evidências de rede em `validacao_tecnica.json`. Preserva a rodada anterior em `validacoes/`.
+
+Os resultados automáticos são separados da revisão humana e das sessões com os dez participantes. A rodada técnica não gera respostas de utilidade, tempos de pessoas nem rótulos humanos.
