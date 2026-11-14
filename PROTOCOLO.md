@@ -461,3 +461,44 @@ As alterações do commit 942969f e os resultados da rodada acima foram preserva
 As três fontes passam pela verificação de robots.txt, inclusive em redirecionamentos, e compartilham o prazo total de 12 segundos da coleta. Nas duas fontes com busca seguida de página de produto, são consultadas no máximo três páginas por fonte; somente produtos cujo código cita o modelo pedido são investigados. Links de domínio diferente são ignorados. As ofertas já confirmadas são preservadas se uma página posterior demorar.
 
 A conferência automática local confirma o funcionamento dos leitores, mas não substitui uma nova rodada no app publicado nem a conferência humana. A cobertura do protocolo pode incluir ofertas equivalentes à parte; o cálculo da faixa continua restrito ao Pix ou à vista confirmado. A marcação humana das ofertas e os testes com os dez participantes permanecem separados dessas verificações automáticas.
+
+### Reconferência no app publicado com as novas fontes (14/11/2026)
+
+Rodada das **12h08 às 12h16 (UTC−3)**, no mesmo servidor do Streamlit, pelo endereço `/~/+/?coleta_nova=1`. Código avaliado: commit **1be2352**, SHA-256 do app.py iniciado por **47231472dff4**; prompt **6953e9ae9a95**. As mesmas 20 buscas foram executadas uma vez, sem cache de preços. Não houve tentativa descartada nem repetição nesta rodada. A instrumentação só leu a tela, sem inserir textos nela. O tempo inclui a demora da automação e vai do clique até a mensagem de conclusão visível.
+
+| Medida | Resultado automático | Situação |
+| --- | --- | --- |
+| Cobertura em duas lojas, incluindo ofertas à parte | **18 de 20** | Atinge o número exigido; aguarda conferência humana |
+| Cobertura em duas lojas só com preço à vista/Pix confirmado | **16 de 20** | Informada separadamente; ofertas à parte continuam fora da faixa |
+| Tempo até 15 segundos | **20 de 20** | Meta atingida nesta medição; mediana 11,7 s, máximo 14,4 s |
+| Faixas geradas | **16 de 20** | Informada |
+| Ofertas exibidas | **207: 127 com pagamento confirmado e 80 à parte** | Aguardam conferência humana; equivalência ainda não calculada |
+
+| # | Entrada original | Tempo | Lojas com pagamento confirmado | Lojas incluindo ofertas à parte | Gerou faixa? |
+| --- | --- | --- | --- | --- | --- |
+| 1 | galaxy a07 128gb | 11,6 s | 4 | 5 | Sim |
+| 2 | galaxi a17 128gb | 13,7 s | 3 | 5 | Sim |
+| 3 | galaxy a16 128gb | 7,4 s | 2 | 3 | Sim |
+| 4 | galaxy a36 5g 128gb | 12,1 s | 2 | 4 | Sim |
+| 5 | galaxy a14 128gb usado | 9,7 s | 0 | 0 | Não |
+| 6 | motorolla g06 128gb | 10,0 s | 5 | 7 | Sim |
+| 7 | moto g17 256gb | 11,0 s | 5 | 8 | Sim |
+| 8 | moto g35 256gb | 5,0 s | 2 | 4 | Sim |
+| 9 | moto g47 128gb | 9,9 s | 4 | 7 | Sim |
+| 10 | moto e15 64gb | 6,4 s | 2 | 2 | Sim |
+| 11 | xiaome redmi 15c 256gb | 12,8 s | 3 | 5 | Sim |
+| 12 | redmi 15 256gb | 13,7 s | 1 | 2 | Não |
+| 13 | poco c85 128gb | 14,0 s | 2 | 2 | Sim |
+| 14 | redmi note 15 256gb | 13,1 s | 1 | 2 | Não |
+| 15 | oppo a6x 128gb | 13,2 s | 3 | 4 | Sim |
+| 16 | iphone 16e 128gb | 14,4 s | 3 | 4 | Sim |
+| 17 | epone 16 128gb | 12,4 s | 2 | 5 | Sim |
+| 18 | iphone 17 pro max 256gb | 11,8 s | 3 | 5 | Sim |
+| 19 | iphone 13 128gb usado | 10,7 s | 2 | 2 | Sim |
+| 20 | iphone 14 128gb recondicionado | 10,9 s | 0 | 0 | Não |
+
+O Moto E15 ganhou a FoneMix, com Pix confirmado; o Galaxy A36 ganhou a Fast Shop. A EletroInfo Outlet forneceu a segunda loja do Redmi 15 e do Redmi Note 15, com as ofertas fora da faixa por pagamento não informado. O iPhone 16 também passou a ter duas lojas com pagamento confirmado. As buscas 5 (Galaxy A14 usado, na versão 4G pedida) e 20 (iPhone 14 recondicionado) continuam sem oferta equivalente: não foram substituídas por outros modelos, redes ou condições.
+
+O registro completo, com entrada, horário, conclusão do app, tempo, situação de cada fonte, lojas distintas, preços, títulos, pagamentos, rede exibida e links das 207 ofertas, está em `validacao_fontes_adicionais.json` e no alto da página pública `?avaliar=1`. A mudança seguinte apenas apresenta esse registro; busca, extração, decisão e prompt permanecem os mesmos. As rodadas anteriores, inclusive a validação das 11h27 publicada pelo Kevin, foram preservadas.
+
+Os 66 testes de regressão passaram, incluindo os resultados das regras nos 50 títulos (45 extrações e 44 decisões corretas sobre os rótulos publicados). Esta reconferência não cria uma nova amostra independente. A revisão humana dos 50 rótulos e das 207 ofertas continua pendente, assim como as sessões com os 5 lojistas e 5 consumidores para digitação, redução do tempo e utilidade. Nenhuma resposta de participante foi gerada nesta rodada.

@@ -2088,6 +2088,7 @@ ARQUIVO_RESULTADOS = "resultados_registrados.json"  # resultados já obtidos, pu
 ARQUIVO_PROTOCOLO = "PROTOCOLO.md"  # protocolo de validação, publicado ao lado do app.py
 ARQUIVO_VALIDACAO = "validacao_tecnica.json"
 ARQUIVO_NAVEGADOR = "validacao_navegador.json"
+ARQUIVO_FONTES_ADICIONAIS = "validacao_fontes_adicionais.json"
 
 
 def mostrar_validacao_tecnica():
@@ -2145,13 +2146,13 @@ def mostrar_validacao_tecnica():
     st.divider()
 
 
-def mostrar_validacao_navegador():
-    caminho = os.path.join(os.path.dirname(os.path.abspath(__file__)), ARQUIVO_NAVEGADOR)
+def mostrar_validacao_navegador(arquivo=ARQUIVO_NAVEGADOR):
+    caminho = os.path.join(os.path.dirname(os.path.abspath(__file__)), arquivo)
     if not os.path.exists(caminho):
         return
     with open(caminho, encoding="utf-8") as arquivo:
         registro = json.load(arquivo)
-    st.header("Tempo no app publicado, com coleta nova")
+    st.header(registro.get("titulo", "Tempo no app publicado, com coleta nova"))
     st.caption(f"{registro['inicio']} a {registro['fim']} · código {registro['codigo_sha256'][:12]} · navegador Edge")
     st.write(registro["metodo"])
     total = len(registro["buscas"])
@@ -2161,8 +2162,19 @@ def mostrar_validacao_navegador():
         st.write(f"Cobertura automática no app publicado: {registro['duas_lojas']} de {total} buscas em duas lojas. "
                  f"Meta: 18 de 20 — {'atingida na contagem automática' if total == 20 and registro['duas_lojas'] >= 18 else 'não atingida'}. "
                  "A conferência humana dos produtos e preços ainda está pendente.")
+    if "duas_lojas_com_pagamento" in registro:
+        st.write(f"Dessas buscas, {registro['duas_lojas_com_pagamento']} têm pelo menos duas lojas com pagamento à vista ou "
+                 f"no Pix confirmado. Foram geradas {registro['faixas']} faixas. "
+                 f"Mediana do tempo: {registro['mediana']:.1f} s; maior tempo: {registro['maximo']:.1f} s.")
+        st.info(f"Conferência humana pendente: {registro['ofertas']} ofertas exibidas "
+                f"({registro['confirmadas']} com preço confirmado e {registro['a_parte']} à parte). "
+                "Também faltam a revisão dos 50 rótulos e as sessões com 5 lojistas e 5 consumidores, "
+                "para medir digitação, redução do tempo de pesquisa e utilidade.")
     st.dataframe(pd.DataFrame([{
         "Nº": busca["n"], "Entrada": busca["entrada"], "Tempo no navegador (s)": busca["segundos"],
+        **({"Lojas equivalentes (antes da conferência)": busca["lojas_distintas"],
+            "Lojas com pagamento confirmado": busca["lojas_com_preco_confirmado"],
+            "Gerou faixa?": "Sim" if busca["gerou_faixa"] else "Não"} if "lojas_distintas" in busca else {}),
         "Conclusão exibida pelo app": busca["conclusao"],
     } for busca in registro["buscas"]]), hide_index=True)
     ofertas = [dict(oferta, Busca=busca["entrada"], Coletado=busca["quando"])
@@ -2267,6 +2279,7 @@ def mostrar_avaliacao():
                f"{versao_do_prompt()}, LLM principal {LLM_MODELO}, reserva {LLM_MODELO_RESERVA}, {LOTE_LLM} títulos por "
                f"chamada. Regras: filtro de acessórios, marca e modelo como na tela de escolha, armazenamento, condição, "
                "rede e defeito lidos no título. Cada resultado registrado traz a versão em que foi obtido.")
+    mostrar_validacao_navegador(ARQUIVO_FONTES_ADICIONAIS)
     mostrar_validacao_final()
     mostrar_validacao_navegador()
     mostrar_validacao_tecnica()
