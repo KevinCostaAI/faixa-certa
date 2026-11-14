@@ -2129,6 +2129,7 @@ def mostrar_diagnostico_fontes():
         "Casas Bahia": "https://www.casasbahia.com.br/galaxy-a17-128gb/b",
         "Efácil": "https://www.efacil.com.br/loja/departamento/Smartphones",
         "Trocafy": TROCAFY + "/",
+        "Magalu móvel": "https://m.magazineluiza.com.br/busca/galaxy+a17+128gb/",
     }
     def diagnosticar(item):
         nome, url = item

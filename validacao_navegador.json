@@ -1,0 +1,1153 @@
+{
+  "inicio": "14/11/2026, 09:29:43",
+  "fim": "14/11/2026, 09:51:28",
+  "codigo_sha256": "c31b5133feda4962894e2479e1e925180716c68a35f7d97f6046f0fa3ccdc4ba",
+  "metodo": "Medição automática no Edge, do acionamento de Buscar até a mensagem de conclusão ficar visível. As 20 buscas usaram ?coleta_nova=1, sem cache de preços. O tempo inclui a demora da automação, sendo uma medida conservadora; não é um teste com usuários.",
+  "ate_15s": 19,
+  "duas_lojas": 12,
+  "faixas": 13,
+  "revisao_humana": "pendente",
+  "buscas": [
+    {
+      "n": 1,
+      "entrada": "galaxy a07 128gb",
+      "nome": "Galaxy A07 128GB",
+      "quando": "14/11/2026, 09:29:43",
+      "segundos": 12.83,
+      "conclusao": "Consulta concluída: Galaxy A07 128GB. Coleta nova. Processamento: 11.7 s.",
+      "coleta_nova": true,
+      "lojas": [
+        "KaBuM!",
+        "Webcontinental"
+      ],
+      "gerou_faixa": true,
+      "ofertas": [
+        {
+          "titulo": "Celular Galaxy A07 128GB 4g Samsung",
+          "preco": 718.2,
+          "pagamento": "Pix",
+          "loja": "Magalu",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/921237/smartphone-galaxy-a07-128gb-4g-samsung",
+          "rede": "4G"
+        },
+        {
+          "titulo": "Smartphone Samsung Galaxy A07 128GB - Violeta, 4g, Ram 4gb, Câmera 50mp + Selfie 8mp, Tela 6,7\"",
+          "preco": 718.2,
+          "pagamento": "Pix",
+          "loja": "Magalu",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/921128/smartphone-samsung-galaxy-a07-128gb-violeta-4g-ram-4gb-camera-50mp-selfie-8mp-tela-6-7-",
+          "rede": "4G"
+        },
+        {
+          "titulo": "Smartphone Samsung A07 4g 128GB 4gb 50mp 8mp 6.7” Preto",
+          "preco": 718.2,
+          "pagamento": "Pix",
+          "loja": "Magalu",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/921218/smartphone-galaxy-a07-128gb-4g-samsung",
+          "rede": "4G"
+        },
+        {
+          "titulo": "Smartphone Samsung Galaxy A07 128GB, 4GB, Câmera 50mp, Tela 6.7”, Proteção Ip54, Processador 6nm, Preto",
+          "preco": 784.69,
+          "pagamento": "Pix",
+          "loja": "OFFCOMP",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/924196/celular-samsung-galaxy-a07-128gb-4gb-camera-50mp-tela-6-7-protecao-ip54-processador-6nm-preto-128-gb",
+          "rede": "4G (ficha)"
+        },
+        {
+          "titulo": "Smartphone Samsung A07 4GB RAM 128GB 50MP Violeta",
+          "preco": 843.9,
+          "pagamento": "Pix",
+          "loja": "Webcontinental · Lojas Edmil",
+          "fonte": "Webcontinental",
+          "link": "https://www.webcontinental.com.br/smartphone-samsung-a07-4gb-ram-128gb-50mp-violeta-003958001053/p",
+          "rede": "4G (ficha)"
+        },
+        {
+          "titulo": "Smartphone Samsung Galaxy A07 Sm-a075mzkrzto 6,7\" Hd/4g/4gb Ram+4gb Ram Plus/128GB/android 15/ Preto",
+          "preco": 979.9,
+          "pagamento": "Pix",
+          "loja": "LetsGo Informática",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/997796/celular-samsung-galaxy-a07-128gb-tela-6-7-pol-pls-lcd-4gb-ram-ram-plus-ate-4gb-camera-traseira-50-2mp-frontal-8mp-preto-",
+          "rede": "4G"
+        },
+        {
+          "titulo": "Smartphone Samsung Galaxy A07 A075 8GB 128GB 50MP 4G Android Preto",
+          "preco": 1359.91,
+          "pagamento": "Pix",
+          "loja": "Webcontinental · Tá Barato Tô Levando",
+          "fonte": "Webcontinental",
+          "link": "https://www.webcontinental.com.br/smartphone-samsung-galaxy-a07-a075-8gb-128gb-50mp-4g-android-preto-002648007476/p",
+          "rede": "4G"
+        }
+      ],
+      "fontes": "Lojas consultadas: Compare Livre: 8 ofertas · KaBuM!: 30 ofertas · Gazin: 1 oferta · Novo Mundo: 2 ofertas · Magazine Luiza: erro HTTP 403 · Webcontinental: 22 ofertas · Trocafy: fonte de aparelhos usados: não se aplica à condição pedida. Preços coletados às 09:29.",
+      "quando_utc": "2026-11-14T12:29:43.089Z"
+    },
+    {
+      "n": 2,
+      "entrada": "galaxi a17 128gb",
+      "nome": "Galaxy A17 128GB",
+      "quando": "14/11/2026, 09:30:32",
+      "segundos": 13.815,
+      "conclusao": "Consulta concluída: Galaxy A17 128GB. Coleta nova. Processamento: 12.1 s.",
+      "coleta_nova": true,
+      "lojas": [
+        "Gazin",
+        "KaBuM!",
+        "Webcontinental"
+      ],
+      "gerou_faixa": true,
+      "ofertas": [
+        {
+          "titulo": "Smartphone Samsung Galaxy A17 4G 6.7\" 128GB 4GB Câmera Tripla",
+          "preco": 929.9,
+          "pagamento": "Pix",
+          "loja": "Gazin",
+          "fonte": "Gazin",
+          "link": "https://www.gazin.com.br/produto/smartphone-samsung-galaxy-a17-4g-67-128gb-4gb-camera-tripla/9984/azul/quadriband",
+          "rede": "4G"
+        },
+        {
+          "titulo": "Celular Samsung Galaxy A17 4g 128GB 4gb Câmera 50mp Tela 6.7'' Preto",
+          "preco": 978.55,
+          "pagamento": "Pix",
+          "loja": "CONCORDIA INFORMATICA",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/1077420/celular-samsung-galaxy-a17-4g-128gb-4gb-camera-50mp-tela-6-7-preto",
+          "rede": "4G"
+        },
+        {
+          "titulo": "Smartphone Samsung Galaxy A17 4GB 128GB Câmera Tripla 50MP Preto",
+          "preco": 1390.82,
+          "pagamento": "Pix",
+          "loja": "Webcontinental · Lojas Colombo SA",
+          "fonte": "Webcontinental",
+          "link": "https://www.webcontinental.com.br/smartphone-samsung-galaxy-a17-4gb-128gb-camera-tripla-50mp-preto-003082004384/p",
+          "rede": "4G (ficha)"
+        },
+        {
+          "titulo": "Smartphone Samsung Galaxy A17 Com Ia, 128GB, 4GB RAM, Câm De 50mp, Tela De 6.7”, Nfc, Ip54 Preto",
+          "preco": 1417,
+          "pagamento": "Pix",
+          "loja": "MAGAZINEMETA",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/924199/celular-samsung-galaxy-a17-com-ia-128gb-4gb-ram-cam-de-50mp-tela-de-6-7-nfc-ip54-preto-128-gb",
+          "rede": "4G (ficha)"
+        }
+      ],
+      "fontes": "Lojas consultadas: Compare Livre: tempo limite da coleta · KaBuM!: 30 ofertas · Gazin: 1 oferta · Novo Mundo: 3 ofertas · Magazine Luiza: erro HTTP 403 · Webcontinental: 22 ofertas · Trocafy: fonte de aparelhos usados: não se aplica à condição pedida. Preços coletados às 09:30.",
+      "quando_utc": "2026-11-14T12:30:32.678Z"
+    },
+    {
+      "n": 3,
+      "entrada": "galaxy a16 128gb",
+      "nome": "Galaxy A16 128GB",
+      "quando": "14/11/2026, 09:30:47",
+      "segundos": 13.591,
+      "conclusao": "Consulta concluída: Galaxy A16 128GB. Coleta nova. Processamento: 12.1 s.",
+      "coleta_nova": true,
+      "lojas": [
+        "Webcontinental",
+        "KaBuM!"
+      ],
+      "gerou_faixa": true,
+      "ofertas": [
+        {
+          "titulo": "Celular Smartphone Samsung A16 128gb De Memória 4gb Ram 4g Preto",
+          "preco": 1102.96,
+          "pagamento": "Pix",
+          "loja": "Webcontinental · WORLDTRONICS",
+          "fonte": "Webcontinental",
+          "link": "https://www.webcontinental.com.br/celular-smartphone-samsung-a16-128gb-de-memoria-4gb-ram-4g-preto-006488000010/p",
+          "rede": "4G"
+        },
+        {
+          "titulo": "Smartphone Samsung Galaxy A16 4G, 128GB, 4GB Ram, Câmera Tripla 50MP, Tela 6.7\", Preto",
+          "preco": 1299,
+          "pagamento": "Pix",
+          "loja": "MAGAZINE JABUR",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/677921/smartphone-samsung-galaxy-a16-4g-128gb-4gb-ram-camera-tripla-50mp-tela-6-7-preto",
+          "rede": "4G"
+        },
+        {
+          "titulo": "Smartphone Samsung Galaxy A16 4GB RAM 128GB Câmera 50MP",
+          "preco": 1310.4,
+          "pagamento": "Pix",
+          "loja": "Webcontinental · Luana Eletronicos",
+          "fonte": "Webcontinental",
+          "link": "https://www.webcontinental.com.br/smartphone-samsung-galaxy-a16-4gb-ram-128gb-camera-50mp-006586000042/p",
+          "rede": "4G (ficha)"
+        }
+      ],
+      "fontes": "Lojas consultadas: Compare Livre: tempo limite da coleta · KaBuM!: 30 ofertas · Gazin: nenhuma oferta encontrada · Novo Mundo: 2 ofertas · Magazine Luiza: erro HTTP 403 · Webcontinental: 19 ofertas · Trocafy: fonte de aparelhos usados: não se aplica à condição pedida. Preços coletados às 09:30.",
+      "quando_utc": "2026-11-14T12:30:47.735Z"
+    },
+    {
+      "n": 4,
+      "entrada": "galaxy a36 5g 128gb",
+      "nome": "Galaxy A36 5G 128GB",
+      "quando": "14/11/2026, 09:31:02",
+      "segundos": 13.544,
+      "conclusao": "Consulta concluída: Galaxy A36 5G 128GB. Coleta nova. Processamento: 12.3 s.",
+      "coleta_nova": true,
+      "lojas": [
+        "KaBuM!"
+      ],
+      "gerou_faixa": false,
+      "ofertas": [
+        {
+          "titulo": "Smartphone Samsung Galaxy A36 128GB 5g - Verde, Câmera Tripla 50mp, Ram 6gb, Tela 6.7\"",
+          "preco": 2229.44,
+          "pagamento": "Pix",
+          "loja": "ECOM ELETRO",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/734582/smartphone-samsung-galaxy-a36-128gb-5g-verde-camera-tripla-50mp-ram-6gb-tela-6-7-",
+          "rede": ""
+        },
+        {
+          "titulo": "Smartphone Samsung Galaxy A36 128GB 5g - Preto, Câmera Tripla 50mp, Ram 6gb, Tela 6.7\"",
+          "preco": 2389,
+          "pagamento": "Pix",
+          "loja": "TUDOSMART",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/734633/smartphone-samsung-galaxy-a36-128gb-5g-preto-camera-tripla-50mp-ram-6gb-tela-6-7-",
+          "rede": ""
+        }
+      ],
+      "fontes": "Lojas consultadas: Compare Livre: 5 ofertas · KaBuM!: 30 ofertas · Gazin: nenhuma oferta encontrada · Novo Mundo: nenhuma oferta encontrada · Magazine Luiza: erro HTTP 403 · Webcontinental: 4 ofertas · Trocafy: fonte de aparelhos usados: não se aplica à condição pedida. Preços coletados às 09:31.",
+      "quando_utc": "2026-11-14T12:31:02.319Z"
+    },
+    {
+      "n": 5,
+      "entrada": "galaxy a14 128gb usado",
+      "nome": "Galaxy A14 128GB usado",
+      "quando": "14/11/2026, 09:32:26",
+      "segundos": 10.988,
+      "conclusao": "Consulta concluída: Galaxy A14 128GB usado. Coleta nova. Processamento: 9.0 s.",
+      "coleta_nova": true,
+      "lojas": [],
+      "gerou_faixa": false,
+      "ofertas": [],
+      "fontes": "Lojas consultadas: Compare Livre: nenhuma oferta encontrada · KaBuM!: 30 ofertas · Gazin: nenhuma oferta encontrada · Novo Mundo: nenhuma oferta encontrada · Magazine Luiza: erro HTTP 403 · Webcontinental: nenhuma oferta encontrada · Trocafy: modelo não consta nas categorias públicas da loja. Preços coletados às 09:32.",
+      "quando_utc": "2026-11-14T12:32:26.309Z"
+    },
+    {
+      "n": 6,
+      "entrada": "motorolla g06 128gb",
+      "nome": "Motorola G06 128GB",
+      "quando": "14/11/2026, 09:32:38",
+      "segundos": 12.299,
+      "conclusao": "Consulta concluída: Motorola G06 128GB. Coleta nova. Processamento: 10.8 s.",
+      "coleta_nova": true,
+      "lojas": [
+        "Gazin",
+        "KaBuM!",
+        "Webcontinental"
+      ],
+      "gerou_faixa": true,
+      "ofertas": [
+        {
+          "titulo": "Smartphone Motorola Moto G06 4G 6.9\" 128GB 4GB Câmera 50MP",
+          "preco": 759.9,
+          "pagamento": "Pix",
+          "loja": "Gazin",
+          "fonte": "Gazin",
+          "link": "https://www.gazin.com.br/produto/smartphone-motorola-moto-g06-4g-69-128gb-4gb-camera-50mp/10037/azul/quadriband",
+          "rede": ""
+        },
+        {
+          "titulo": "Smartphone Motorola G06 4g 128GB 8GB 6.9” 50mp Azul Marinho",
+          "preco": 798.3,
+          "pagamento": "Pix",
+          "loja": "MIRANDA",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/951782/smartphone-motorola-moto-g06-128gb-azul-marinho-12gb-4gb-ram-8gb-ram-boost-camera-50mp-e-tela-6-9-",
+          "rede": ""
+        },
+        {
+          "titulo": "Smartphone Motorola Moto G06 128GB - Laranja, 12gb (4gb Ram +8GB Ram Boost), Câmera 50mp E Tela 6,9”",
+          "preco": 798.3,
+          "pagamento": "Pix",
+          "loja": "MIRANDA",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/951780/smartphone-motorola-moto-g06-128gb-laranja-12gb-4gb-ram-8gb-ram-boost-camera-50mp-e-tela-6-9-",
+          "rede": ""
+        },
+        {
+          "titulo": "Smartphone Motorola Moto G06 4GB RAM 128GB 50MP Azul Marinho",
+          "preco": 898.9,
+          "pagamento": "Pix",
+          "loja": "Webcontinental · Lojas Edmil",
+          "fonte": "Webcontinental",
+          "link": "https://www.webcontinental.com.br/smartphone-motorola-moto-g06-4gb-ram-128gb-50mp-azul-marinho-003958001019/p",
+          "rede": ""
+        },
+        {
+          "titulo": "Smartphone Moto G06, 128GB, Câmera Traseira 50mp, Bege, Motorola",
+          "preco": 1439.9,
+          "pagamento": "Pix",
+          "loja": "HJ MAGAZINE",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/1015942/smartphone-moto-g06-128gb-camera-traseira-50mp-bege-motorola",
+          "rede": ""
+        }
+      ],
+      "fontes": "Lojas consultadas: Compare Livre: 16 ofertas · KaBuM!: 30 ofertas · Gazin: 1 oferta · Novo Mundo: nenhuma oferta encontrada · Magazine Luiza: erro HTTP 403 · Webcontinental: 17 ofertas · Trocafy: fonte de aparelhos usados: não se aplica à condição pedida. Preços coletados às 09:32.",
+      "quando_utc": "2026-11-14T12:32:38.319Z"
+    },
+    {
+      "n": 7,
+      "entrada": "moto g17 256gb",
+      "nome": "Moto G17 256GB",
+      "quando": "14/11/2026, 09:32:51",
+      "segundos": 17.825,
+      "conclusao": "Consulta concluída: Moto G17 256GB. Coleta nova. Processamento: 11.5 s.",
+      "coleta_nova": true,
+      "lojas": [
+        "Webcontinental",
+        "KaBuM!",
+        "Gazin"
+      ],
+      "gerou_faixa": true,
+      "ofertas": [
+        {
+          "titulo": "Smartphone Motorola Moto G17 XT2623 12GB 256GB 4G NFC Roxo",
+          "preco": 1061.91,
+          "pagamento": "Pix",
+          "loja": "Webcontinental · Lojas Edmil",
+          "fonte": "Webcontinental",
+          "link": "https://www.webcontinental.com.br/smartphone-motorola-moto-g17-xt2623-12gb-256gb-4g-nfc-roxo-003958001143/p",
+          "rede": "4G"
+        },
+        {
+          "titulo": "Smartphone Motorola Moto G17 256gb - Rosa, 12gb (4gb Ram + 8GB Ram Boost), Câmera 50mp E Tela 6,7\"",
+          "preco": 1099,
+          "pagamento": "Pix",
+          "loja": "LOGIN INFORMATICA",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/1007606/smartphone-motorola-moto-g17-256gb-rosa-12gb-4gb-ram-8gb-ram-boost-camera-50mp-e-tela-6-7-",
+          "rede": "NÃO INFORMADA"
+        },
+        {
+          "titulo": "Smartphone Motorola Moto G17 256gb - Roxo, 12gb (4gb Ram + 8GB Ram Boost), Câmera 50mp E Tela 6,7\"",
+          "preco": 1199,
+          "pagamento": "Pix",
+          "loja": "Magalu",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/1007601/smartphone-motorola-moto-g17-256gb-roxo-12gb-4gb-ram-8gb-ram-boost-camera-50mp-e-tela-6-7-",
+          "rede": "NÃO INFORMADA"
+        },
+        {
+          "titulo": "Smartphone Motorola XT2623-1 Moto G17 4GB 256GB Câmera 50MP Azul",
+          "preco": 1254.77,
+          "pagamento": "Pix",
+          "loja": "Webcontinental · Lojas Colombo SA",
+          "fonte": "Webcontinental",
+          "link": "https://www.webcontinental.com.br/smartphone-motorola-xt2623-1-moto-g17-4gb-256gb-camera-50mp-azul-003082004524/p",
+          "rede": "4G (ficha)"
+        },
+        {
+          "titulo": "Smartphone Motorola Moto G17 256gb - Azul Claro, 12gb (4gb Ram + 8GB Ram Boost), Câmera 50mp E Tela 6,7\"",
+          "preco": 1357.55,
+          "pagamento": "Pix",
+          "loja": "MASTERCELL",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/1007602/smartphone-motorola-moto-g17-256gb-azul-claro-12gb-4gb-ram-8gb-ram-boost-camera-50mp-e-tela-6-7-",
+          "rede": "NÃO INFORMADA"
+        },
+        {
+          "titulo": "Smartphone Motorola Moto G17 6.7\" Octa Core 256GB 4GB Câmera Tripla",
+          "preco": 2191.92,
+          "pagamento": "Pix",
+          "loja": "Gazin",
+          "fonte": "Gazin",
+          "link": "https://www.gazin.com.br/produto/smartphone-motorola-moto-g17-67-octa-core-256gb-4gb-camera-tripla/10286/rosa/quadriband",
+          "rede": "NÃO INFORMADA"
+        }
+      ],
+      "fontes": "Lojas consultadas: Compare Livre: 7 ofertas · KaBuM!: 30 ofertas · Gazin: 1 oferta · Novo Mundo: 1 oferta · Magazine Luiza: erro HTTP 403 · Webcontinental: 26 ofertas · Trocafy: fonte de aparelhos usados: não se aplica à condição pedida. Preços coletados às 09:33.",
+      "quando_utc": "2026-11-14T12:32:51.780Z"
+    },
+    {
+      "n": 8,
+      "entrada": "moto g35 256gb",
+      "nome": "Moto G35 256GB",
+      "quando": "14/11/2026, 09:34:02",
+      "segundos": 13.176,
+      "conclusao": "Consulta concluída: Moto G35 256GB. Coleta nova. Processamento: 10.9 s.",
+      "coleta_nova": true,
+      "lojas": [
+        "KaBuM!"
+      ],
+      "gerou_faixa": false,
+      "ofertas": [
+        {
+          "titulo": "Smartphone Motorola G35 5g 256gb 4GB Ram 6.72” 50mp Coral",
+          "preco": 1259.1,
+          "pagamento": "Pix",
+          "loja": "Magalu",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/662346/smartphone-motorola-moto-g35-5g-256gb-coral-12gb-ram-boost-camera-50-mp-selfie-16mp-e-tela-6-7-android-14",
+          "rede": ""
+        },
+        {
+          "titulo": "Smartphone Motorola G35 5g 256gb 8GB Ram 6.72” 50mp Cinza",
+          "preco": 1769,
+          "pagamento": "Pix",
+          "loja": "UPDEFRUTA",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/643126/smartphone-motorola-moto-g35-5g-256gb-cinza-12gb-ram-boost-camera-50-mp-selfie-16mp-e-tela-6-7-android-14",
+          "rede": ""
+        }
+      ],
+      "fontes": "Lojas consultadas: Compare Livre: 4 ofertas · KaBuM!: 30 ofertas · Gazin: nenhuma oferta encontrada · Novo Mundo: nenhuma oferta encontrada · Magazine Luiza: erro HTTP 403 · Webcontinental: 19 ofertas · Trocafy: fonte de aparelhos usados: não se aplica à condição pedida. Preços coletados às 09:34.",
+      "quando_utc": "2026-11-14T12:34:02.968Z"
+    },
+    {
+      "n": 9,
+      "entrada": "moto g47 128gb",
+      "nome": "Moto G47 128GB",
+      "quando": "14/11/2026, 09:34:18",
+      "segundos": 12.867,
+      "conclusao": "Consulta concluída: Moto G47 128GB. Coleta nova. Processamento: 11.2 s.",
+      "coleta_nova": true,
+      "lojas": [
+        "KaBuM!",
+        "Gazin"
+      ],
+      "gerou_faixa": true,
+      "ofertas": [
+        {
+          "titulo": "Smartphone Motorola Moto G47 5G, 128GB, 12GB (4GB RAM + 8GB RAM Boost), Câmera 50 MP, Tela 6.7”, Rosa",
+          "preco": 1131.3,
+          "pagamento": "Pix",
+          "loja": "Magalu",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/1038264/smartphone-motorola-moto-g47-5g-rosa-tela-de-6-7-128gb-4gb-ram-e-camera-de-50-mp-sony-lytia-600-bivolt",
+          "rede": ""
+        },
+        {
+          "titulo": "Smartphone Motorola Moto G47, 5g, Grafite, Tela De 6,7”, 128GB, 4gb Ram E Câmera De 50 Mp Sony Lytia?? 600 - Bivolt",
+          "preco": 1131.3,
+          "pagamento": "Pix",
+          "loja": "Magalu",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/1038262/smartphone-motorola-moto-g47-5g-grafite-tela-de-6-7-128gb-4gb-ram-e-camera-de-50-mp-sony-lytia-600-bivolt",
+          "rede": ""
+        },
+        {
+          "titulo": "Smartphone Motorola Moto G47 5G, 128GB, 12GB (4GB RAM + 8GB RAM Boost), Câmera 50 Mp, Tela 6.7”, Azul Náutico",
+          "preco": 1131.3,
+          "pagamento": "Pix",
+          "loja": "Magalu",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/1038261/smartphone-motorola-moto-g47-5g-128gb-12gb-4gb-ram-8gb-ram-boost-camera-50-mp-tela-6-7-azul-nautico",
+          "rede": ""
+        },
+        {
+          "titulo": "Smartphone Motorola Moto G47 5G 6.7\" Octa-Core 128GB 4GB Câmera Dupla",
+          "preco": 1238.76,
+          "pagamento": "Pix",
+          "loja": "Gazin",
+          "fonte": "Gazin",
+          "link": "https://www.gazin.com.br/produto/smartphone-motorola-moto-g47-5g-67-octa-core-128gb-4gb-camera-dupla/11119/azul/quadriband",
+          "rede": ""
+        },
+        {
+          "titulo": "Smartphone Motorola Moto G47 5g 128GB - Azul Turquesa, 12gb (4gb Ram + 8GB Ram Boost), Câmera 50 Mp E Tela 6,7\"",
+          "preco": 1471.55,
+          "pagamento": "Pix",
+          "loja": "MASTERCELL",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/1050739/smartphone-motorola-moto-g47-5g-128gb-azul-turquesa-12gb-4gb-ram-8gb-ram-boost-camera-50-mp-e-tela-6-7-",
+          "rede": ""
+        }
+      ],
+      "fontes": "Lojas consultadas: Compare Livre: 8 ofertas · KaBuM!: 30 ofertas · Gazin: 1 oferta · Novo Mundo: 1 oferta · Magazine Luiza: erro HTTP 403 · Webcontinental: 12 ofertas · Trocafy: fonte de aparelhos usados: não se aplica à condição pedida. Preços coletados às 09:34.",
+      "quando_utc": "2026-11-14T12:34:18.886Z"
+    },
+    {
+      "n": 10,
+      "entrada": "moto e15 64gb",
+      "nome": "Moto E15 64GB",
+      "quando": "14/11/2026, 09:34:32",
+      "segundos": 8.815,
+      "conclusao": "Consulta concluída: Moto E15 64GB. Coleta nova. Processamento: 5.5 s.",
+      "coleta_nova": true,
+      "lojas": [
+        "KaBuM!"
+      ],
+      "gerou_faixa": false,
+      "ofertas": [
+        {
+          "titulo": "Smartphone Motorola Moto E15 64gb 2gb Azul",
+          "preco": 916.65,
+          "pagamento": "Pix",
+          "loja": "MUSIC POWER",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/1020404/smartphone-motorola-moto-e15-64gb-2gb-azul",
+          "rede": ""
+        },
+        {
+          "titulo": "Motorola Moto E15 Xt2523-6 64gb 2gb Ram Roxo Morado.",
+          "preco": 939,
+          "pagamento": "Pix",
+          "loja": "EURO PARTTS BRASIL",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/887591/motorola-moto-e15-xt2523-6-64gb-2gb-ram-roxo-morado",
+          "rede": ""
+        }
+      ],
+      "fontes": "Lojas consultadas: Compare Livre: nenhuma oferta encontrada · KaBuM!: 14 ofertas · Gazin: nenhuma oferta encontrada · Novo Mundo: nenhuma oferta encontrada · Magazine Luiza: erro HTTP 403 · Webcontinental: 10 ofertas · Trocafy: fonte de aparelhos usados: não se aplica à condição pedida. Preços coletados às 09:34.",
+      "quando_utc": "2026-11-14T12:34:32.713Z"
+    },
+    {
+      "n": 11,
+      "entrada": "xiaome redmi 15c 256gb",
+      "nome": "Xiaomi Redmi 15C 256GB",
+      "quando": "14/11/2026, 09:40:37",
+      "segundos": 13.507,
+      "conclusao": "Consulta concluída: Xiaomi Redmi 15C 256GB. Coleta nova. Processamento: 11.7 s.",
+      "coleta_nova": true,
+      "lojas": [
+        "KaBuM!",
+        "Webcontinental"
+      ],
+      "gerou_faixa": true,
+      "ofertas": [
+        {
+          "titulo": "Smartphone Xiaomi Redmi 15c 4g 8GB Ram 256gb Verde Tela 6,9\" Câmera 50mp Bateria 6000mah",
+          "preco": 1379.89,
+          "pagamento": "Pix",
+          "loja": "VTX COMERCIO DE VARIEDADES",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/1077713/smartphone-xiaomi-redmi-15c-4g-8gb-ram-256gb-verde-tela-6-9-camera-50mp-bateria-6000mah",
+          "rede": "4G"
+        },
+        {
+          "titulo": "Smartphone Xiaomi Redmi 15c 4g 256gb 4gb Ram Tela 6,9\" 120hz Câmera 50mp Bateria 6000mah",
+          "preco": 1469.9,
+          "pagamento": "Pix",
+          "loja": "VTX COMERCIO DE VARIEDADES",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/1077711/smartphone-xiaomi-redmi-15c-4g-256gb-4gb-ram-tela-6-9-120hz-camera-50mp-bateria-6000mah",
+          "rede": "4G"
+        },
+        {
+          "titulo": "Smartphone Xiaomi Redmi 15C 4G 4GB Ram 256GB Câmera 50MP Bateria 6000mAh Verde",
+          "preco": 1671.99,
+          "pagamento": "Pix",
+          "loja": "Webcontinental · Xiaomi",
+          "fonte": "Webcontinental",
+          "link": "https://www.webcontinental.com.br/smartphone-xiaomi-redmi-15c-4g-br-4-4gb-ram-virtual-256gb-verde-006293000478/p",
+          "rede": "4G (ficha)"
+        },
+        {
+          "titulo": "Smartphone Xiaomi Redmi 15C 4G 4GB Ram 256GB Câmera 50MP Preto",
+          "preco": 1671.99,
+          "pagamento": "Pix",
+          "loja": "Webcontinental · Xiaomi",
+          "fonte": "Webcontinental",
+          "link": "https://www.webcontinental.com.br/smartphone-xiaomi-redmi-15c-4g-br-4-4gb-ram-virtual-256gb-preto-006293000477/p",
+          "rede": "4G (ficha)"
+        },
+        {
+          "titulo": "Smartphone Xiaomi Redmi 15c 4g Br 4+4gb Ramvirtual + 256gb",
+          "preco": 1899.99,
+          "pagamento": "Pix",
+          "loja": "Xiaomi Oficial",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/947939/smartphone-xiaomi-redmi-15c-4g-br-4-4gb-ramvirtual-256gb",
+          "rede": "4G"
+        },
+        {
+          "titulo": "Smartphone Xiaomi Redmi 15c 4g Br 4+4gb Ram Virtual + 256gb",
+          "preco": 1899.99,
+          "pagamento": "Pix",
+          "loja": "Xiaomi Oficial",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/947526/smartphone-xiaomi-redmi-15c-4g-br-4-4gb-ram-virtual-256gb",
+          "rede": "4G"
+        }
+      ],
+      "fontes": "Lojas consultadas: Compare Livre: 7 ofertas · KaBuM!: 30 ofertas · Gazin: 1 oferta · Novo Mundo: nenhuma oferta encontrada · Magazine Luiza: erro HTTP 403 · Webcontinental: 25 ofertas · Trocafy: fonte de aparelhos usados: não se aplica à condição pedida. Preços coletados às 09:40.",
+      "quando_utc": "2026-11-14T12:40:37.065Z"
+    },
+    {
+      "n": 12,
+      "entrada": "redmi 15 256gb",
+      "nome": "Redmi 15 256GB",
+      "quando": "14/11/2026, 09:40:52",
+      "segundos": 13.943,
+      "conclusao": "Consulta concluída: Redmi 15 256GB. Coleta nova. Processamento: 11.6 s.",
+      "coleta_nova": true,
+      "lojas": [
+        "KaBuM!"
+      ],
+      "gerou_faixa": false,
+      "ofertas": [
+        {
+          "titulo": "Celular Xiaomi Redmi 15 256gb 8GB Preto 4g Selfie Com Gravação 1080p 30fps",
+          "preco": 1619.1,
+          "pagamento": "Pix",
+          "loja": "MAGA'ABUR",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/984772/celular-xiaomi-redmi-15-256gb-8gb-preto-4g-selfie-com-gravacao-1080p-30fps",
+          "rede": ""
+        }
+      ],
+      "fontes": "Lojas consultadas: Compare Livre: 14 ofertas · KaBuM!: 30 ofertas · Gazin: 1 oferta · Novo Mundo: nenhuma oferta encontrada · Magazine Luiza: erro HTTP 403 · Webcontinental: 25 ofertas · Trocafy: fonte de aparelhos usados: não se aplica à condição pedida. Preços coletados às 09:41.",
+      "quando_utc": "2026-11-14T12:40:52.564Z"
+    },
+    {
+      "n": 13,
+      "entrada": "poco c85 128gb",
+      "nome": "Poco C85 128GB",
+      "quando": "14/11/2026, 09:41:07",
+      "segundos": 14.287,
+      "conclusao": "Consulta concluída: Poco C85 128GB. Coleta nova. Processamento: 12.1 s.",
+      "coleta_nova": true,
+      "lojas": [
+        "Webcontinental",
+        "KaBuM!"
+      ],
+      "gerou_faixa": true,
+      "ofertas": [
+        {
+          "titulo": "Smartphone Xiaomi Poco C85 6GB 128GB Câmera 50MP Tela 6,9 Polegadas Preto",
+          "preco": 1495.99,
+          "pagamento": "Pix",
+          "loja": "Webcontinental · Xiaomi",
+          "fonte": "Webcontinental",
+          "link": "https://www.webcontinental.com.br/smartphone-poco-c85-6-6gb-128gb-preto-006293000067/p",
+          "rede": "4G (ficha)"
+        },
+        {
+          "titulo": "Smartphone Xiaomi Poco C85 6GB Ram 128GB Câmera 50MP Bateria 6000mAh Roxo",
+          "preco": 1495.99,
+          "pagamento": "Pix",
+          "loja": "Webcontinental · Xiaomi",
+          "fonte": "Webcontinental",
+          "link": "https://www.webcontinental.com.br/smartphone-poco-c85-6-6gb-ram-128gb---roxo-006293000068/p",
+          "rede": "4G (ficha)"
+        },
+        {
+          "titulo": "Smartphone Poco C85 6+6gb + 128GB, Preto",
+          "preco": 1699.99,
+          "pagamento": "Pix",
+          "loja": "Xiaomi Oficial",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/931262/smartphone-poco-c85-6-6gb-128gb-preto",
+          "rede": "4G (ficha)"
+        }
+      ],
+      "fontes": "Lojas consultadas: Compare Livre: tempo limite da coleta · KaBuM!: 30 ofertas · Gazin: nenhuma oferta encontrada · Novo Mundo: nenhuma oferta encontrada · Magazine Luiza: erro HTTP 403 · Webcontinental: 15 ofertas · Trocafy: fonte de aparelhos usados: não se aplica à condição pedida. Preços coletados às 09:41.",
+      "quando_utc": "2026-11-14T12:41:07.583Z"
+    },
+    {
+      "n": 14,
+      "entrada": "redmi note 15 256gb",
+      "nome": "Redmi Note 15 256GB",
+      "quando": "14/11/2026, 09:45:20",
+      "segundos": 13.174,
+      "conclusao": "Consulta concluída: Redmi Note 15 256GB. Coleta nova. Processamento: 11.3 s.",
+      "coleta_nova": true,
+      "lojas": [
+        "KaBuM!"
+      ],
+      "gerou_faixa": false,
+      "ofertas": [
+        {
+          "titulo": "Redmi Note 15 256gb",
+          "preco": 2799.99,
+          "pagamento": "Pix",
+          "loja": "Xiaomi Oficial",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/997652/redmi-note-15-256gb",
+          "rede": "4G (ficha)"
+        }
+      ],
+      "fontes": "Lojas consultadas: Compare Livre: 4 ofertas · KaBuM!: 30 ofertas · Gazin: 1 oferta · Novo Mundo: nenhuma oferta encontrada · Magazine Luiza: erro HTTP 403 · Webcontinental: 27 ofertas · Trocafy: fonte de aparelhos usados: não se aplica à condição pedida. Preços coletados às 09:45.",
+      "quando_utc": "2026-11-14T12:45:20.728Z"
+    },
+    {
+      "n": 15,
+      "entrada": "oppo a6x 128gb",
+      "nome": "Oppo A6X 128GB",
+      "quando": "14/11/2026, 09:45:34",
+      "segundos": 12.977,
+      "conclusao": "Consulta concluída: Oppo A6X 128GB. Coleta nova. Processamento: 11.3 s.",
+      "coleta_nova": true,
+      "lojas": [
+        "KaBuM!",
+        "Gazin"
+      ],
+      "gerou_faixa": true,
+      "ofertas": [
+        {
+          "titulo": "Celular Oppo A6x 4 128GB Cph 2819 - Cph 2819 Azul Quadriband",
+          "preco": 1169.1,
+          "pagamento": "Pix",
+          "loja": "Magalu",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/1000527/celular-oppo-a6x-4-128gb-cph-2819-cph-2819-azul-quadriband",
+          "rede": ""
+        },
+        {
+          "titulo": "Smartphone OPPO A6x, 128GB, 4GB + 8GB RAM, 6,75'', Câmera Traseira de 13MP - Púrpura",
+          "preco": 1169.1,
+          "pagamento": "Pix",
+          "loja": "Magalu",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/1000528/oppo-a6x-128gb",
+          "rede": ""
+        },
+        {
+          "titulo": "Smartphone Oppo A6x 128GB 4gb Ram Púrpura Tela 6.75\" 120hz Bateria 6500mah Nfc Snapdragon 4g",
+          "preco": 1399,
+          "pagamento": "Pix",
+          "loja": "MUSIC POWER",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/1061032/smartphone-oppo-a6x-128gb-4gb-ram-purpura-tela-6-75-120hz-bateria-6500mah-nfc-snapdragon-4g",
+          "rede": ""
+        },
+        {
+          "titulo": "Smartphone OPPO A6x 6.75\" 128GB 4GB Câmera Dupla",
+          "preco": 1509.3,
+          "pagamento": "Pix",
+          "loja": "Gazin",
+          "fonte": "Gazin",
+          "link": "https://www.gazin.com.br/produto/smartphone-oppo-a6x-675-128gb-4gb-camera-dupla/10245/purpura/quadriband",
+          "rede": ""
+        }
+      ],
+      "fontes": "Lojas consultadas: Compare Livre: 2 ofertas · KaBuM!: 6 ofertas · Gazin: 1 oferta · Novo Mundo: 1 oferta · Magazine Luiza: erro HTTP 403 · Webcontinental: nenhuma oferta encontrada · Trocafy: fonte de aparelhos usados: não se aplica à condição pedida. Preços coletados às 09:45.",
+      "quando_utc": "2026-11-14T12:45:34.828Z"
+    },
+    {
+      "n": 16,
+      "entrada": "iphone 16e 128gb",
+      "nome": "iPhone 16E 128GB",
+      "quando": "14/11/2026, 09:45:48",
+      "segundos": 12.376,
+      "conclusao": "Consulta concluída: iPhone 16E 128GB. Coleta nova. Processamento: 11.0 s.",
+      "coleta_nova": true,
+      "lojas": [
+        "KaBuM!",
+        "Gazin"
+      ],
+      "gerou_faixa": true,
+      "ofertas": [
+        {
+          "titulo": "Apple Iphone 16e A3212 Esim 128GB 8GB Ram 6.1 - Black",
+          "preco": 3299,
+          "pagamento": "Pix",
+          "loja": "Magalu",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/723885/iphone-16e-128gb-apple",
+          "rede": ""
+        },
+        {
+          "titulo": "Iphone 16e 128GB Apple",
+          "preco": 3299,
+          "pagamento": "Pix",
+          "loja": "Magalu",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/724768/iphone-16e-128gb-apple",
+          "rede": ""
+        },
+        {
+          "titulo": "iPhone 16e Apple 128GB, Câmera 48MP, Tela Super Retina XDR 6,1\", Branco",
+          "preco": 4499.9,
+          "pagamento": "Pix",
+          "loja": "KaBuM!",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/717163/iphone-16e-apple-128gb-camera-48mp-tela-super-retina-xdr-6-1-branco",
+          "rede": ""
+        },
+        {
+          "titulo": "iPhone 16e Apple 5G 6,1\" IOS 18 128GB 8GB Câmera 48MP",
+          "preco": 5179.9,
+          "pagamento": "Pix",
+          "loja": "Gazin",
+          "fonte": "Gazin",
+          "link": "https://www.gazin.com.br/produto/iphone-16e-apple-5g-61-ios-18-128gb-8gb-camera-48mp/9522/preto/quadriband",
+          "rede": ""
+        }
+      ],
+      "fontes": "Lojas consultadas: Compare Livre: sem resposta · KaBuM!: 30 ofertas · Gazin: 1 oferta · Novo Mundo: nenhuma oferta encontrada · Magazine Luiza: erro HTTP 403 · Webcontinental: 17 ofertas · Trocafy: fonte de aparelhos usados: não se aplica à condição pedida. Preços coletados às 09:45.",
+      "quando_utc": "2026-11-14T12:45:48.804Z"
+    },
+    {
+      "n": 17,
+      "entrada": "epone 16 128gb",
+      "nome": "iPhone 16 128GB",
+      "quando": "14/11/2026, 09:49:00",
+      "segundos": 13.014,
+      "conclusao": "Consulta concluída: iPhone 16 128GB. Coleta nova. Processamento: 11.0 s.",
+      "coleta_nova": true,
+      "lojas": [
+        "KaBuM!"
+      ],
+      "gerou_faixa": true,
+      "ofertas": [
+        {
+          "titulo": "Apple Iphone 16 128GB Rosa",
+          "preco": 4799,
+          "pagamento": "Pix",
+          "loja": "Magalu",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/643113/apple-iphone-16-128gb-rosa",
+          "rede": ""
+        },
+        {
+          "titulo": "Iphone 16 128GB 5g Branco Tela 6,1 Câmera 48mp Apple",
+          "preco": 4799,
+          "pagamento": "Pix",
+          "loja": "Magalu",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/643121/iphone-16-128gb-5g-branco-tela-6-1-camera-48mp-apple",
+          "rede": ""
+        },
+        {
+          "titulo": "Apple Iphone 16 128GB 8GB Ram A3287 Nano + Esim Tela 6.1 48+12mp Verde Acinzentado",
+          "preco": 4799,
+          "pagamento": "Pix",
+          "loja": "Magalu",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/643118/apple-iphone-16-128gb-8gb-ram-a3287-nano-esim-tela-6-1-48-12mp-verde-acinzentado",
+          "rede": ""
+        },
+        {
+          "titulo": "Smartphone Apple Iphone 16 5g 128GB 48mp 6.1” Preto",
+          "preco": 4799,
+          "pagamento": "Pix",
+          "loja": "Magalu",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/643120/iphone-16-128gb-5g-preto-tela-6-1-camera-48mp-apple",
+          "rede": ""
+        },
+        {
+          "titulo": "iPhone 16 Apple 128GB, Câmera Dupla de 48MP, Tela 6.1\", Branco",
+          "preco": 5799,
+          "pagamento": "Pix",
+          "loja": "KaBuM!",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/640913/iphone-16-apple-128gb-camera-dupla-de-48mp-tela-6-1-branco",
+          "rede": ""
+        }
+      ],
+      "fontes": "Lojas consultadas: Compare Livre: 1 oferta · KaBuM!: 30 ofertas · Gazin: nenhuma oferta encontrada · Novo Mundo: nenhuma oferta encontrada · Magazine Luiza: erro HTTP 403 · Webcontinental: 28 ofertas · Trocafy: fonte de aparelhos usados: não se aplica à condição pedida. Preços coletados às 09:49.",
+      "quando_utc": "2026-11-14T12:49:00.183Z"
+    },
+    {
+      "n": 18,
+      "entrada": "iphone 17 pro max 256gb",
+      "nome": "iPhone 17 Pro Max 256GB",
+      "quando": "14/11/2026, 09:49:14",
+      "segundos": 13.402,
+      "conclusao": "Consulta concluída: iPhone 17 Pro Max 256GB. Coleta nova. Processamento: 11.6 s.",
+      "coleta_nova": true,
+      "lojas": [
+        "KaBuM!",
+        "Webcontinental"
+      ],
+      "gerou_faixa": true,
+      "ofertas": [
+        {
+          "titulo": "Apple Iphone 17 Pro Max 256gb Laranja-cósmico",
+          "preco": 9099,
+          "pagamento": "Pix",
+          "loja": "NegociuN",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/928991/apple-iphone-17-pro-max-256gb-laranja-cosmico",
+          "rede": ""
+        },
+        {
+          "titulo": "Iphone 17 Pro Max 256gb Apple Blue",
+          "preco": 9490,
+          "pagamento": "Pix",
+          "loja": "JANONI TECNOLOGIA",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/928901/iphone-17-pro-max-256gb-apple-blue",
+          "rede": ""
+        },
+        {
+          "titulo": "Apple Iphone 17 Pro Max 256gb Prateado",
+          "preco": 10169.1,
+          "pagamento": "Pix",
+          "loja": "Magalu",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/928979/apple-iphone-17-pro-max-256gb-prateado",
+          "rede": ""
+        },
+        {
+          "titulo": "iPhone 17 Pro Max Apple 256GB, Câmera Tripla Fusion de 48MP, Tela 6.9\" Super Retina XDR, Azul-intenso",
+          "preco": 12499,
+          "pagamento": "Pix",
+          "loja": "KaBuM!",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/925357/iphone-17-pro-max-apple-256gb-camera-tripla-fusion-de-48mp-tela-6-9-super-retina-xdr-azul-intenso",
+          "rede": ""
+        },
+        {
+          "titulo": "iPhone 17 Pro Max Apple 256GB, Câmera Tripla Fusion de 48MP, Tela 6.9\" Super Retina XDR, Prateado",
+          "preco": 13499,
+          "pagamento": "Pix",
+          "loja": "KaBuM!",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/925355/iphone-17-pro-max-apple-256gb-camera-tripla-fusion-de-48mp-tela-6-9-super-retina-xdr-prateado",
+          "rede": ""
+        },
+        {
+          "titulo": "iPhone 17 Pro Max 12GB 256GB Laranja-cósmico",
+          "preco": 14586.6,
+          "pagamento": "Pix",
+          "loja": "Webcontinental · UP 2 TECH DO BRASIL",
+          "fonte": "Webcontinental",
+          "link": "https://www.webcontinental.com.br/iphone-17-pro-max-12gb-256gb-laranja-cosmico-006611000250/p",
+          "rede": ""
+        }
+      ],
+      "fontes": "Lojas consultadas: Compare Livre: sem resposta · KaBuM!: 30 ofertas · Gazin: nenhuma oferta encontrada · Novo Mundo: nenhuma oferta encontrada · Magazine Luiza: erro HTTP 403 · Webcontinental: 30 ofertas · Trocafy: fonte de aparelhos usados: não se aplica à condição pedida. Preços coletados às 09:49.",
+      "quando_utc": "2026-11-14T12:49:14.112Z"
+    },
+    {
+      "n": 19,
+      "entrada": "iphone 13 128gb usado",
+      "nome": "iPhone 13 128GB usado",
+      "quando": "14/11/2026, 09:49:28",
+      "segundos": 12.68,
+      "conclusao": "Consulta concluída: iPhone 13 128GB usado. Coleta nova. Processamento: 11.2 s.",
+      "coleta_nova": true,
+      "lojas": [
+        "Trocafy",
+        "KaBuM!"
+      ],
+      "gerou_faixa": true,
+      "ofertas": [
+        {
+          "titulo": "Apple - iPhone 13 128GB (PRODUCT)RED - Fui Mais Usado - Bateria 70%",
+          "preco": 1713.51,
+          "pagamento": "Pix",
+          "loja": "Trocafy",
+          "fonte": "Trocafy",
+          "link": "https://www.trocafy.com.br/iphone-13-128gb-product-red-fui-mais-usado-bateria-70-p2603",
+          "rede": ""
+        },
+        {
+          "titulo": "Apple - iPhone 13 128GB Azul - Fui Mais Usado - Bateria 70%",
+          "preco": 1713.51,
+          "pagamento": "Pix",
+          "loja": "Trocafy",
+          "fonte": "Trocafy",
+          "link": "https://www.trocafy.com.br/iphone-13-128gb-azul-fui-mais-usado-bateria-70-p2516",
+          "rede": ""
+        },
+        {
+          "titulo": "Apple - iPhone 13 128GB - Branco - Tenho minhas marcas de uso",
+          "preco": 1739.61,
+          "pagamento": "Pix",
+          "loja": "Trocafy",
+          "fonte": "Trocafy",
+          "link": "https://www.trocafy.com.br/iphone-13-128gb-branco-tenho-minhas-marcas-de-uso-p1204",
+          "rede": ""
+        },
+        {
+          "titulo": "Apple - iPhone 13 128GB Rosa - Fui Mais Usado",
+          "preco": 1765.71,
+          "pagamento": "Pix",
+          "loja": "Trocafy",
+          "fonte": "Trocafy",
+          "link": "https://www.trocafy.com.br/iphone-13-128gb-rosa-fui-mais-usado-p2063",
+          "rede": ""
+        },
+        {
+          "titulo": "Apple - iPhone 13 128GB (PRODUCT)RED - Fui Mais Usado",
+          "preco": 1765.71,
+          "pagamento": "Pix",
+          "loja": "Trocafy",
+          "fonte": "Trocafy",
+          "link": "https://www.trocafy.com.br/iphone-13-128gb-product-red-fui-mais-usado-p2149",
+          "rede": ""
+        },
+        {
+          "titulo": "Usado -  Iphone 13 128GB Estelar Muito Bom - Trocafone",
+          "preco": 2087.13,
+          "pagamento": "Pix",
+          "loja": "Trocafone",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/577039/usado-iphone-13-128gb-estelar-muito-bom-trocafone",
+          "rede": ""
+        },
+        {
+          "titulo": "Usado: Iphone 13 128GB, Meia Noite - Muito Bom",
+          "preco": 2159.1,
+          "pagamento": "Pix",
+          "loja": "Trocafone",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/574874/usado-iphone-13-128gb-meia-noite-muito-bom",
+          "rede": ""
+        },
+        {
+          "titulo": "USADO: Iphone 13 128GB, Estelar - Excelente",
+          "preco": 2191.53,
+          "pagamento": "Pix",
+          "loja": "Trocafone",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/506655/usado-iphone-13-128gb-estelar-excelente",
+          "rede": ""
+        },
+        {
+          "titulo": "Usado: Iphone 13 128GB, Azul - Muito Bom",
+          "preco": 2231.07,
+          "pagamento": "Pix",
+          "loja": "Trocafone",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/574871/usado-iphone-13-128gb-azul-muito-bom",
+          "rede": ""
+        },
+        {
+          "titulo": "Usado - Iphone 13 128GB, Red, Muito Bom - Trocafone",
+          "preco": 2231.07,
+          "pagamento": "Pix",
+          "loja": "Trocafone",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/577848/usado-iphone-13-128gb-red-muito-bom-trocafone",
+          "rede": ""
+        },
+        {
+          "titulo": "Usado -  Iphone 13 Red 128GB Bom - Trocafone",
+          "preco": 2249,
+          "pagamento": "Pix",
+          "loja": "Trocafone",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/578307/usado-iphone-13-red-128gb-bom-trocafone",
+          "rede": ""
+        },
+        {
+          "titulo": "Usado: Iphone 13, 128GB, Azul - Excelente",
+          "preco": 2267.1,
+          "pagamento": "Pix",
+          "loja": "Trocafone",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/575416/usado-iphone-13-128gb-azul-excelente",
+          "rede": ""
+        },
+        {
+          "titulo": "Usado -  Iphone 13 128 Gb Verde - Muito Bom",
+          "preco": 2303.3,
+          "pagamento": "Pix",
+          "loja": "CELLULAR STORE",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/985693/usado-iphone-13-128-gb-verde-muito-bom",
+          "rede": ""
+        },
+        {
+          "titulo": "Usado: Iphone 13, 128GB, Meia Noite - Excelente",
+          "preco": 2342.67,
+          "pagamento": "Pix",
+          "loja": "Trocafone",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/574872/usado-iphone-13-128gb-meia-noite-excelente",
+          "rede": ""
+        },
+        {
+          "titulo": "Usado -  Iphone 13 128GB Verde Muito Bom - Trocafone",
+          "preco": 2399,
+          "pagamento": "Pix",
+          "loja": "Trocafone",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/598720/usado-iphone-13-128gb-verde-muito-bom-trocafone",
+          "rede": ""
+        },
+        {
+          "titulo": "Usado: Iphone 13 128 Gb Vermelho - Excelente",
+          "preco": 2427.3,
+          "pagamento": "Pix",
+          "loja": "CELLULAR STORE",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/883548/usado-iphone-13-128-gb-vermelho-excelente",
+          "rede": ""
+        },
+        {
+          "titulo": "Usado -  Iphone 13 128 Gb Branco - Muito Bom",
+          "preco": 2476.67,
+          "pagamento": "Pix",
+          "loja": "CELLULAR STORE",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/1015559/usado-iphone-13-128-gb-branco-muito-bom",
+          "rede": ""
+        },
+        {
+          "titulo": "Usado: Iphone 13 128 Gb Preto - Bom",
+          "preco": 2609,
+          "pagamento": "Pix",
+          "loja": "CELLULAR STORE",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/902520/usado-iphone-13-128-gb-preto-bom",
+          "rede": ""
+        },
+        {
+          "titulo": "Usado: Iphone 13 128 Gb Preto - Muito Bom",
+          "preco": 2749,
+          "pagamento": "Pix",
+          "loja": "CELLULAR STORE",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/893656/usado-iphone-13-128-gb-preto-muito-bom",
+          "rede": ""
+        },
+        {
+          "titulo": "Usado: Iphone 13 128GB Estelar - Muito Bom",
+          "preco": 2849,
+          "pagamento": "Pix",
+          "loja": "REUSE FONE",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/1089208/usado-iphone-13-128gb-estelar-muito-bom",
+          "rede": ""
+        },
+        {
+          "titulo": "Usado: Iphone 13 128 Gb Branco - Excelente",
+          "preco": 2889,
+          "pagamento": "Pix",
+          "loja": "CELLULAR STORE",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/893660/usado-iphone-13-128-gb-branco-excelente",
+          "rede": ""
+        },
+        {
+          "titulo": "Usado - Iphone 13 128 Gb Preto Excelente",
+          "preco": 2899,
+          "pagamento": "Pix",
+          "loja": "NOVA ERA COMERCIO DE CELULARES LTDA",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/992523/usado-iphone-13-128-gb-preto-excelente",
+          "rede": ""
+        }
+      ],
+      "fontes": "Lojas consultadas: Compare Livre: sem resposta · KaBuM!: 30 ofertas · Gazin: nenhuma oferta encontrada · Novo Mundo: nenhuma oferta encontrada · Magazine Luiza: erro HTTP 403 · Webcontinental: nenhuma oferta encontrada · Trocafy: 30 ofertas. Preços coletados às 09:49.",
+      "quando_utc": "2026-11-14T12:49:28.425Z"
+    },
+    {
+      "n": 20,
+      "entrada": "iphone 14 128gb recondicionado",
+      "nome": "iPhone 14 128GB recondicionado",
+      "quando": "14/11/2026, 09:51:15",
+      "segundos": 13.348,
+      "conclusao": "Consulta concluída: iPhone 14 128GB recondicionado. Coleta nova. Processamento: 11.5 s.",
+      "coleta_nova": true,
+      "lojas": [],
+      "gerou_faixa": false,
+      "ofertas": [],
+      "fontes": "Lojas consultadas: Compare Livre: sem resposta · KaBuM!: 30 ofertas · Gazin: nenhuma oferta encontrada · Novo Mundo: nenhuma oferta encontrada · Magazine Luiza: erro HTTP 403 · Webcontinental: nenhuma oferta encontrada · Trocafy: fonte de aparelhos usados: não se aplica à condição pedida. Preços coletados às 09:51.",
+      "quando_utc": "2026-11-14T12:51:15.555Z"
+    }
+  ]
+}

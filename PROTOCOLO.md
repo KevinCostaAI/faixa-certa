@@ -368,6 +368,8 @@ Kevin autorizou a implementação e os testes no repositório existente `KevinCo
 
 **Fonte de usados:** a Trocafy foi acrescentada para buscas cuja condição pedida é usado. O endereço da categoria vem dos links públicos do menu, sem utilizar a busca por palavras que o robots.txt restringe. Os cartões confirmam o preço no Pix. Estados declarados pela loja, como “Sou como novo”, “Tenho minhas marcas de uso” e “Fui mais usado”, comprovam a condição usado, mantida em campo próprio; o título original não é reescrito. A avaliação dos 50 títulos não recebe esses dados complementares e continua com os mesmos resultados de extração e decisão.
 
+**Rodada no app publicado, código c31b5133feda:** 20 buscas reais com coleta nova, medidas no Edge do clique até a conclusão visível: 19 em até 15 segundos; cobertura de preços confirmados em duas lojas em 12 buscas; 13 faixas; 88 ofertas exibidas para conferência humana. A execução e as falhas estão em `validacao_navegador.json`, sem substituir as rodadas anteriores. A meta de tempo foi atingida nessa medição conservadora, que inclui a demora da automação. A cobertura de 18 de 20 não foi atingida no Streamlit. A Magazine Luiza retornou HTTP 403 nas 20 buscas; ofertas de outros modelos ou variantes das demais fontes continuaram excluídas. A equivalência dessas 88 ofertas ainda precisa de revisão humana.
+
 ### Aplicação dos testes com pessoas
 
 O roteiro e as metas da seção “Correção de digitação e testes com usuários” permanecem os mesmos. Kevin aplica as sessões com os participantes reais, usando códigos L1 a L5 e C1 a C5, sem publicar nomes.
