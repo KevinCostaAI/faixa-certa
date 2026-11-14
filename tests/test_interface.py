@@ -74,8 +74,8 @@ def test_avaliacao_abre_com_a_rodada_mais_recente_e_preserva_as_anteriores():
     at.run()
     assert not at.exception
     cabecalhos = [h.value for h in at.header]
-    assert cabecalhos[:2] == ["Reconferência com novas fontes", "Validação final"]
-    assert "Resultados registrados" in cabecalhos[2:]
+    assert cabecalhos[:3] == ["Bateria com lojas diretas", "Reconferência com novas fontes", "Validação final"]
+    assert "Resultados registrados" in cabecalhos[3:]
     assert any("validação final" in s.value for s in at.subheader)
 
 
@@ -86,4 +86,4 @@ def test_revisao_ia_abre_online_e_nao_se_apresenta_como_teste_humano():
     assert not at.exception
     assert at.title[0].value == "Faixa Certa: revisão técnica por IA"
     assert any("Não é conferência humana" in aviso.value for aviso in at.info)
-    assert [t.label for t in at.tabs] == ["Rótulos (50)", "Ofertas (207)", "Páginas não confirmadas (70)"]
+    assert [t.label for t in at.tabs] == ["Rótulos (50)", "Ofertas (136)", "Páginas não confirmadas (4)"]

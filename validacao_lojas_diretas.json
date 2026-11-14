@@ -1,0 +1,2362 @@
+{
+  "titulo": "Bateria com lojas diretas",
+  "commit": "865969a50b9b8d2463ceead2398b48b44362144f",
+  "codigo_sha256": "0a835274e9ad029344726af0f9d000a3bb8462002626439c4209b7ee6ac218b5",
+  "prompt_sha256": "6953e9ae9a95",
+  "inicio": "2026-11-14T13:18:32.684-03:00",
+  "fim": "2026-11-14T13:22:24.975-03:00",
+  "origem": "Medição automatizada no navegador Chrome, no app publicado",
+  "metodo": "As mesmas 20 buscas, uma vez cada na rodada formal, com coleta nova, somente lojas diretas e pagamento da Gazin não presumido como Pix. Tempo do clique à conclusão e às tabelas completas. Inclui a demora da automação. Loja é o destino da compra; vendedores do mesmo marketplace contam uma vez. Os títulos foram normalizados para minúsculas, sem acentos e com espaços normalizados, preservando modelos e variantes. As ofertas, preços e links foram capturados na interface. Esta é uma reconferência de modelos conhecidos, não uma nova amostra independente nem teste com participantes.",
+  "ate_15s": 20,
+  "duas_lojas": 18,
+  "duas_lojas_com_pagamento": 16,
+  "faixas": 16,
+  "ofertas": 136,
+  "confirmadas": 120,
+  "a_parte": 16,
+  "mediana": 3.027,
+  "maximo": 3.988,
+  "preparacao": [
+    {
+      "n": 1,
+      "entrada": "galaxy a07 128gb",
+      "quando": "2026-11-14T16:16:12.233Z",
+      "segundos": 3.935,
+      "conclusao": "Consulta concluída: Galaxy A07 128GB. Coleta nova. Processamento: 2.6 s.",
+      "ofertas": 14,
+      "faixa_capturada": false
+    },
+    {
+      "n": 2,
+      "entrada": "galaxi a17 128gb",
+      "quando": "2026-11-14T16:16:16.215Z",
+      "segundos": 3.074,
+      "conclusao": "Consulta concluída: Galaxy A17 128GB. Coleta nova. Processamento: 2.2 s.",
+      "ofertas": 4,
+      "faixa_capturada": true
+    },
+    {
+      "n": 3,
+      "entrada": "galaxy a16 128gb",
+      "quando": "2026-11-14T16:16:19.331Z",
+      "segundos": 2.687,
+      "conclusao": "Consulta concluída: Galaxy A16 128GB. Coleta nova. Processamento: 2.0 s.",
+      "ofertas": 4,
+      "faixa_capturada": true
+    }
+  ],
+  "desvio": "Três buscas preparatórias foram preservadas. A primeira captura do indicador de faixa ficou incompleta. Antes de continuar a bateria, a instrumentação foi ajustada para aguardar as tabelas e o indicador. Em seguida, a rodada formal inteira começou com coletas novas. Nenhum dado de participante foi produzido.",
+  "buscas": [
+    {
+      "n": 1,
+      "entrada": "galaxy a07 128gb",
+      "quando": "2026-11-14T13:18:32.684-03:00",
+      "segundos": 2.856,
+      "conclusao": "Consulta concluída: Galaxy A07 128GB. Coleta nova. Processamento: 2.4 s.",
+      "lojas_equivalentes": [
+        "Fast Shop",
+        "KaBuM!",
+        "Samsung",
+        "Webcontinental"
+      ],
+      "lojas_com_pagamento": [
+        "Fast Shop",
+        "KaBuM!",
+        "Samsung",
+        "Webcontinental"
+      ],
+      "lojas_distintas": 4,
+      "lojas_com_preco_confirmado": 4,
+      "gerou_faixa": true,
+      "ofertas": [
+        {
+          "titulo": "celular galaxy a07 128gb 4g samsung",
+          "titulo_normalizado": true,
+          "preco": "R$ 718,20",
+          "preco_valor": 718.2,
+          "pagamento": "Pix",
+          "loja": "KaBuM!",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/921237/smartphone-galaxy-a07-128gb-4g-samsung",
+          "pagina": "https://www.kabum.com.br/produto/921237/smartphone-galaxy-a07-128gb-4g-samsung",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone samsung a07 4g 128gb 4gb 50mp 8mp 6.7” preto",
+          "titulo_normalizado": true,
+          "preco": "R$ 718,20",
+          "preco_valor": 718.2,
+          "pagamento": "Pix",
+          "loja": "KaBuM!",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/921218/smartphone-galaxy-a07-128gb-4g-samsung",
+          "pagina": "https://www.kabum.com.br/produto/921218/smartphone-galaxy-a07-128gb-4g-samsung",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone samsung galaxy a07 128gb, 4gb, camera 50mp, tela 6.7”, protecao ip54, processador 6nm, preto",
+          "titulo_normalizado": true,
+          "preco": "R$ 784,69",
+          "preco_valor": 784.69,
+          "pagamento": "Pix",
+          "loja": "KaBuM!",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/924196/celular-samsung-galaxy-a07-128gb-4gb-camera-50mp-tela-6-7-protecao-ip54-processador-6nm-preto-128-gb",
+          "pagina": "https://www.kabum.com.br/produto/924196/celular-samsung-galaxy-a07-128gb-4gb-camera-50mp-tela-6-7-protecao-ip54-processador-6nm-preto-128-gb",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone samsung a07 4gb ram 128gb 50mp violeta",
+          "titulo_normalizado": true,
+          "preco": "R$ 843,90",
+          "preco_valor": 843.9,
+          "pagamento": "Pix",
+          "loja": "Webcontinental",
+          "fonte": "Webcontinental",
+          "link": "https://www.webcontinental.com.br/smartphone-samsung-a07-4gb-ram-128gb-50mp-violeta-003958001053/p",
+          "pagina": "https://www.webcontinental.com.br/smartphone-samsung-a07-4gb-ram-128gb-50mp-violeta-003958001053/p",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone samsung galaxy a07 4g 128gb 4gb + 4gb ram plus camera 50mp violeta violeta",
+          "titulo_normalizado": true,
+          "preco": "R$ 845,91",
+          "preco_valor": 845.91,
+          "pagamento": "Pix",
+          "loja": "Fast Shop",
+          "fonte": "Fast Shop",
+          "link": "https://site.fastshop.com.br/smartphone-samsung-galaxy-a07-4g-128gb-4gb---4gb-ram-plus-camera-50mp-violeta-198010/p",
+          "pagina": "https://site.fastshop.com.br/smartphone-samsung-galaxy-a07-4g-128gb-4gb---4gb-ram-plus-camera-50mp-violeta-198010/p",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone samsung galaxy a07 128gb 4g 4gb ram verde verde",
+          "titulo_normalizado": true,
+          "preco": "R$ 845,91",
+          "preco_valor": 845.91,
+          "pagamento": "Pix",
+          "loja": "Fast Shop",
+          "fonte": "Fast Shop",
+          "link": "https://site.fastshop.com.br/smartphone-samsung-galaxy-a07-128gb-4g-4gb-ram-verde-verde-197998/p",
+          "pagina": "https://site.fastshop.com.br/smartphone-samsung-galaxy-a07-128gb-4g-4gb-ram-verde-verde-197998/p",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone samsung galaxy a07 sm-a075mzkrzto 6,7\" hd/4g/4gb ram+4gb ram plus/128gb/android 15/ preto",
+          "titulo_normalizado": true,
+          "preco": "R$ 979,90",
+          "preco_valor": 979.9,
+          "pagamento": "Pix",
+          "loja": "KaBuM!",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/997796/celular-samsung-galaxy-a07-128gb-tela-6-7-pol-pls-lcd-4gb-ram-ram-plus-ate-4gb-camera-traseira-50-2mp-frontal-8mp-preto-",
+          "pagina": "https://www.kabum.com.br/produto/997796/celular-samsung-galaxy-a07-128gb-tela-6-7-pol-pls-lcd-4gb-ram-ram-plus-ate-4gb-camera-traseira-50-2mp-frontal-8mp-preto-",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "celular samsung galaxy a07 tela 6.7\" 128gb 4g 90hz camera dupla 50mp verde",
+          "titulo_normalizado": true,
+          "preco": "R$ 985,90",
+          "preco_valor": 985.9,
+          "pagamento": "Pix",
+          "loja": "Fast Shop",
+          "fonte": "Fast Shop",
+          "link": "https://site.fastshop.com.br/celular-samsung-galaxy-a07-tela-6-7--128gb-4g-90hz-camera-dupla-50mp-verde-139093/p",
+          "pagina": "https://site.fastshop.com.br/celular-samsung-galaxy-a07-tela-6-7--128gb-4g-90hz-camera-dupla-50mp-verde-139093/p",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "celular samsung galaxy a07 tela 6.7\" 128gb 4g 90hz camera dupla 50mp verde",
+          "titulo_normalizado": true,
+          "preco": "R$ 985,90",
+          "preco_valor": 985.9,
+          "pagamento": "Pix",
+          "loja": "Fast Shop",
+          "fonte": "Fast Shop",
+          "link": "https://site.fastshop.com.br/celular-samsung-galaxy-a07-tela-6-7-128gb-4g-90hz-camera-dupla-50mp-verde-135405/p",
+          "pagina": "https://site.fastshop.com.br/celular-samsung-galaxy-a07-tela-6-7-128gb-4g-90hz-camera-dupla-50mp-verde-135405/p",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "celular samsung galaxy a07 128gb, 4gb, camera 50mp, tela 6.7\", protecao ip54, processador 6nm · verde",
+          "titulo_normalizado": true,
+          "preco": "R$ 1.044,05",
+          "preco_valor": 1044.05,
+          "pagamento": "Pix",
+          "loja": "Samsung",
+          "fonte": "Samsung",
+          "link": "https://shop.samsung.com/br/galaxy-a07/p",
+          "pagina": "https://shop.samsung.com/br/galaxy-a07/p",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "celular samsung galaxy a07 tela 6.7 128gb 4g 90hz camera dupla 50mp preto",
+          "titulo_normalizado": true,
+          "preco": "R$ 1.048,83",
+          "preco_valor": 1048.83,
+          "pagamento": "Pix",
+          "loja": "Fast Shop",
+          "fonte": "Fast Shop",
+          "link": "https://site.fastshop.com.br/celular-samsung-galaxy-a07-tela-6-7-128gb-4g-90hz-camera-dupla-50mp-preto-135412/p",
+          "pagina": "https://site.fastshop.com.br/celular-samsung-galaxy-a07-tela-6-7-128gb-4g-90hz-camera-dupla-50mp-preto-135412/p",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone samsung galaxy a07 128gb - violeta, 4g, ram 4gb, camera 50mp + selfie 8mp, tela 6,7\"",
+          "titulo_normalizado": true,
+          "preco": "R$ 1.220,49",
+          "preco_valor": 1220.49,
+          "pagamento": "Pix",
+          "loja": "KaBuM!",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/921128/smartphone-samsung-galaxy-a07-128gb-violeta-4g-ram-4gb-camera-50mp-selfie-8mp-tela-6-7-",
+          "pagina": "https://www.kabum.com.br/produto/921128/smartphone-samsung-galaxy-a07-128gb-violeta-4g-ram-4gb-camera-50mp-selfie-8mp-tela-6-7-",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone samsung galaxy a07 a075 8gb 128gb 50mp 4g android preto",
+          "titulo_normalizado": true,
+          "preco": "R$ 1.359,91",
+          "preco_valor": 1359.91,
+          "pagamento": "Pix",
+          "loja": "Webcontinental",
+          "fonte": "Webcontinental",
+          "link": "https://www.webcontinental.com.br/smartphone-samsung-galaxy-a07-a075-8gb-128gb-50mp-4g-android-preto-002648007476/p",
+          "pagina": "https://www.webcontinental.com.br/smartphone-samsung-galaxy-a07-a075-8gb-128gb-50mp-4g-android-preto-002648007476/p",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone samsung galaxy a07 128gb 4g samsung preto",
+          "titulo_normalizado": true,
+          "preco": "R$ 1.599,90",
+          "preco_valor": 1599.9,
+          "pagamento": "Pix",
+          "loja": "Fast Shop",
+          "fonte": "Fast Shop",
+          "link": "https://site.fastshop.com.br/smartphone-samsung-galaxy-a07-128gb-4g-samsung-preto-170970/p",
+          "pagina": "https://site.fastshop.com.br/smartphone-samsung-galaxy-a07-128gb-4g-samsung-preto-170970/p",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        }
+      ],
+      "falhas": [
+        "Magazine Luiza: erro HTTP 403"
+      ],
+      "menor": 718.2,
+      "mediana": 982.9,
+      "maior": 1599.9
+    },
+    {
+      "n": 2,
+      "entrada": "galaxi a17 128gb",
+      "quando": "2026-11-14T13:18:35.555-03:00",
+      "segundos": 3.272,
+      "conclusao": "Consulta concluída: Galaxy A17 128GB. Coleta nova. Processamento: 2.4 s.",
+      "lojas_equivalentes": [
+        "Gazin",
+        "KaBuM!",
+        "Webcontinental"
+      ],
+      "lojas_com_pagamento": [
+        "KaBuM!",
+        "Webcontinental"
+      ],
+      "lojas_distintas": 3,
+      "lojas_com_preco_confirmado": 2,
+      "gerou_faixa": true,
+      "ofertas": [
+        {
+          "titulo": "celular samsung galaxy a17 4g 128gb 4gb camera 50mp tela 6.7'' preto",
+          "titulo_normalizado": true,
+          "preco": "R$ 978,55",
+          "preco_valor": 978.55,
+          "pagamento": "Pix",
+          "loja": "KaBuM!",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/1077420/celular-samsung-galaxy-a17-4g-128gb-4gb-camera-50mp-tela-6-7-preto",
+          "pagina": "https://www.kabum.com.br/produto/1077420/celular-samsung-galaxy-a17-4g-128gb-4gb-camera-50mp-tela-6-7-preto",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone samsung galaxy a17 4gb 128gb camera tripla 50mp preto",
+          "titulo_normalizado": true,
+          "preco": "R$ 1.390,82",
+          "preco_valor": 1390.82,
+          "pagamento": "Pix",
+          "loja": "Webcontinental",
+          "fonte": "Webcontinental",
+          "link": "https://www.webcontinental.com.br/smartphone-samsung-galaxy-a17-4gb-128gb-camera-tripla-50mp-preto-003082004384/p",
+          "pagina": "https://www.webcontinental.com.br/smartphone-samsung-galaxy-a17-4gb-128gb-camera-tripla-50mp-preto-003082004384/p",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone samsung galaxy a17 com ia, 128gb, 4gb ram, cam de 50mp, tela de 6.7”, nfc, ip54 preto",
+          "titulo_normalizado": true,
+          "preco": "R$ 1.417,00",
+          "preco_valor": 1417.0,
+          "pagamento": "Pix",
+          "loja": "KaBuM!",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/924199/celular-samsung-galaxy-a17-com-ia-128gb-4gb-ram-cam-de-50mp-tela-de-6-7-nfc-ip54-preto-128-gb",
+          "pagina": "https://www.kabum.com.br/produto/924199/celular-samsung-galaxy-a17-com-ia-128gb-4gb-ram-cam-de-50mp-tela-de-6-7-nfc-ip54-preto-128-gb",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone samsung galaxy a17 4g 6.7\" 128gb 4gb camera tripla",
+          "titulo_normalizado": true,
+          "preco": "R$ 929,90",
+          "preco_valor": 929.9,
+          "pagamento": "não informada",
+          "loja": "Gazin",
+          "fonte": "Gazin",
+          "link": "https://www.gazin.com.br/produto/smartphone-samsung-galaxy-a17-4g-67-128gb-4gb-camera-tripla/9984/azul/quadriband",
+          "pagina": "https://www.gazin.com.br/produto/smartphone-samsung-galaxy-a17-4g-67-128gb-4gb-camera-tripla/9984/azul/quadriband",
+          "na_faixa": false,
+          "conferencia_humana": "pendente"
+        }
+      ],
+      "falhas": [
+        "Magazine Luiza: erro HTTP 403",
+        "Fast Shop: erro HTTP 500"
+      ],
+      "menor": 978.55,
+      "mediana": 1390.82,
+      "maior": 1417.0
+    },
+    {
+      "n": 3,
+      "entrada": "galaxy a16 128gb",
+      "quando": "2026-11-14T13:18:38.844-03:00",
+      "segundos": 2.468,
+      "conclusao": "Consulta concluída: Galaxy A16 128GB. Coleta nova. Processamento: 1.9 s.",
+      "lojas_equivalentes": [
+        "KaBuM!",
+        "Novo Mundo",
+        "Webcontinental"
+      ],
+      "lojas_com_pagamento": [
+        "KaBuM!",
+        "Webcontinental"
+      ],
+      "lojas_distintas": 3,
+      "lojas_com_preco_confirmado": 2,
+      "gerou_faixa": true,
+      "ofertas": [
+        {
+          "titulo": "celular smartphone samsung a16 128gb de memoria 4gb ram 4g preto",
+          "titulo_normalizado": true,
+          "preco": "R$ 1.102,96",
+          "preco_valor": 1102.96,
+          "pagamento": "Pix",
+          "loja": "Webcontinental",
+          "fonte": "Webcontinental",
+          "link": "https://www.webcontinental.com.br/celular-smartphone-samsung-a16-128gb-de-memoria-4gb-ram-4g-preto-006488000010/p",
+          "pagina": "https://www.webcontinental.com.br/celular-smartphone-samsung-a16-128gb-de-memoria-4gb-ram-4g-preto-006488000010/p",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone samsung galaxy a16 4g, 128gb, 4gb ram, camera tripla 50mp, tela 6.7\", preto",
+          "titulo_normalizado": true,
+          "preco": "R$ 1.299,00",
+          "preco_valor": 1299.0,
+          "pagamento": "Pix",
+          "loja": "KaBuM!",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/677921/smartphone-samsung-galaxy-a16-4g-128gb-4gb-ram-camera-tripla-50mp-tela-6-7-preto",
+          "pagina": "https://www.kabum.com.br/produto/677921/smartphone-samsung-galaxy-a16-4g-128gb-4gb-ram-camera-tripla-50mp-tela-6-7-preto",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone samsung galaxy a16 4gb ram 128gb camera 50mp",
+          "titulo_normalizado": true,
+          "preco": "R$ 1.310,40",
+          "preco_valor": 1310.4,
+          "pagamento": "Pix",
+          "loja": "Webcontinental",
+          "fonte": "Webcontinental",
+          "link": "https://www.webcontinental.com.br/smartphone-samsung-galaxy-a16-4gb-ram-128gb-camera-50mp-006586000042/p",
+          "pagina": "https://www.webcontinental.com.br/smartphone-samsung-galaxy-a16-4gb-ram-128gb-camera-50mp-006586000042/p",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone samsung galaxy a16 4g 6.7'' 128gb 4gb camera tripla - cinza",
+          "titulo_normalizado": true,
+          "preco": "R$ 999,00",
+          "preco_valor": 999.0,
+          "pagamento": "não informada",
+          "loja": "Novo Mundo",
+          "fonte": "Novo Mundo",
+          "link": "https://www.novomundo.com.br/produto/smartphone-samsung-galaxy-a16-4g-6-7-128gb-4gb-camera-tripla-cinza-150339",
+          "pagina": "https://www.novomundo.com.br/produto/smartphone-samsung-galaxy-a16-4g-6-7-128gb-4gb-camera-tripla-cinza-150339",
+          "na_faixa": false,
+          "conferencia_humana": "pendente"
+        }
+      ],
+      "falhas": [
+        "Magazine Luiza: erro HTTP 403"
+      ],
+      "menor": 1102.96,
+      "mediana": 1299.0,
+      "maior": 1310.4
+    },
+    {
+      "n": 4,
+      "entrada": "galaxy a36 5g 128gb",
+      "quando": "2026-11-14T13:18:49.422-03:00",
+      "segundos": 2.642,
+      "conclusao": "Consulta concluída: Galaxy A36 5G 128GB. Coleta nova. Processamento: 1.8 s.",
+      "lojas_equivalentes": [
+        "Fast Shop",
+        "KaBuM!"
+      ],
+      "lojas_com_pagamento": [
+        "Fast Shop",
+        "KaBuM!"
+      ],
+      "lojas_distintas": 2,
+      "lojas_com_preco_confirmado": 2,
+      "gerou_faixa": true,
+      "ofertas": [
+        {
+          "titulo": "smartphone samsung galaxy a36 5g preto 128gb, 6gb ram, camera tripla ate 50mp, tela super amoled 6.7, ip67, nfc, recursos ai e snapdragon 6 gen 3",
+          "titulo_normalizado": true,
+          "preco": "R$ 2.082,57",
+          "preco_valor": 2082.57,
+          "pagamento": "Pix",
+          "loja": "Fast Shop",
+          "fonte": "Fast Shop",
+          "link": "https://site.fastshop.com.br/smartphone-samsung-galaxy-a36-5g-preto-128gb-6gb-ram-camera-tripla-ate-50mp-tela-super-amoled-6-7-ip67-nfc-recursos-ai-e-snapdragon-6-gen-3-135409/p",
+          "pagina": "https://site.fastshop.com.br/smartphone-samsung-galaxy-a36-5g-preto-128gb-6gb-ram-camera-tripla-ate-50mp-tela-super-amoled-6-7-ip67-nfc-recursos-ai-e-snapdragon-6-gen-3-135409/p",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone samsung galaxy a36 5g preto 128gb, 6gb ram, camera tripla ate 50mp, tela super amoled 6.7\", ip67, nfc, recursos ai e snapdragon 6 gen 3",
+          "titulo_normalizado": true,
+          "preco": "R$ 2.082,57",
+          "preco_valor": 2082.57,
+          "pagamento": "Pix",
+          "loja": "Fast Shop",
+          "fonte": "Fast Shop",
+          "link": "https://site.fastshop.com.br/smartphone-samsung-galaxy-a36-5g-preto-128gb-6gb-ram-camera-tripla-ate-50mp-tela-super-amoled-6-7--ip67-nfc-recursos-ai-e-snapdragon-6-gen-3-139014/p",
+          "pagina": "https://site.fastshop.com.br/smartphone-samsung-galaxy-a36-5g-preto-128gb-6gb-ram-camera-tripla-ate-50mp-tela-super-amoled-6-7--ip67-nfc-recursos-ai-e-snapdragon-6-gen-3-139014/p",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone samsung galaxy a36 128gb 5g - verde, camera tripla 50mp, ram 6gb, tela 6.7\"",
+          "titulo_normalizado": true,
+          "preco": "R$ 2.229,44",
+          "preco_valor": 2229.44,
+          "pagamento": "Pix",
+          "loja": "KaBuM!",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/734582/smartphone-samsung-galaxy-a36-128gb-5g-verde-camera-tripla-50mp-ram-6gb-tela-6-7-",
+          "pagina": "https://www.kabum.com.br/produto/734582/smartphone-samsung-galaxy-a36-128gb-5g-verde-camera-tripla-50mp-ram-6gb-tela-6-7-",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone samsung galaxy a36 128gb 5g - preto, camera tripla 50mp, ram 6gb, tela 6.7\"",
+          "titulo_normalizado": true,
+          "preco": "R$ 2.389,00",
+          "preco_valor": 2389.0,
+          "pagamento": "Pix",
+          "loja": "KaBuM!",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/734633/smartphone-samsung-galaxy-a36-128gb-5g-preto-camera-tripla-50mp-ram-6gb-tela-6-7-",
+          "pagina": "https://www.kabum.com.br/produto/734633/smartphone-samsung-galaxy-a36-128gb-5g-preto-camera-tripla-50mp-ram-6gb-tela-6-7-",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        }
+      ],
+      "falhas": [
+        "Magazine Luiza: erro HTTP 403"
+      ],
+      "menor": 2082.57,
+      "mediana": 2156.005,
+      "maior": 2389.0
+    },
+    {
+      "n": 5,
+      "entrada": "galaxy a14 128gb usado",
+      "quando": "2026-11-14T13:18:52.080-03:00",
+      "segundos": 2.655,
+      "conclusao": "Consulta concluída: Galaxy A14 128GB usado. Coleta nova. Processamento: 2.1 s.",
+      "lojas_equivalentes": [],
+      "lojas_com_pagamento": [],
+      "lojas_distintas": 0,
+      "lojas_com_preco_confirmado": 0,
+      "gerou_faixa": false,
+      "ofertas": [],
+      "falhas": [
+        "Magazine Luiza: erro HTTP 403"
+      ]
+    },
+    {
+      "n": 6,
+      "entrada": "motorolla g06 128gb",
+      "quando": "2026-11-14T13:18:54.747-03:00",
+      "segundos": 2.704,
+      "conclusao": "Consulta concluída: Motorola G06 128GB. Coleta nova. Processamento: 1.8 s.",
+      "lojas_equivalentes": [
+        "Fast Shop",
+        "Gazin",
+        "KaBuM!",
+        "Motorola",
+        "Webcontinental"
+      ],
+      "lojas_com_pagamento": [
+        "Fast Shop",
+        "KaBuM!",
+        "Motorola",
+        "Webcontinental"
+      ],
+      "lojas_distintas": 5,
+      "lojas_com_preco_confirmado": 4,
+      "gerou_faixa": true,
+      "ofertas": [
+        {
+          "titulo": "smartphone motorola g06 4g 128gb 8gb 6.9” 50mp azul marinho",
+          "titulo_normalizado": true,
+          "preco": "R$ 798,30",
+          "preco_valor": 798.3,
+          "pagamento": "Pix",
+          "loja": "KaBuM!",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/951782/smartphone-motorola-moto-g06-128gb-azul-marinho-12gb-4gb-ram-8gb-ram-boost-camera-50mp-e-tela-6-9-",
+          "pagina": "https://www.kabum.com.br/produto/951782/smartphone-motorola-moto-g06-128gb-azul-marinho-12gb-4gb-ram-8gb-ram-boost-camera-50mp-e-tela-6-9-",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone motorola moto g06 128gb - laranja, 12gb (4gb ram +8gb ram boost), camera 50mp e tela 6,9”",
+          "titulo_normalizado": true,
+          "preco": "R$ 798,30",
+          "preco_valor": 798.3,
+          "pagamento": "Pix",
+          "loja": "KaBuM!",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/951780/smartphone-motorola-moto-g06-128gb-laranja-12gb-4gb-ram-8gb-ram-boost-camera-50mp-e-tela-6-9-",
+          "pagina": "https://www.kabum.com.br/produto/951780/smartphone-motorola-moto-g06-128gb-laranja-12gb-4gb-ram-8gb-ram-boost-camera-50mp-e-tela-6-9-",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone moto g06 128gb tela 6.9 camera 50mp - desempenho rapido e bateria de longa duracao laranja",
+          "titulo_normalizado": true,
+          "preco": "R$ 798,91",
+          "preco_valor": 798.91,
+          "pagamento": "Pix",
+          "loja": "Fast Shop",
+          "fonte": "Fast Shop",
+          "link": "https://site.fastshop.com.br/smartphone-moto-g06-128gb-tela-6-9-camera-50mp---desempenho-rapido-e-bateria-de-longa-duracao-198018/p",
+          "pagina": "https://site.fastshop.com.br/smartphone-moto-g06-128gb-tela-6-9-camera-50mp---desempenho-rapido-e-bateria-de-longa-duracao-198018/p",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone moto g06 128gb tela super 6.9 camera 50mp - desempenho rapido e amplo armazenamento azul",
+          "titulo_normalizado": true,
+          "preco": "R$ 798,91",
+          "preco_valor": 798.91,
+          "pagamento": "Pix",
+          "loja": "Fast Shop",
+          "fonte": "Fast Shop",
+          "link": "https://site.fastshop.com.br/smartphone-moto-g06-128gb-tela-super-6-9-camera-50mp---desempenho-rapido-e-amplo-armazenamento-198007/p",
+          "pagina": "https://site.fastshop.com.br/smartphone-moto-g06-128gb-tela-super-6-9-camera-50mp---desempenho-rapido-e-amplo-armazenamento-198007/p",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone motorola moto g06 128gb · 4gb ram + 8gb ram boost, camera 50mp com ai bateria de 5200 mah tela 6.9\" - azul marinho",
+          "titulo_normalizado": true,
+          "preco": "R$ 799,00",
+          "preco_valor": 799.0,
+          "pagamento": "Pix",
+          "loja": "Motorola",
+          "fonte": "Motorola",
+          "link": "https://www.motorola.com.br/smartphone-moto-g06-128-gb/p",
+          "pagina": "https://www.motorola.com.br/smartphone-moto-g06-128-gb/p",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone motorola moto g06 4gb ram 128gb 50mp azul marinho",
+          "titulo_normalizado": true,
+          "preco": "R$ 898,90",
+          "preco_valor": 898.9,
+          "pagamento": "Pix",
+          "loja": "Webcontinental",
+          "fonte": "Webcontinental",
+          "link": "https://www.webcontinental.com.br/smartphone-motorola-moto-g06-4gb-ram-128gb-50mp-azul-marinho-003958001019/p",
+          "pagina": "https://www.webcontinental.com.br/smartphone-motorola-moto-g06-4gb-ram-128gb-50mp-azul-marinho-003958001019/p",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone motorola moto g06 4g tela 6,9” 128gb camera 50mp azul marinho",
+          "titulo_normalizado": true,
+          "preco": "R$ 931,07",
+          "preco_valor": 931.07,
+          "pagamento": "Pix",
+          "loja": "Fast Shop",
+          "fonte": "Fast Shop",
+          "link": "https://site.fastshop.com.br/smartphone-motorola-moto-g06-4g-tela-69%E2%80%9D-128gb-camera-50mp-azul-marinho-134620/p",
+          "pagina": "https://site.fastshop.com.br/smartphone-motorola-moto-g06-4g-tela-69%E2%80%9D-128gb-camera-50mp-azul-marinho-134620/p",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone motorola moto g06 4g tela 6,9 128gb camera 50mp azul marinho",
+          "titulo_normalizado": true,
+          "preco": "R$ 931,07",
+          "preco_valor": 931.07,
+          "pagamento": "Pix",
+          "loja": "Fast Shop",
+          "fonte": "Fast Shop",
+          "link": "https://site.fastshop.com.br/smartphone-motorola-moto-g06-4g-tela-69-128gb-camera-50mp-azul-marinho-139101/p",
+          "pagina": "https://site.fastshop.com.br/smartphone-motorola-moto-g06-4g-tela-69-128gb-camera-50mp-azul-marinho-139101/p",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone moto g06, 128gb, camera traseira 50mp, bege, motorola",
+          "titulo_normalizado": true,
+          "preco": "R$ 1.439,90",
+          "preco_valor": 1439.9,
+          "pagamento": "Pix",
+          "loja": "KaBuM!",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/1015942/smartphone-moto-g06-128gb-camera-traseira-50mp-bege-motorola",
+          "pagina": "https://www.kabum.com.br/produto/1015942/smartphone-moto-g06-128gb-camera-traseira-50mp-bege-motorola",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone motorola moto g06 4g 6.9\" 128gb 4gb camera 50mp",
+          "titulo_normalizado": true,
+          "preco": "R$ 759,90",
+          "preco_valor": 759.9,
+          "pagamento": "não informada",
+          "loja": "Gazin",
+          "fonte": "Gazin",
+          "link": "https://www.gazin.com.br/produto/smartphone-motorola-moto-g06-4g-69-128gb-4gb-camera-50mp/10037/azul/quadriband",
+          "pagina": "https://www.gazin.com.br/produto/smartphone-motorola-moto-g06-4g-69-128gb-4gb-camera-50mp/10037/azul/quadriband",
+          "na_faixa": false,
+          "conferencia_humana": "pendente"
+        }
+      ],
+      "falhas": [
+        "Magazine Luiza: erro HTTP 403"
+      ],
+      "menor": 798.3,
+      "mediana": 799.0,
+      "maior": 1439.9
+    },
+    {
+      "n": 7,
+      "entrada": "moto g17 256gb",
+      "quando": "2026-11-14T13:19:04.399-03:00",
+      "segundos": 3.988,
+      "conclusao": "Consulta concluída: Moto G17 256GB. Coleta nova. Processamento: 2.8 s.",
+      "lojas_equivalentes": [
+        "Fast Shop",
+        "Gazin",
+        "KaBuM!",
+        "Motorola",
+        "Novo Mundo",
+        "Webcontinental"
+      ],
+      "lojas_com_pagamento": [
+        "Fast Shop",
+        "KaBuM!",
+        "Motorola",
+        "Webcontinental"
+      ],
+      "lojas_distintas": 6,
+      "lojas_com_preco_confirmado": 4,
+      "gerou_faixa": true,
+      "ofertas": [
+        {
+          "titulo": "smartphone motorola moto g17 xt2623 12gb 256gb 4g nfc roxo",
+          "titulo_normalizado": true,
+          "preco": "R$ 1.061,91",
+          "preco_valor": 1061.91,
+          "pagamento": "Pix",
+          "loja": "Webcontinental",
+          "fonte": "Webcontinental",
+          "link": "https://www.webcontinental.com.br/smartphone-motorola-moto-g17-xt2623-12gb-256gb-4g-nfc-roxo-003958001143/p",
+          "pagina": "https://www.webcontinental.com.br/smartphone-motorola-moto-g17-xt2623-12gb-256gb-4g-nfc-roxo-003958001143/p",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone motorola moto g17 256gb - rosa, 12gb (4gb ram + 8gb ram boost), camera 50mp e tela 6,7\"",
+          "titulo_normalizado": true,
+          "preco": "R$ 1.099,00",
+          "preco_valor": 1099.0,
+          "pagamento": "Pix",
+          "loja": "KaBuM!",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/1007606/smartphone-motorola-moto-g17-256gb-rosa-12gb-4gb-ram-8gb-ram-boost-camera-50mp-e-tela-6-7-",
+          "pagina": "https://www.kabum.com.br/produto/1007606/smartphone-motorola-moto-g17-256gb-rosa-12gb-4gb-ram-8gb-ram-boost-camera-50mp-e-tela-6-7-",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone motorola moto g17 xt2623 12gb 256gb 4g nfc roxo",
+          "titulo_normalizado": true,
+          "preco": "R$ 1.114,11",
+          "preco_valor": 1114.11,
+          "pagamento": "Pix",
+          "loja": "Fast Shop",
+          "fonte": "Fast Shop",
+          "link": "https://site.fastshop.com.br/smartphone-motorola-moto-g17-xt2623-12gb-256gb-4g-nfc-roxo-186415/p",
+          "pagina": "https://site.fastshop.com.br/smartphone-motorola-moto-g17-xt2623-12gb-256gb-4g-nfc-roxo-186415/p",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone motorola moto g17 256gb - roxo, 12gb (4gb ram + 8gb ram boost), camera 50mp e tela 6,7\"",
+          "titulo_normalizado": true,
+          "preco": "R$ 1.199,00",
+          "preco_valor": 1199.0,
+          "pagamento": "Pix",
+          "loja": "KaBuM!",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/1007601/smartphone-motorola-moto-g17-256gb-roxo-12gb-4gb-ram-8gb-ram-boost-camera-50mp-e-tela-6-7-",
+          "pagina": "https://www.kabum.com.br/produto/1007601/smartphone-motorola-moto-g17-256gb-roxo-12gb-4gb-ram-8gb-ram-boost-camera-50mp-e-tela-6-7-",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone motorola moto g17 256gb · 4gb ram + 8gb ram boost, camera 50mp sony lytia 600, tela fhd+ 60hz, bateria 5200 mah - roxa",
+          "titulo_normalizado": true,
+          "preco": "R$ 1.199,00",
+          "preco_valor": 1199.0,
+          "pagamento": "Pix",
+          "loja": "Motorola",
+          "fonte": "Motorola",
+          "link": "https://www.motorola.com.br/smartphone-motorola-moto-g17-256gb/p",
+          "pagina": "https://www.motorola.com.br/smartphone-motorola-moto-g17-256gb/p",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone motorola xt2623-1 moto g17 4gb 256gb camera 50mp azul",
+          "titulo_normalizado": true,
+          "preco": "R$ 1.254,77",
+          "preco_valor": 1254.77,
+          "pagamento": "Pix",
+          "loja": "Webcontinental",
+          "fonte": "Webcontinental",
+          "link": "https://www.webcontinental.com.br/smartphone-motorola-xt2623-1-moto-g17-4gb-256gb-camera-50mp-azul-003082004524/p",
+          "pagina": "https://www.webcontinental.com.br/smartphone-motorola-xt2623-1-moto-g17-4gb-256gb-camera-50mp-azul-003082004524/p",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone motorola g17 tela 6,7” 256gb 4g camera 50mp bordeaux",
+          "titulo_normalizado": true,
+          "preco": "R$ 1.314,90",
+          "preco_valor": 1314.9,
+          "pagamento": "Pix",
+          "loja": "Fast Shop",
+          "fonte": "Fast Shop",
+          "link": "https://site.fastshop.com.br/smartphone-motorola-g17-tela-67%E2%80%9D-256gb-4g-camera-50mp-bordeaux-173046/p",
+          "pagina": "https://site.fastshop.com.br/smartphone-motorola-g17-tela-67%E2%80%9D-256gb-4g-camera-50mp-bordeaux-173046/p",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone motorola g17 tela 6,7” 256gb 4g camera 50mp bordeaux",
+          "titulo_normalizado": true,
+          "preco": "R$ 1.314,90",
+          "preco_valor": 1314.9,
+          "pagamento": "Pix",
+          "loja": "Fast Shop",
+          "fonte": "Fast Shop",
+          "link": "https://site.fastshop.com.br/smartphone-motorola-g17-tela-67%E2%80%9D-256gb-4g-camera-50mp-bordeaux-172584/p",
+          "pagina": "https://site.fastshop.com.br/smartphone-motorola-g17-tela-67%E2%80%9D-256gb-4g-camera-50mp-bordeaux-172584/p",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone motorola moto g17 256gb - azul claro, 12gb (4gb ram + 8gb ram boost), camera 50mp e tela 6,7\"",
+          "titulo_normalizado": true,
+          "preco": "R$ 1.357,55",
+          "preco_valor": 1357.55,
+          "pagamento": "Pix",
+          "loja": "KaBuM!",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/1007602/smartphone-motorola-moto-g17-256gb-azul-claro-12gb-4gb-ram-8gb-ram-boost-camera-50mp-e-tela-6-7-",
+          "pagina": "https://www.kabum.com.br/produto/1007602/smartphone-motorola-moto-g17-256gb-azul-claro-12gb-4gb-ram-8gb-ram-boost-camera-50mp-e-tela-6-7-",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone motorola moto g17 tela 6,7” 256gb 4g camera 50mp evening blue",
+          "titulo_normalizado": true,
+          "preco": "R$ 1.398,83",
+          "preco_valor": 1398.83,
+          "pagamento": "Pix",
+          "loja": "Fast Shop",
+          "fonte": "Fast Shop",
+          "link": "https://site.fastshop.com.br/smartphone-motorola-moto-g17-tela-67%E2%80%9D-256gb-4g-camera-50mp-evening-blue-172573/p",
+          "pagina": "https://site.fastshop.com.br/smartphone-motorola-moto-g17-tela-67%E2%80%9D-256gb-4g-camera-50mp-evening-blue-172573/p",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone motorola g17 tela 6,7” 256gb 4g camera 50mp roxo",
+          "titulo_normalizado": true,
+          "preco": "R$ 1.398,83",
+          "preco_valor": 1398.83,
+          "pagamento": "Pix",
+          "loja": "Fast Shop",
+          "fonte": "Fast Shop",
+          "link": "https://site.fastshop.com.br/smartphone-motorola-g17-tela-67%E2%80%9D-256gb-4g-camera-50mp-roxo-152340/p",
+          "pagina": "https://site.fastshop.com.br/smartphone-motorola-g17-tela-67%E2%80%9D-256gb-4g-camera-50mp-roxo-152340/p",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone motorola moto g17, xt2623, 256gb, 4gb - roxo",
+          "titulo_normalizado": true,
+          "preco": "R$ 1.399,00",
+          "preco_valor": 1399.0,
+          "pagamento": "não informada",
+          "loja": "Novo Mundo",
+          "fonte": "Novo Mundo",
+          "link": "https://www.novomundo.com.br/produto/smartphone-motorola-moto-g17-xt2623-256gb-4gb-roxo-150485",
+          "pagina": "https://www.novomundo.com.br/produto/smartphone-motorola-moto-g17-xt2623-256gb-4gb-roxo-150485",
+          "na_faixa": false,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone motorola moto g17 6.7\" octa core 256gb 4gb camera tripla",
+          "titulo_normalizado": true,
+          "preco": "R$ 2.191,92",
+          "preco_valor": 2191.92,
+          "pagamento": "não informada",
+          "loja": "Gazin",
+          "fonte": "Gazin",
+          "link": "https://www.gazin.com.br/produto/smartphone-motorola-moto-g17-67-octa-core-256gb-4gb-camera-tripla/10286/rosa/quadriband",
+          "pagina": "https://www.gazin.com.br/produto/smartphone-motorola-moto-g17-67-octa-core-256gb-4gb-camera-tripla/10286/rosa/quadriband",
+          "na_faixa": false,
+          "conferencia_humana": "pendente"
+        }
+      ],
+      "falhas": [
+        "Magazine Luiza: erro HTTP 403"
+      ],
+      "menor": 1061.91,
+      "mediana": 1254.77,
+      "maior": 1398.83
+    },
+    {
+      "n": 8,
+      "entrada": "moto g35 256gb",
+      "quando": "2026-11-14T13:19:08.403-03:00",
+      "segundos": 3.275,
+      "conclusao": "Consulta concluída: Moto G35 256GB. Coleta nova. Processamento: 2.3 s.",
+      "lojas_equivalentes": [
+        "KaBuM!",
+        "Motorola"
+      ],
+      "lojas_com_pagamento": [
+        "KaBuM!",
+        "Motorola"
+      ],
+      "lojas_distintas": 2,
+      "lojas_com_preco_confirmado": 2,
+      "gerou_faixa": true,
+      "ofertas": [
+        {
+          "titulo": "smartphone motorola moto g35 5g 256gb · 4gb ram + 8gb ram boost, camera 50mp com ai nfc tela 6.7\" com superbrilho - coral",
+          "titulo_normalizado": true,
+          "preco": "R$ 1.199,00",
+          "preco_valor": 1199.0,
+          "pagamento": "Pix",
+          "loja": "Motorola",
+          "fonte": "Motorola",
+          "link": "https://www.motorola.com.br/smartphone-moto-g35-5g-256gb/p",
+          "pagina": "https://www.motorola.com.br/smartphone-moto-g35-5g-256gb/p",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone motorola g35 5g 256gb 4gb ram 6.72” 50mp coral",
+          "titulo_normalizado": true,
+          "preco": "R$ 1.259,10",
+          "preco_valor": 1259.1,
+          "pagamento": "Pix",
+          "loja": "KaBuM!",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/662346/smartphone-motorola-moto-g35-5g-256gb-coral-12gb-ram-boost-camera-50-mp-selfie-16mp-e-tela-6-7-android-14",
+          "pagina": "https://www.kabum.com.br/produto/662346/smartphone-motorola-moto-g35-5g-256gb-coral-12gb-ram-boost-camera-50-mp-selfie-16mp-e-tela-6-7-android-14",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone motorola g35 5g 256gb 8gb ram 6.72” 50mp cinza",
+          "titulo_normalizado": true,
+          "preco": "R$ 1.769,00",
+          "preco_valor": 1769.0,
+          "pagamento": "Pix",
+          "loja": "KaBuM!",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/643126/smartphone-motorola-moto-g35-5g-256gb-cinza-12gb-ram-boost-camera-50-mp-selfie-16mp-e-tela-6-7-android-14",
+          "pagina": "https://www.kabum.com.br/produto/643126/smartphone-motorola-moto-g35-5g-256gb-cinza-12gb-ram-boost-camera-50-mp-selfie-16mp-e-tela-6-7-android-14",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        }
+      ],
+      "falhas": [
+        "Magazine Luiza: erro HTTP 403"
+      ],
+      "menor": 1199.0,
+      "mediana": 1259.1,
+      "maior": 1769.0
+    },
+    {
+      "n": 9,
+      "entrada": "moto g47 128gb",
+      "quando": "2026-11-14T13:19:11.692-03:00",
+      "segundos": 2.905,
+      "conclusao": "Consulta concluída: Moto G47 128GB. Coleta nova. Processamento: 2.2 s.",
+      "lojas_equivalentes": [
+        "Fast Shop",
+        "Gazin",
+        "KaBuM!",
+        "Motorola",
+        "Novo Mundo"
+      ],
+      "lojas_com_pagamento": [
+        "Fast Shop",
+        "KaBuM!",
+        "Motorola"
+      ],
+      "lojas_distintas": 5,
+      "lojas_com_preco_confirmado": 3,
+      "gerou_faixa": true,
+      "ofertas": [
+        {
+          "titulo": "smartphone motorola moto g47 5g, 128gb, 12gb (4gb ram + 8gb ram boost), camera 50 mp, tela 6.7”, rosa",
+          "titulo_normalizado": true,
+          "preco": "R$ 1.131,30",
+          "preco_valor": 1131.3,
+          "pagamento": "Pix",
+          "loja": "KaBuM!",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/1038264/smartphone-motorola-moto-g47-5g-rosa-tela-de-6-7-128gb-4gb-ram-e-camera-de-50-mp-sony-lytia-600-bivolt",
+          "pagina": "https://www.kabum.com.br/produto/1038264/smartphone-motorola-moto-g47-5g-rosa-tela-de-6-7-128gb-4gb-ram-e-camera-de-50-mp-sony-lytia-600-bivolt",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone motorola moto g47, 5g, grafite, tela de 6,7”, 128gb, 4gb ram e camera de 50 mp sony lytia?? 600 - bivolt",
+          "titulo_normalizado": true,
+          "preco": "R$ 1.131,30",
+          "preco_valor": 1131.3,
+          "pagamento": "Pix",
+          "loja": "KaBuM!",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/1038262/smartphone-motorola-moto-g47-5g-grafite-tela-de-6-7-128gb-4gb-ram-e-camera-de-50-mp-sony-lytia-600-bivolt",
+          "pagina": "https://www.kabum.com.br/produto/1038262/smartphone-motorola-moto-g47-5g-grafite-tela-de-6-7-128gb-4gb-ram-e-camera-de-50-mp-sony-lytia-600-bivolt",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone motorola moto g47 5g, 128gb, 12gb (4gb ram + 8gb ram boost), camera 50 mp, tela 6.7”, azul nautico",
+          "titulo_normalizado": true,
+          "preco": "R$ 1.131,30",
+          "preco_valor": 1131.3,
+          "pagamento": "Pix",
+          "loja": "KaBuM!",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/1038261/smartphone-motorola-moto-g47-5g-128gb-12gb-4gb-ram-8gb-ram-boost-camera-50-mp-tela-6-7-azul-nautico",
+          "pagina": "https://www.kabum.com.br/produto/1038261/smartphone-motorola-moto-g47-5g-128gb-12gb-4gb-ram-8gb-ram-boost-camera-50-mp-tela-6-7-azul-nautico",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone motorola moto g47 5g 128gb · 4gb ram + 8gb ram boost, camera 50 mp sony lytia 600, tela 6.7\" fhd+ 120hz, nfc, ip64 - grafite",
+          "titulo_normalizado": true,
+          "preco": "R$ 1.199,00",
+          "preco_valor": 1199.0,
+          "pagamento": "Pix",
+          "loja": "Motorola",
+          "fonte": "Motorola",
+          "link": "https://www.motorola.com.br/smartphone-motorola-moto-g47-5g-128gb/p",
+          "pagina": "https://www.motorola.com.br/smartphone-motorola-moto-g47-5g-128gb/p",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone motorola moto g47 5g 128gb, 4gb ram + 8gb ram boost, camera 50 mp sony lytia 600, tela 6.7\" fhd+ 120hz, nfc, ip64 grafite",
+          "titulo_normalizado": true,
+          "preco": "R$ 1.424,57",
+          "preco_valor": 1424.57,
+          "pagamento": "Pix",
+          "loja": "Fast Shop",
+          "fonte": "Fast Shop",
+          "link": "https://site.fastshop.com.br/smartphone-motorola-moto-g47-5g-128gb-4gb-ram-camera-50mp-grafite-186699/p",
+          "pagina": "https://site.fastshop.com.br/smartphone-motorola-moto-g47-5g-128gb-4gb-ram-camera-50mp-grafite-186699/p",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone motorola moto g47 5g 128gb, 4gb ram + 8gb ram boost, camera 50 mp sony lytia 600, tela 6.7\" fhd+ 120hz, nfc, ip64 rosa",
+          "titulo_normalizado": true,
+          "preco": "R$ 1.424,57",
+          "preco_valor": 1424.57,
+          "pagamento": "Pix",
+          "loja": "Fast Shop",
+          "fonte": "Fast Shop",
+          "link": "https://site.fastshop.com.br/smartphone-motorola-moto-g47-5g-128gb-4gb-ram-camera-50mp-rosa-186682/p",
+          "pagina": "https://site.fastshop.com.br/smartphone-motorola-moto-g47-5g-128gb-4gb-ram-camera-50mp-rosa-186682/p",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone motorola moto g47 5g 128gb, 4gb ram + 8gb ram boost, camera 50 mp sony lytia 600, tela 6.7\" fhd+ 120hz, nfc, ip64 azul nautico",
+          "titulo_normalizado": true,
+          "preco": "R$ 1.424,57",
+          "preco_valor": 1424.57,
+          "pagamento": "Pix",
+          "loja": "Fast Shop",
+          "fonte": "Fast Shop",
+          "link": "https://site.fastshop.com.br/smartphone-motorola-moto-g47-5g-128gb-4gb-ram-camera-50mp-azul-nautico-186688/p",
+          "pagina": "https://site.fastshop.com.br/smartphone-motorola-moto-g47-5g-128gb-4gb-ram-camera-50mp-azul-nautico-186688/p",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone motorola moto g47 5g 128gb, 4gb ram + 8gb ram boost, camera 50 mp sony lytia 600, tela 6.7\" fhd+ 120hz, nfc, ip64 azul nautico",
+          "titulo_normalizado": true,
+          "preco": "R$ 1.424,57",
+          "preco_valor": 1424.57,
+          "pagamento": "Pix",
+          "loja": "Fast Shop",
+          "fonte": "Fast Shop",
+          "link": "https://site.fastshop.com.br/smartphone-motorola-moto-g47-5g-128gb-4gb-ram-camera-50mp-azul-nautico-186675/p",
+          "pagina": "https://site.fastshop.com.br/smartphone-motorola-moto-g47-5g-128gb-4gb-ram-camera-50mp-azul-nautico-186675/p",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone motorola moto g47 5g 128gb - azul turquesa, 12gb (4gb ram + 8gb ram boost), camera 50 mp e tela 6,7\"",
+          "titulo_normalizado": true,
+          "preco": "R$ 1.471,55",
+          "preco_valor": 1471.55,
+          "pagamento": "Pix",
+          "loja": "KaBuM!",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/1050739/smartphone-motorola-moto-g47-5g-128gb-azul-turquesa-12gb-4gb-ram-8gb-ram-boost-camera-50-mp-e-tela-6-7-",
+          "pagina": "https://www.kabum.com.br/produto/1050739/smartphone-motorola-moto-g47-5g-128gb-azul-turquesa-12gb-4gb-ram-8gb-ram-boost-camera-50-mp-e-tela-6-7-",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone motorola moto g47 5g 6.7\" octa-core 128gb 4gb camera dupla",
+          "titulo_normalizado": true,
+          "preco": "R$ 1.238,76",
+          "preco_valor": 1238.76,
+          "pagamento": "não informada",
+          "loja": "Gazin",
+          "fonte": "Gazin",
+          "link": "https://www.gazin.com.br/produto/smartphone-motorola-moto-g47-5g-67-octa-core-128gb-4gb-camera-dupla/11119/rosa/quadriband",
+          "pagina": "https://www.gazin.com.br/produto/smartphone-motorola-moto-g47-5g-67-octa-core-128gb-4gb-camera-dupla/11119/rosa/quadriband",
+          "na_faixa": false,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone motorola moto g47 5g 128gb 4gb ram tela 6,7'' - grafite",
+          "titulo_normalizado": true,
+          "preco": "R$ 1.389,00",
+          "preco_valor": 1389.0,
+          "pagamento": "não informada",
+          "loja": "Novo Mundo",
+          "fonte": "Novo Mundo",
+          "link": "https://www.novomundo.com.br/produto/smartphone-motorola-moto-g47-5g-128gb-4gb-ram-tela-6-7-grafite-150486",
+          "pagina": "https://www.novomundo.com.br/produto/smartphone-motorola-moto-g47-5g-128gb-4gb-ram-tela-6-7-grafite-150486",
+          "na_faixa": false,
+          "conferencia_humana": "pendente"
+        }
+      ],
+      "falhas": [
+        "Magazine Luiza: erro HTTP 403"
+      ],
+      "menor": 1131.3,
+      "mediana": 1424.57,
+      "maior": 1471.55
+    },
+    {
+      "n": 10,
+      "entrada": "moto e15 64gb",
+      "quando": "2026-11-14T13:19:14.610-03:00",
+      "segundos": 2.567,
+      "conclusao": "Consulta concluída: Moto E15 64GB. Coleta nova. Processamento: 1.7 s.",
+      "lojas_equivalentes": [
+        "FoneMix",
+        "KaBuM!"
+      ],
+      "lojas_com_pagamento": [
+        "FoneMix",
+        "KaBuM!"
+      ],
+      "lojas_distintas": 2,
+      "lojas_com_preco_confirmado": 2,
+      "gerou_faixa": true,
+      "ofertas": [
+        {
+          "titulo": "motorola moto e15 · 64gb 2gb · azul",
+          "titulo_normalizado": true,
+          "preco": "R$ 883,90",
+          "preco_valor": 883.9,
+          "pagamento": "Pix",
+          "loja": "FoneMix",
+          "fonte": "FoneMix",
+          "link": "https://fonemix.com.br/shop/motorola-moto-e15",
+          "pagina": "https://fonemix.com.br/shop/motorola-moto-e15",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone motorola moto e15 64gb 2gb azul",
+          "titulo_normalizado": true,
+          "preco": "R$ 916,65",
+          "preco_valor": 916.65,
+          "pagamento": "Pix",
+          "loja": "KaBuM!",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/1020404/smartphone-motorola-moto-e15-64gb-2gb-azul",
+          "pagina": "https://www.kabum.com.br/produto/1020404/smartphone-motorola-moto-e15-64gb-2gb-azul",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "motorola moto e15 xt2523-6 64gb 2gb ram roxo morado.",
+          "titulo_normalizado": true,
+          "preco": "R$ 939,00",
+          "preco_valor": 939.0,
+          "pagamento": "Pix",
+          "loja": "KaBuM!",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/887591/motorola-moto-e15-xt2523-6-64gb-2gb-ram-roxo-morado",
+          "pagina": "https://www.kabum.com.br/produto/887591/motorola-moto-e15-xt2523-6-64gb-2gb-ram-roxo-morado",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        }
+      ],
+      "falhas": [
+        "Magazine Luiza: erro HTTP 403"
+      ],
+      "menor": 883.9,
+      "mediana": 916.65,
+      "maior": 939.0
+    },
+    {
+      "n": 11,
+      "entrada": "xiaome redmi 15c 256gb",
+      "quando": "2026-11-14T13:19:27.582-03:00",
+      "segundos": 2.919,
+      "conclusao": "Consulta concluída: Xiaomi Redmi 15C 256GB. Coleta nova. Processamento: 2.4 s.",
+      "lojas_equivalentes": [
+        "Fast Shop",
+        "KaBuM!",
+        "Webcontinental"
+      ],
+      "lojas_com_pagamento": [
+        "Fast Shop",
+        "KaBuM!",
+        "Webcontinental"
+      ],
+      "lojas_distintas": 3,
+      "lojas_com_preco_confirmado": 3,
+      "gerou_faixa": true,
+      "ofertas": [
+        {
+          "titulo": "smartphone xiaomi redmi 15c 4g 8gb ram 256gb verde tela 6,9\" camera 50mp bateria 6000mah",
+          "titulo_normalizado": true,
+          "preco": "R$ 1.379,89",
+          "preco_valor": 1379.89,
+          "pagamento": "Pix",
+          "loja": "KaBuM!",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/1077713/smartphone-xiaomi-redmi-15c-4g-8gb-ram-256gb-verde-tela-6-9-camera-50mp-bateria-6000mah",
+          "pagina": "https://www.kabum.com.br/produto/1077713/smartphone-xiaomi-redmi-15c-4g-8gb-ram-256gb-verde-tela-6-9-camera-50mp-bateria-6000mah",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone xiaomi redmi 15c 4g 256gb 4gb ram tela 6,9\" 120hz camera 50mp bateria 6000mah",
+          "titulo_normalizado": true,
+          "preco": "R$ 1.469,90",
+          "preco_valor": 1469.9,
+          "pagamento": "Pix",
+          "loja": "KaBuM!",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/1077711/smartphone-xiaomi-redmi-15c-4g-256gb-4gb-ram-tela-6-9-120hz-camera-50mp-bateria-6000mah",
+          "pagina": "https://www.kabum.com.br/produto/1077711/smartphone-xiaomi-redmi-15c-4g-256gb-4gb-ram-tela-6-9-120hz-camera-50mp-bateria-6000mah",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone xiaomi redmi 15c 4g 4gb ram 256gb camera 50mp bateria 6000mah verde",
+          "titulo_normalizado": true,
+          "preco": "R$ 1.671,99",
+          "preco_valor": 1671.99,
+          "pagamento": "Pix",
+          "loja": "Webcontinental",
+          "fonte": "Webcontinental",
+          "link": "https://www.webcontinental.com.br/smartphone-xiaomi-redmi-15c-4g-br-4-4gb-ram-virtual-256gb-verde-006293000478/p",
+          "pagina": "https://www.webcontinental.com.br/smartphone-xiaomi-redmi-15c-4g-br-4-4gb-ram-virtual-256gb-verde-006293000478/p",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone xiaomi redmi 15c 4g 4gb ram 256gb camera 50mp preto",
+          "titulo_normalizado": true,
+          "preco": "R$ 1.671,99",
+          "preco_valor": 1671.99,
+          "pagamento": "Pix",
+          "loja": "Webcontinental",
+          "fonte": "Webcontinental",
+          "link": "https://www.webcontinental.com.br/smartphone-xiaomi-redmi-15c-4g-br-4-4gb-ram-virtual-256gb-preto-006293000477/p",
+          "pagina": "https://www.webcontinental.com.br/smartphone-xiaomi-redmi-15c-4g-br-4-4gb-ram-virtual-256gb-preto-006293000477/p",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone xiaomi redmi 15c 4g br 4+4gb ramvirtual + 256gb",
+          "titulo_normalizado": true,
+          "preco": "R$ 1.899,99",
+          "preco_valor": 1899.99,
+          "pagamento": "Pix",
+          "loja": "KaBuM!",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/947939/smartphone-xiaomi-redmi-15c-4g-br-4-4gb-ramvirtual-256gb",
+          "pagina": "https://www.kabum.com.br/produto/947939/smartphone-xiaomi-redmi-15c-4g-br-4-4gb-ramvirtual-256gb",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone xiaomi redmi 15c 4g br 4+4gb ram virtual + 256gb",
+          "titulo_normalizado": true,
+          "preco": "R$ 1.899,99",
+          "preco_valor": 1899.99,
+          "pagamento": "Pix",
+          "loja": "KaBuM!",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/947526/smartphone-xiaomi-redmi-15c-4g-br-4-4gb-ram-virtual-256gb",
+          "pagina": "https://www.kabum.com.br/produto/947526/smartphone-xiaomi-redmi-15c-4g-br-4-4gb-ram-virtual-256gb",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone xiaomi redmi 15c 4g 4gb ram 256gb camera 50mp preto",
+          "titulo_normalizado": true,
+          "preco": "R$ 1.899,99",
+          "preco_valor": 1899.99,
+          "pagamento": "Pix",
+          "loja": "Fast Shop",
+          "fonte": "Fast Shop",
+          "link": "https://site.fastshop.com.br/smartphone-xiaomi-redmi-15c-4g-4gb-ram-256gb-camera-50mp-preto-171942/p",
+          "pagina": "https://site.fastshop.com.br/smartphone-xiaomi-redmi-15c-4g-4gb-ram-256gb-camera-50mp-preto-171942/p",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone xiaomi redmi 15c 4g 4gb ram 256gb camera 50mp bateria 6000mah azul",
+          "titulo_normalizado": true,
+          "preco": "R$ 1.899,99",
+          "preco_valor": 1899.99,
+          "pagamento": "Pix",
+          "loja": "Fast Shop",
+          "fonte": "Fast Shop",
+          "link": "https://site.fastshop.com.br/smartphone-xiaomi-redmi-15c-4g-4gb-ram-256gb-camera-50mp-bateria-6000mah-azul-171932/p",
+          "pagina": "https://site.fastshop.com.br/smartphone-xiaomi-redmi-15c-4g-4gb-ram-256gb-camera-50mp-bateria-6000mah-azul-171932/p",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        }
+      ],
+      "falhas": [
+        "Magazine Luiza: erro HTTP 403"
+      ],
+      "menor": 1379.89,
+      "mediana": 1785.99,
+      "maior": 1899.99
+    },
+    {
+      "n": 12,
+      "entrada": "redmi 15 256gb",
+      "quando": "2026-11-14T13:19:30.516-03:00",
+      "segundos": 3.306,
+      "conclusao": "Consulta concluída: Redmi 15 256GB. Coleta nova. Processamento: 2.8 s.",
+      "lojas_equivalentes": [
+        "EletroInfo Outlet",
+        "KaBuM!"
+      ],
+      "lojas_com_pagamento": [
+        "KaBuM!"
+      ],
+      "lojas_distintas": 2,
+      "lojas_com_preco_confirmado": 1,
+      "gerou_faixa": false,
+      "ofertas": [
+        {
+          "titulo": "celular xiaomi redmi 15 256gb 8gb preto 4g selfie com gravacao 1080p 30fps",
+          "titulo_normalizado": true,
+          "preco": "R$ 1.619,10",
+          "preco_valor": 1619.1,
+          "pagamento": "Pix",
+          "loja": "KaBuM!",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/984772/celular-xiaomi-redmi-15-256gb-8gb-preto-4g-selfie-com-gravacao-1080p-30fps",
+          "pagina": "https://www.kabum.com.br/produto/984772/celular-xiaomi-redmi-15-256gb-8gb-preto-4g-selfie-com-gravacao-1080p-30fps",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone xiaomi redmi 15 4g 256gb 8gb ram dual sim - dourado",
+          "titulo_normalizado": true,
+          "preco": "R$ 1.500,00",
+          "preco_valor": 1500.0,
+          "pagamento": "não informada",
+          "loja": "EletroInfo Outlet",
+          "fonte": "EletroInfo Outlet",
+          "link": "https://eletroinfoonline.com/products/smartphone-xiaomi-redmi-15-4g-256gb-8gb-ram-dual-sim",
+          "pagina": "https://eletroinfoonline.com/products/smartphone-xiaomi-redmi-15-4g-256gb-8gb-ram-dual-sim",
+          "na_faixa": false,
+          "conferencia_humana": "pendente"
+        }
+      ],
+      "falhas": [
+        "Magazine Luiza: erro HTTP 403"
+      ]
+    },
+    {
+      "n": 13,
+      "entrada": "poco c85 128gb",
+      "quando": "2026-11-14T13:19:33.836-03:00",
+      "segundos": 3.129,
+      "conclusao": "Consulta concluída: Poco C85 128GB. Coleta nova. Processamento: 2.3 s.",
+      "lojas_equivalentes": [
+        "KaBuM!",
+        "Webcontinental"
+      ],
+      "lojas_com_pagamento": [
+        "KaBuM!",
+        "Webcontinental"
+      ],
+      "lojas_distintas": 2,
+      "lojas_com_preco_confirmado": 2,
+      "gerou_faixa": true,
+      "ofertas": [
+        {
+          "titulo": "smartphone xiaomi poco c85 6gb 128gb camera 50mp tela 6,9 polegadas preto",
+          "titulo_normalizado": true,
+          "preco": "R$ 1.495,99",
+          "preco_valor": 1495.99,
+          "pagamento": "Pix",
+          "loja": "Webcontinental",
+          "fonte": "Webcontinental",
+          "link": "https://www.webcontinental.com.br/smartphone-poco-c85-6-6gb-128gb-preto-006293000067/p",
+          "pagina": "https://www.webcontinental.com.br/smartphone-poco-c85-6-6gb-128gb-preto-006293000067/p",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone xiaomi poco c85 6gb ram 128gb camera 50mp bateria 6000mah roxo",
+          "titulo_normalizado": true,
+          "preco": "R$ 1.495,99",
+          "preco_valor": 1495.99,
+          "pagamento": "Pix",
+          "loja": "Webcontinental",
+          "fonte": "Webcontinental",
+          "link": "https://www.webcontinental.com.br/smartphone-poco-c85-6-6gb-ram-128gb---roxo-006293000068/p",
+          "pagina": "https://www.webcontinental.com.br/smartphone-poco-c85-6-6gb-ram-128gb---roxo-006293000068/p",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone poco c85 6+6gb + 128gb, preto",
+          "titulo_normalizado": true,
+          "preco": "R$ 1.699,99",
+          "preco_valor": 1699.99,
+          "pagamento": "Pix",
+          "loja": "KaBuM!",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/931262/smartphone-poco-c85-6-6gb-128gb-preto",
+          "pagina": "https://www.kabum.com.br/produto/931262/smartphone-poco-c85-6-6gb-128gb-preto",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        }
+      ],
+      "falhas": [
+        "Magazine Luiza: erro HTTP 403"
+      ],
+      "menor": 1495.99,
+      "mediana": 1495.99,
+      "maior": 1699.99
+    },
+    {
+      "n": 14,
+      "entrada": "redmi note 15 256gb",
+      "quando": "2026-11-14T13:19:36.979-03:00",
+      "segundos": 3.234,
+      "conclusao": "Consulta concluída: Redmi Note 15 256GB. Coleta nova. Processamento: 2.5 s.",
+      "lojas_equivalentes": [
+        "EletroInfo Outlet",
+        "KaBuM!"
+      ],
+      "lojas_com_pagamento": [
+        "KaBuM!"
+      ],
+      "lojas_distintas": 2,
+      "lojas_com_preco_confirmado": 1,
+      "gerou_faixa": false,
+      "ofertas": [
+        {
+          "titulo": "redmi note 15 256gb",
+          "titulo_normalizado": true,
+          "preco": "R$ 2.799,99",
+          "preco_valor": 2799.99,
+          "pagamento": "Pix",
+          "loja": "KaBuM!",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/997652/redmi-note-15-256gb",
+          "pagina": "https://www.kabum.com.br/produto/997652/redmi-note-15-256gb",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone xiaomi redmi note 15 4g 256gb 8gb ram - verde",
+          "titulo_normalizado": true,
+          "preco": "R$ 1.680,00",
+          "preco_valor": 1680.0,
+          "pagamento": "não informada",
+          "loja": "EletroInfo Outlet",
+          "fonte": "EletroInfo Outlet",
+          "link": "https://eletroinfoonline.com/products/smartphone-xiaomi-redmi-note-15-4g-256gb-8gb-ram",
+          "pagina": "https://eletroinfoonline.com/products/smartphone-xiaomi-redmi-note-15-4g-256gb-8gb-ram",
+          "na_faixa": false,
+          "conferencia_humana": "pendente"
+        }
+      ],
+      "falhas": [
+        "Magazine Luiza: erro HTTP 403"
+      ]
+    },
+    {
+      "n": 15,
+      "entrada": "oppo a6x 128gb",
+      "quando": "2026-11-14T13:19:47.711-03:00",
+      "segundos": 2.992,
+      "conclusao": "Consulta concluída: Oppo A6X 128GB. Coleta nova. Processamento: 2.6 s.",
+      "lojas_equivalentes": [
+        "Fast Shop",
+        "Gazin",
+        "KaBuM!",
+        "Novo Mundo"
+      ],
+      "lojas_com_pagamento": [
+        "Fast Shop",
+        "KaBuM!"
+      ],
+      "lojas_distintas": 4,
+      "lojas_com_preco_confirmado": 2,
+      "gerou_faixa": true,
+      "ofertas": [
+        {
+          "titulo": "celular oppo a6x azul, 128gb, 4gb ram e camera traseira de 13mp",
+          "titulo_normalizado": true,
+          "preco": "R$ 1.049,00",
+          "preco_valor": 1049.0,
+          "pagamento": "Pix",
+          "loja": "Fast Shop",
+          "fonte": "Fast Shop",
+          "link": "https://site.fastshop.com.br/celular-oppo-a6x-azul--128gb--4gb-ram-e-camera-traseira-de-13mp-5pcph2820azl_prd/p",
+          "pagina": "https://site.fastshop.com.br/celular-oppo-a6x-azul--128gb--4gb-ram-e-camera-traseira-de-13mp-5pcph2820azl_prd/p",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone oppo a6x 4g tela 6.75” 128gb camera 13mp azul",
+          "titulo_normalizado": true,
+          "preco": "R$ 1.095,57",
+          "preco_valor": 1095.57,
+          "pagamento": "Pix",
+          "loja": "Fast Shop",
+          "fonte": "Fast Shop",
+          "link": "https://site.fastshop.com.br/smartphone-oppo-a6x-4g-tela-6-75%E2%80%9D-128gb-camera-13mp-azul-157128/p",
+          "pagina": "https://site.fastshop.com.br/smartphone-oppo-a6x-4g-tela-6-75%E2%80%9D-128gb-camera-13mp-azul-157128/p",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone oppo a6x 4g tela 6.75” 128gb camera 13mp purpura",
+          "titulo_normalizado": true,
+          "preco": "R$ 1.095,57",
+          "preco_valor": 1095.57,
+          "pagamento": "Pix",
+          "loja": "Fast Shop",
+          "fonte": "Fast Shop",
+          "link": "https://site.fastshop.com.br/smartphone-oppo-a6x-4g-tela-6-75%E2%80%9D-128gb-camera-13mp-purpura-156920/p",
+          "pagina": "https://site.fastshop.com.br/smartphone-oppo-a6x-4g-tela-6-75%E2%80%9D-128gb-camera-13mp-purpura-156920/p",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "celular oppo a6x 4 128gb cph 2819 - cph 2819 azul quadriband",
+          "titulo_normalizado": true,
+          "preco": "R$ 1.169,10",
+          "preco_valor": 1169.1,
+          "pagamento": "Pix",
+          "loja": "KaBuM!",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/1000527/celular-oppo-a6x-4-128gb-cph-2819-cph-2819-azul-quadriband",
+          "pagina": "https://www.kabum.com.br/produto/1000527/celular-oppo-a6x-4-128gb-cph-2819-cph-2819-azul-quadriband",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone oppo a6x, 128gb, 4gb + 8gb ram, 6,75'', camera traseira de 13mp - purpura",
+          "titulo_normalizado": true,
+          "preco": "R$ 1.169,10",
+          "preco_valor": 1169.1,
+          "pagamento": "Pix",
+          "loja": "KaBuM!",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/1000528/oppo-a6x-128gb",
+          "pagina": "https://www.kabum.com.br/produto/1000528/oppo-a6x-128gb",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone oppo a6x 4g tela 6.75” 128gb camera 13mp purpura",
+          "titulo_normalizado": true,
+          "preco": "R$ 1.183,39",
+          "preco_valor": 1183.39,
+          "pagamento": "Pix",
+          "loja": "Fast Shop",
+          "fonte": "Fast Shop",
+          "link": "https://site.fastshop.com.br/smartphone-oppo-a6x-4g-tela-6-75%E2%80%9D-128gb-camera-13mp-purpura-156913/p",
+          "pagina": "https://site.fastshop.com.br/smartphone-oppo-a6x-4g-tela-6-75%E2%80%9D-128gb-camera-13mp-purpura-156913/p",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone oppo a6x 4g tela 6.75” 128gb camera 13mp azul",
+          "titulo_normalizado": true,
+          "preco": "R$ 1.183,40",
+          "preco_valor": 1183.4,
+          "pagamento": "Pix",
+          "loja": "Fast Shop",
+          "fonte": "Fast Shop",
+          "link": "https://site.fastshop.com.br/smartphone-oppo-a6x-4g-tela-6-75%E2%80%9D-128gb-camera-13mp-azul-152345/p",
+          "pagina": "https://site.fastshop.com.br/smartphone-oppo-a6x-4g-tela-6-75%E2%80%9D-128gb-camera-13mp-azul-152345/p",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone oppo a6x 128gb 4gb ram purpura tela 6.75\" 120hz bateria 6500mah nfc snapdragon 4g",
+          "titulo_normalizado": true,
+          "preco": "R$ 1.399,00",
+          "preco_valor": 1399.0,
+          "pagamento": "Pix",
+          "loja": "KaBuM!",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/1061032/smartphone-oppo-a6x-128gb-4gb-ram-purpura-tela-6-75-120hz-bateria-6500mah-nfc-snapdragon-4g",
+          "pagina": "https://www.kabum.com.br/produto/1061032/smartphone-oppo-a6x-128gb-4gb-ram-purpura-tela-6-75-120hz-bateria-6500mah-nfc-snapdragon-4g",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone oppo a6x 4g 128gb azul",
+          "titulo_normalizado": true,
+          "preco": "R$ 1.169,00",
+          "preco_valor": 1169.0,
+          "pagamento": "não informada",
+          "loja": "Novo Mundo",
+          "fonte": "Novo Mundo",
+          "link": "https://www.novomundo.com.br/produto/smartphone-oppo-a6x-4g-128gb-azul-164743",
+          "pagina": "https://www.novomundo.com.br/produto/smartphone-oppo-a6x-4g-128gb-azul-164743",
+          "na_faixa": false,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone oppo a6x 4g 128gb purpura",
+          "titulo_normalizado": true,
+          "preco": "R$ 1.169,00",
+          "preco_valor": 1169.0,
+          "pagamento": "não informada",
+          "loja": "Novo Mundo",
+          "fonte": "Novo Mundo",
+          "link": "https://www.novomundo.com.br/produto/smartphone-oppo-a6x-4g-128gb-purpura-164741",
+          "pagina": "https://www.novomundo.com.br/produto/smartphone-oppo-a6x-4g-128gb-purpura-164741",
+          "na_faixa": false,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone oppo a6x 6.75\" 128gb 4gb camera dupla",
+          "titulo_normalizado": true,
+          "preco": "R$ 1.509,30",
+          "preco_valor": 1509.3,
+          "pagamento": "não informada",
+          "loja": "Gazin",
+          "fonte": "Gazin",
+          "link": "https://www.gazin.com.br/produto/smartphone-oppo-a6x-675-128gb-4gb-camera-dupla/10245/purpura/quadriband",
+          "pagina": "https://www.gazin.com.br/produto/smartphone-oppo-a6x-675-128gb-4gb-camera-dupla/10245/purpura/quadriband",
+          "na_faixa": false,
+          "conferencia_humana": "pendente"
+        }
+      ],
+      "falhas": [
+        "Magazine Luiza: erro HTTP 403"
+      ],
+      "menor": 1049.0,
+      "mediana": 1169.1,
+      "maior": 1399.0
+    },
+    {
+      "n": 16,
+      "entrada": "iphone 16e 128gb",
+      "quando": "2026-11-14T13:19:50.713-03:00",
+      "segundos": 2.646,
+      "conclusao": "Consulta concluída: iPhone 16E 128GB. Coleta nova. Processamento: 1.8 s.",
+      "lojas_equivalentes": [
+        "EletroInfo Outlet",
+        "Fast Shop",
+        "Gazin",
+        "KaBuM!"
+      ],
+      "lojas_com_pagamento": [
+        "Fast Shop",
+        "KaBuM!"
+      ],
+      "lojas_distintas": 4,
+      "lojas_com_preco_confirmado": 2,
+      "gerou_faixa": true,
+      "ofertas": [
+        {
+          "titulo": "apple iphone 16e a3212 esim 128gb 8gb ram 6.1 - black",
+          "titulo_normalizado": true,
+          "preco": "R$ 3.299,00",
+          "preco_valor": 3299.0,
+          "pagamento": "Pix",
+          "loja": "KaBuM!",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/723885/iphone-16e-128gb-apple",
+          "pagina": "https://www.kabum.com.br/produto/723885/iphone-16e-128gb-apple",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "iphone 16e 128gb apple",
+          "titulo_normalizado": true,
+          "preco": "R$ 3.299,00",
+          "preco_valor": 3299.0,
+          "pagamento": "Pix",
+          "loja": "KaBuM!",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/724768/iphone-16e-128gb-apple",
+          "pagina": "https://www.kabum.com.br/produto/724768/iphone-16e-128gb-apple",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "apple iphone 16e 128gb branco",
+          "titulo_normalizado": true,
+          "preco": "R$ 4.229,10",
+          "preco_valor": 4229.1,
+          "pagamento": "Pix",
+          "loja": "Fast Shop",
+          "fonte": "Fast Shop",
+          "link": "https://site.fastshop.com.br/apple-iphone-16e-128gb-branco-156677/p",
+          "pagina": "https://site.fastshop.com.br/apple-iphone-16e-128gb-branco-156677/p",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "apple iphone 16e de 128gb - preto",
+          "titulo_normalizado": true,
+          "preco": "R$ 4.229,10",
+          "preco_valor": 4229.1,
+          "pagamento": "Pix",
+          "loja": "Fast Shop",
+          "fonte": "Fast Shop",
+          "link": "https://site.fastshop.com.br/apple-iphone-16e-de-128gb---preto-156675/p",
+          "pagina": "https://site.fastshop.com.br/apple-iphone-16e-de-128gb---preto-156675/p",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "iphone 16e apple 128gb, camera 48mp, tela super retina xdr 6,1\", branco",
+          "titulo_normalizado": true,
+          "preco": "R$ 4.499,90",
+          "preco_valor": 4499.9,
+          "pagamento": "Pix",
+          "loja": "KaBuM!",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/717163/iphone-16e-apple-128gb-camera-48mp-tela-super-retina-xdr-6-1-branco",
+          "pagina": "https://www.kabum.com.br/produto/717163/iphone-16e-apple-128gb-camera-48mp-tela-super-retina-xdr-6-1-branco",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "apple iphone 16e 128gb - preto",
+          "titulo_normalizado": true,
+          "preco": "R$ 4.548,00",
+          "preco_valor": 4548.0,
+          "pagamento": "não informada",
+          "loja": "EletroInfo Outlet",
+          "fonte": "EletroInfo Outlet",
+          "link": "https://eletroinfoonline.com/products/apple-iphone-16e-128gb",
+          "pagina": "https://eletroinfoonline.com/products/apple-iphone-16e-128gb",
+          "na_faixa": false,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "iphone 16e apple 5g 6,1\" ios 18 128gb 8gb camera 48mp",
+          "titulo_normalizado": true,
+          "preco": "R$ 5.179,90",
+          "preco_valor": 5179.9,
+          "pagamento": "não informada",
+          "loja": "Gazin",
+          "fonte": "Gazin",
+          "link": "https://www.gazin.com.br/produto/iphone-16e-apple-5g-61-ios-18-128gb-8gb-camera-48mp/9522/preto/quadriband",
+          "pagina": "https://www.gazin.com.br/produto/iphone-16e-apple-5g-61-ios-18-128gb-8gb-camera-48mp/9522/preto/quadriband",
+          "na_faixa": false,
+          "conferencia_humana": "pendente"
+        }
+      ],
+      "falhas": [
+        "Magazine Luiza: erro HTTP 403"
+      ],
+      "menor": 3299.0,
+      "mediana": 4229.1,
+      "maior": 4499.9
+    },
+    {
+      "n": 17,
+      "entrada": "epone 16 128gb",
+      "quando": "2026-11-14T13:19:53.371-03:00",
+      "segundos": 3.144,
+      "conclusao": "Consulta concluída: iPhone 16 128GB. Coleta nova. Processamento: 2.6 s.",
+      "lojas_equivalentes": [
+        "EletroInfo Outlet",
+        "Fast Shop",
+        "KaBuM!"
+      ],
+      "lojas_com_pagamento": [
+        "Fast Shop",
+        "KaBuM!"
+      ],
+      "lojas_distintas": 3,
+      "lojas_com_preco_confirmado": 2,
+      "gerou_faixa": true,
+      "ofertas": [
+        {
+          "titulo": "apple iphone 16 128gb rosa",
+          "titulo_normalizado": true,
+          "preco": "R$ 4.799,00",
+          "preco_valor": 4799.0,
+          "pagamento": "Pix",
+          "loja": "KaBuM!",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/643113/apple-iphone-16-128gb-rosa",
+          "pagina": "https://www.kabum.com.br/produto/643113/apple-iphone-16-128gb-rosa",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "iphone 16 128gb 5g branco tela 6,1 camera 48mp apple",
+          "titulo_normalizado": true,
+          "preco": "R$ 4.799,00",
+          "preco_valor": 4799.0,
+          "pagamento": "Pix",
+          "loja": "KaBuM!",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/643121/iphone-16-128gb-5g-branco-tela-6-1-camera-48mp-apple",
+          "pagina": "https://www.kabum.com.br/produto/643121/iphone-16-128gb-5g-branco-tela-6-1-camera-48mp-apple",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "apple iphone 16 128gb 8gb ram a3287 nano + esim tela 6.1 48+12mp verde acinzentado",
+          "titulo_normalizado": true,
+          "preco": "R$ 4.799,00",
+          "preco_valor": 4799.0,
+          "pagamento": "Pix",
+          "loja": "KaBuM!",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/643118/apple-iphone-16-128gb-8gb-ram-a3287-nano-esim-tela-6-1-48-12mp-verde-acinzentado",
+          "pagina": "https://www.kabum.com.br/produto/643118/apple-iphone-16-128gb-8gb-ram-a3287-nano-esim-tela-6-1-48-12mp-verde-acinzentado",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "smartphone apple iphone 16 5g 128gb 48mp 6.1” preto",
+          "titulo_normalizado": true,
+          "preco": "R$ 4.799,00",
+          "preco_valor": 4799.0,
+          "pagamento": "Pix",
+          "loja": "KaBuM!",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/643120/iphone-16-128gb-5g-preto-tela-6-1-camera-48mp-apple",
+          "pagina": "https://www.kabum.com.br/produto/643120/iphone-16-128gb-5g-preto-tela-6-1-camera-48mp-apple",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "iphone 16 128gb preto",
+          "titulo_normalizado": true,
+          "preco": "R$ 5.174,10",
+          "preco_valor": 5174.1,
+          "pagamento": "Pix",
+          "loja": "Fast Shop",
+          "fonte": "Fast Shop",
+          "link": "https://site.fastshop.com.br/iphone-16-128gb-preto-129078/p",
+          "pagina": "https://site.fastshop.com.br/iphone-16-128gb-preto-129078/p",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "iphone 16 apple 128gb, camera dupla de 48mp, tela 6.1\", branco",
+          "titulo_normalizado": true,
+          "preco": "R$ 5.799,00",
+          "preco_valor": 5799.0,
+          "pagamento": "Pix",
+          "loja": "KaBuM!",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/640913/iphone-16-apple-128gb-camera-dupla-de-48mp-tela-6-1-branco",
+          "pagina": "https://www.kabum.com.br/produto/640913/iphone-16-apple-128gb-camera-dupla-de-48mp-tela-6-1-branco",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "iphone 16 128gb - verde",
+          "titulo_normalizado": true,
+          "preco": "R$ 6.120,00",
+          "preco_valor": 6120.0,
+          "pagamento": "não informada",
+          "loja": "EletroInfo Outlet",
+          "fonte": "EletroInfo Outlet",
+          "link": "https://eletroinfoonline.com/products/iphone-16-128gb",
+          "pagina": "https://eletroinfoonline.com/products/iphone-16-128gb",
+          "na_faixa": false,
+          "conferencia_humana": "pendente"
+        }
+      ],
+      "falhas": [
+        "Magazine Luiza: erro HTTP 403"
+      ],
+      "menor": 4799.0,
+      "mediana": 4799.0,
+      "maior": 5799.0
+    },
+    {
+      "n": 18,
+      "entrada": "iphone 17 pro max 256gb",
+      "quando": "2026-11-14T13:19:56.527-03:00",
+      "segundos": 3.062,
+      "conclusao": "Consulta concluída: iPhone 17 Pro Max 256GB. Coleta nova. Processamento: 2.1 s.",
+      "lojas_equivalentes": [
+        "EletroInfo Outlet",
+        "Fast Shop",
+        "KaBuM!",
+        "Webcontinental"
+      ],
+      "lojas_com_pagamento": [
+        "Fast Shop",
+        "KaBuM!",
+        "Webcontinental"
+      ],
+      "lojas_distintas": 4,
+      "lojas_com_preco_confirmado": 3,
+      "gerou_faixa": true,
+      "ofertas": [
+        {
+          "titulo": "apple iphone 17 pro max 256gb laranja-cosmico",
+          "titulo_normalizado": true,
+          "preco": "R$ 9.099,00",
+          "preco_valor": 9099.0,
+          "pagamento": "Pix",
+          "loja": "KaBuM!",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/928991/apple-iphone-17-pro-max-256gb-laranja-cosmico",
+          "pagina": "https://www.kabum.com.br/produto/928991/apple-iphone-17-pro-max-256gb-laranja-cosmico",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "iphone 17 pro max 256gb apple blue",
+          "titulo_normalizado": true,
+          "preco": "R$ 9.490,00",
+          "preco_valor": 9490.0,
+          "pagamento": "Pix",
+          "loja": "KaBuM!",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/928901/iphone-17-pro-max-256gb-apple-blue",
+          "pagina": "https://www.kabum.com.br/produto/928901/iphone-17-pro-max-256gb-apple-blue",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "iphone 17 pro max 256gb laranja-cosmico",
+          "titulo_normalizado": true,
+          "preco": "R$ 9.651,60",
+          "preco_valor": 9651.6,
+          "pagamento": "Pix",
+          "loja": "Fast Shop",
+          "fonte": "Fast Shop",
+          "link": "https://site.fastshop.com.br/iphone-17-pro-max-256gb-laranja-cosmico-186065/p",
+          "pagina": "https://site.fastshop.com.br/iphone-17-pro-max-256gb-laranja-cosmico-186065/p",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "apple iphone 17 pro max 256gb prateado",
+          "titulo_normalizado": true,
+          "preco": "R$ 10.169,10",
+          "preco_valor": 10169.1,
+          "pagamento": "Pix",
+          "loja": "KaBuM!",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/928979/apple-iphone-17-pro-max-256gb-prateado",
+          "pagina": "https://www.kabum.com.br/produto/928979/apple-iphone-17-pro-max-256gb-prateado",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "iphone 17 pro max apple 256gb, camera tripla fusion de 48mp, tela 6.9\" super retina xdr, azul-intenso",
+          "titulo_normalizado": true,
+          "preco": "R$ 12.499,00",
+          "preco_valor": 12499.0,
+          "pagamento": "Pix",
+          "loja": "KaBuM!",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/925357/iphone-17-pro-max-apple-256gb-camera-tripla-fusion-de-48mp-tela-6-9-super-retina-xdr-azul-intenso",
+          "pagina": "https://www.kabum.com.br/produto/925357/iphone-17-pro-max-apple-256gb-camera-tripla-fusion-de-48mp-tela-6-9-super-retina-xdr-azul-intenso",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "iphone 17 pro max apple 256gb, camera tripla fusion de 48mp, tela 6.9\" super retina xdr, prateado",
+          "titulo_normalizado": true,
+          "preco": "R$ 13.499,00",
+          "preco_valor": 13499.0,
+          "pagamento": "Pix",
+          "loja": "KaBuM!",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/925355/iphone-17-pro-max-apple-256gb-camera-tripla-fusion-de-48mp-tela-6-9-super-retina-xdr-prateado",
+          "pagina": "https://www.kabum.com.br/produto/925355/iphone-17-pro-max-apple-256gb-camera-tripla-fusion-de-48mp-tela-6-9-super-retina-xdr-prateado",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "iphone 17 pro max 12gb 256gb laranja-cosmico",
+          "titulo_normalizado": true,
+          "preco": "R$ 14.586,60",
+          "preco_valor": 14586.6,
+          "pagamento": "Pix",
+          "loja": "Webcontinental",
+          "fonte": "Webcontinental",
+          "link": "https://www.webcontinental.com.br/iphone-17-pro-max-12gb-256gb-laranja-cosmico-006611000250/p",
+          "pagina": "https://www.webcontinental.com.br/iphone-17-pro-max-12gb-256gb-laranja-cosmico-006611000250/p",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "apple iphone 17 pro max 256gb - laranja",
+          "titulo_normalizado": true,
+          "preco": "R$ 10.140,00",
+          "preco_valor": 10140.0,
+          "pagamento": "não informada",
+          "loja": "EletroInfo Outlet",
+          "fonte": "EletroInfo Outlet",
+          "link": "https://eletroinfoonline.com/products/apple-iphone-17-pro-max-256gb",
+          "pagina": "https://eletroinfoonline.com/products/apple-iphone-17-pro-max-256gb",
+          "na_faixa": false,
+          "conferencia_humana": "pendente"
+        }
+      ],
+      "falhas": [
+        "Magazine Luiza: erro HTTP 403"
+      ],
+      "menor": 9099.0,
+      "mediana": 10169.1,
+      "maior": 14586.6
+    },
+    {
+      "n": 19,
+      "entrada": "iphone 13 128gb usado",
+      "quando": "2026-11-14T13:22:18.195-03:00",
+      "segundos": 3.234,
+      "conclusao": "Consulta concluída: iPhone 13 128GB usado. Coleta nova. Processamento: 2.8 s.",
+      "lojas_equivalentes": [
+        "KaBuM!",
+        "Trocafy"
+      ],
+      "lojas_com_pagamento": [
+        "KaBuM!",
+        "Trocafy"
+      ],
+      "lojas_distintas": 2,
+      "lojas_com_preco_confirmado": 2,
+      "gerou_faixa": true,
+      "ofertas": [
+        {
+          "titulo": "apple - iphone 13 128gb (product)red - fui mais usado - bateria 70%",
+          "titulo_normalizado": true,
+          "preco": "R$ 1.713,51",
+          "preco_valor": 1713.51,
+          "pagamento": "Pix",
+          "loja": "Trocafy",
+          "fonte": "Trocafy",
+          "link": "https://www.trocafy.com.br/iphone-13-128gb-product-red-fui-mais-usado-bateria-70-p2603",
+          "pagina": "https://www.trocafy.com.br/iphone-13-128gb-product-red-fui-mais-usado-bateria-70-p2603",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "apple - iphone 13 128gb azul - fui mais usado - bateria 70%",
+          "titulo_normalizado": true,
+          "preco": "R$ 1.713,51",
+          "preco_valor": 1713.51,
+          "pagamento": "Pix",
+          "loja": "Trocafy",
+          "fonte": "Trocafy",
+          "link": "https://www.trocafy.com.br/iphone-13-128gb-azul-fui-mais-usado-bateria-70-p2516",
+          "pagina": "https://www.trocafy.com.br/iphone-13-128gb-azul-fui-mais-usado-bateria-70-p2516",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "apple - iphone 13 128gb - branco - tenho minhas marcas de uso",
+          "titulo_normalizado": true,
+          "preco": "R$ 1.739,61",
+          "preco_valor": 1739.61,
+          "pagamento": "Pix",
+          "loja": "Trocafy",
+          "fonte": "Trocafy",
+          "link": "https://www.trocafy.com.br/iphone-13-128gb-branco-tenho-minhas-marcas-de-uso-p1204",
+          "pagina": "https://www.trocafy.com.br/iphone-13-128gb-branco-tenho-minhas-marcas-de-uso-p1204",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "apple - iphone 13 128gb rosa - fui mais usado",
+          "titulo_normalizado": true,
+          "preco": "R$ 1.765,71",
+          "preco_valor": 1765.71,
+          "pagamento": "Pix",
+          "loja": "Trocafy",
+          "fonte": "Trocafy",
+          "link": "https://www.trocafy.com.br/iphone-13-128gb-rosa-fui-mais-usado-p2063",
+          "pagina": "https://www.trocafy.com.br/iphone-13-128gb-rosa-fui-mais-usado-p2063",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "apple - iphone 13 128gb (product)red - fui mais usado",
+          "titulo_normalizado": true,
+          "preco": "R$ 1.765,71",
+          "preco_valor": 1765.71,
+          "pagamento": "Pix",
+          "loja": "Trocafy",
+          "fonte": "Trocafy",
+          "link": "https://www.trocafy.com.br/iphone-13-128gb-product-red-fui-mais-usado-p2149",
+          "pagina": "https://www.trocafy.com.br/iphone-13-128gb-product-red-fui-mais-usado-p2149",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "usado - iphone 13 128gb estelar muito bom - trocafone",
+          "titulo_normalizado": true,
+          "preco": "R$ 2.087,13",
+          "preco_valor": 2087.13,
+          "pagamento": "Pix",
+          "loja": "KaBuM!",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/577039/usado-iphone-13-128gb-estelar-muito-bom-trocafone",
+          "pagina": "https://www.kabum.com.br/produto/577039/usado-iphone-13-128gb-estelar-muito-bom-trocafone",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "usado: iphone 13 128gb, meia noite - muito bom",
+          "titulo_normalizado": true,
+          "preco": "R$ 2.159,10",
+          "preco_valor": 2159.1,
+          "pagamento": "Pix",
+          "loja": "KaBuM!",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/574874/usado-iphone-13-128gb-meia-noite-muito-bom",
+          "pagina": "https://www.kabum.com.br/produto/574874/usado-iphone-13-128gb-meia-noite-muito-bom",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "usado: iphone 13 128gb, estelar - excelente",
+          "titulo_normalizado": true,
+          "preco": "R$ 2.191,53",
+          "preco_valor": 2191.53,
+          "pagamento": "Pix",
+          "loja": "KaBuM!",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/506655/usado-iphone-13-128gb-estelar-excelente",
+          "pagina": "https://www.kabum.com.br/produto/506655/usado-iphone-13-128gb-estelar-excelente",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "usado: iphone 13 128gb, azul - muito bom",
+          "titulo_normalizado": true,
+          "preco": "R$ 2.231,07",
+          "preco_valor": 2231.07,
+          "pagamento": "Pix",
+          "loja": "KaBuM!",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/574871/usado-iphone-13-128gb-azul-muito-bom",
+          "pagina": "https://www.kabum.com.br/produto/574871/usado-iphone-13-128gb-azul-muito-bom",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "usado - iphone 13 128gb, red, muito bom - trocafone",
+          "titulo_normalizado": true,
+          "preco": "R$ 2.231,07",
+          "preco_valor": 2231.07,
+          "pagamento": "Pix",
+          "loja": "KaBuM!",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/577848/usado-iphone-13-128gb-red-muito-bom-trocafone",
+          "pagina": "https://www.kabum.com.br/produto/577848/usado-iphone-13-128gb-red-muito-bom-trocafone",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "usado - iphone 13 red 128gb bom - trocafone",
+          "titulo_normalizado": true,
+          "preco": "R$ 2.249,00",
+          "preco_valor": 2249.0,
+          "pagamento": "Pix",
+          "loja": "KaBuM!",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/578307/usado-iphone-13-red-128gb-bom-trocafone",
+          "pagina": "https://www.kabum.com.br/produto/578307/usado-iphone-13-red-128gb-bom-trocafone",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "usado: iphone 13, 128gb, azul - excelente",
+          "titulo_normalizado": true,
+          "preco": "R$ 2.267,10",
+          "preco_valor": 2267.1,
+          "pagamento": "Pix",
+          "loja": "KaBuM!",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/575416/usado-iphone-13-128gb-azul-excelente",
+          "pagina": "https://www.kabum.com.br/produto/575416/usado-iphone-13-128gb-azul-excelente",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "usado - iphone 13 128 gb verde - muito bom",
+          "titulo_normalizado": true,
+          "preco": "R$ 2.303,30",
+          "preco_valor": 2303.3,
+          "pagamento": "Pix",
+          "loja": "KaBuM!",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/985693/usado-iphone-13-128-gb-verde-muito-bom",
+          "pagina": "https://www.kabum.com.br/produto/985693/usado-iphone-13-128-gb-verde-muito-bom",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "usado: iphone 13, 128gb, meia noite - excelente",
+          "titulo_normalizado": true,
+          "preco": "R$ 2.342,67",
+          "preco_valor": 2342.67,
+          "pagamento": "Pix",
+          "loja": "KaBuM!",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/574872/usado-iphone-13-128gb-meia-noite-excelente",
+          "pagina": "https://www.kabum.com.br/produto/574872/usado-iphone-13-128gb-meia-noite-excelente",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "usado - iphone 13 128gb verde muito bom - trocafone",
+          "titulo_normalizado": true,
+          "preco": "R$ 2.399,00",
+          "preco_valor": 2399.0,
+          "pagamento": "Pix",
+          "loja": "KaBuM!",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/598720/usado-iphone-13-128gb-verde-muito-bom-trocafone",
+          "pagina": "https://www.kabum.com.br/produto/598720/usado-iphone-13-128gb-verde-muito-bom-trocafone",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "usado: iphone 13 128 gb vermelho - excelente",
+          "titulo_normalizado": true,
+          "preco": "R$ 2.427,30",
+          "preco_valor": 2427.3,
+          "pagamento": "Pix",
+          "loja": "KaBuM!",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/883548/usado-iphone-13-128-gb-vermelho-excelente",
+          "pagina": "https://www.kabum.com.br/produto/883548/usado-iphone-13-128-gb-vermelho-excelente",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "usado - iphone 13 128 gb branco - muito bom",
+          "titulo_normalizado": true,
+          "preco": "R$ 2.476,67",
+          "preco_valor": 2476.67,
+          "pagamento": "Pix",
+          "loja": "KaBuM!",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/1015559/usado-iphone-13-128-gb-branco-muito-bom",
+          "pagina": "https://www.kabum.com.br/produto/1015559/usado-iphone-13-128-gb-branco-muito-bom",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "usado: iphone 13 128 gb preto - bom",
+          "titulo_normalizado": true,
+          "preco": "R$ 2.609,00",
+          "preco_valor": 2609.0,
+          "pagamento": "Pix",
+          "loja": "KaBuM!",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/902520/usado-iphone-13-128-gb-preto-bom",
+          "pagina": "https://www.kabum.com.br/produto/902520/usado-iphone-13-128-gb-preto-bom",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "usado: iphone 13 128 gb preto - muito bom",
+          "titulo_normalizado": true,
+          "preco": "R$ 2.749,00",
+          "preco_valor": 2749.0,
+          "pagamento": "Pix",
+          "loja": "KaBuM!",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/893656/usado-iphone-13-128-gb-preto-muito-bom",
+          "pagina": "https://www.kabum.com.br/produto/893656/usado-iphone-13-128-gb-preto-muito-bom",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "usado: iphone 13 128gb estelar - muito bom",
+          "titulo_normalizado": true,
+          "preco": "R$ 2.849,00",
+          "preco_valor": 2849.0,
+          "pagamento": "Pix",
+          "loja": "KaBuM!",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/1089208/usado-iphone-13-128gb-estelar-muito-bom",
+          "pagina": "https://www.kabum.com.br/produto/1089208/usado-iphone-13-128gb-estelar-muito-bom",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "usado: iphone 13 128 gb branco - excelente",
+          "titulo_normalizado": true,
+          "preco": "R$ 2.889,00",
+          "preco_valor": 2889.0,
+          "pagamento": "Pix",
+          "loja": "KaBuM!",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/893660/usado-iphone-13-128-gb-branco-excelente",
+          "pagina": "https://www.kabum.com.br/produto/893660/usado-iphone-13-128-gb-branco-excelente",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        },
+        {
+          "titulo": "usado - iphone 13 128 gb preto excelente",
+          "titulo_normalizado": true,
+          "preco": "R$ 2.899,00",
+          "preco_valor": 2899.0,
+          "pagamento": "Pix",
+          "loja": "KaBuM!",
+          "fonte": "KaBuM!",
+          "link": "https://www.kabum.com.br/produto/992523/usado-iphone-13-128-gb-preto-excelente",
+          "pagina": "https://www.kabum.com.br/produto/992523/usado-iphone-13-128-gb-preto-excelente",
+          "na_faixa": true,
+          "conferencia_humana": "pendente"
+        }
+      ],
+      "falhas": [
+        "Magazine Luiza: erro HTTP 403"
+      ],
+      "menor": 1713.51,
+      "mediana": 2258.05,
+      "maior": 2899.0
+    },
+    {
+      "n": 20,
+      "entrada": "iphone 14 128gb recondicionado",
+      "quando": "2026-11-14T13:22:21.442-03:00",
+      "segundos": 3.533,
+      "conclusao": "Consulta concluída: iPhone 14 128GB recondicionado. Coleta nova. Processamento: 2.7 s.",
+      "lojas_equivalentes": [],
+      "lojas_com_pagamento": [],
+      "lojas_distintas": 0,
+      "lojas_com_preco_confirmado": 0,
+      "gerou_faixa": false,
+      "ofertas": [],
+      "falhas": [
+        "Magazine Luiza: erro HTTP 403"
+      ]
+    }
+  ],
+  "revisao_ia": {
+    "arquivo": "revisao_ia_diretas.json",
+    "quando_inicio": "2026-11-14T13:28:25-03:00",
+    "quando_fim": "2026-11-14T13:31:56-03:00",
+    "compativeis": 132,
+    "inconclusivas": 4,
+    "equivalencia_percentual": 97.05882352941177,
+    "cobertura_conferida": 18,
+    "humana": false
+  },
+  "captura_compacta": "validacoes/captura-diretas-20261114.json",
+  "referencias_captura": "validacoes/diretas-referencias-20261114.json",
+  "limites": [
+    "A revisão é posterior à coleta; preço compatível agora não comprova retrospectivamente seu valor no horário da bateria.",
+    "Os 50 rótulos, os resultados dos métodos e todas as rodadas anteriores foram preservados.",
+    "As quatro páginas inconclusivas e seus links são publicados; nenhuma foi excluída do denominador.",
+    "Títulos da captura normalizados apenas em caixa, acentos e espaços; modelos, variantes e unidades permanecem preservados.",
+    "Loja significa o local da compra. Vendedores do mesmo marketplace contam uma vez."
+  ]
+}

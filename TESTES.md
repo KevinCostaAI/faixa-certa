@@ -61,3 +61,16 @@ Os resultados automáticos são separados da revisão humana e das sessões com 
 - `tests/test_revisao_evidencias.py`: leitura de valores capturados com separadores alterados, rejeição de parcelas como preço total, confirmação de modalidade na página, tratamento de cupons e correção da suposição de Pix na Gazin.
 - `python revisar_evidencias.py --coletar`: consulta as páginas públicas das ofertas registradas, respeitando robots.txt e o prazo por página. Não usa o extrator do MVP para produzir um rótulo de produto nem gera participantes. Os arquivos de cache retêm a data original da visita; uma página relida não ganha uma data nova de coleta.
 - A rota `?revisao=1` publica a revisão por IA dos 50 títulos e das 207 ofertas, preservando os casos inconclusivos e os registros originais.
+
+## Rodada com lojas diretas de 14/11/2026
+
+Código de coleta: commit `865969a`; SHA-256 de `app.py` iniciado por `0a835274e9ad`. O app publicado foi medido no Chrome, com as mesmas 20 entradas e coleta nova: **20/20 em até 15 s**, mediana **3,027 s**, máximo **3,988 s**; **18/20 com duas lojas** contando ofertas à parte, **16/20** só com pagamento confirmado e **16 faixas**. Foram exibidas **136 ofertas**, sendo 120 com pagamento confirmado e 16 à parte.
+
+A revisão posterior por IA visitou todas as páginas e identificou **132 ofertas compatíveis e 4 inconclusivas**: **97,1%**, mantendo as inconclusivas no denominador. A cobertura de duas lojas permanece 18/20 quando se contam apenas páginas identificadas. Os preços de 116 ofertas à vista/Pix e 16 sem modalidade confirmada foram encontrados nas páginas; a visita posterior não comprova o valor exato no horário da bateria. Os quatro casos inconclusivos permanecem publicados, sem repetição: Fast Shop/A07 (404), Motorola/G06 (sem produto), KaBuM!/iPhone 13 usado (503 e prazo esgotado).
+
+- `validacao_lojas_diretas.json`: entradas, tempos da interface, lojas, ofertas, falhas, preparação e versão avaliada; aparece primeiro em `?avaliar=1`.
+- `revisao_ia_diretas.json`: revisão individual das 136 ofertas, exibida primeiro em `?revisao=1`. A revisão anterior das 207 ofertas permanece disponível.
+- `python revisar_evidencias.py --coletar --registro validacao_lojas_diretas.json --cache ../investigacao/paginas_revisao_diretas`: coleta de evidências da rodada escolhida, com cache separado. A análise do produto exige leitura dos dados; o programa não cria um gabarito humano.
+- `python -m pytest -q`: **79 testes passaram**. A atualização preserva os resultados dos classificadores e verifica a abertura da avaliação e da revisão com os registros mais recentes.
+
+As medições e a revisão são técnicas e por IA. A conferência humana prevista no protocolo e os testes de digitação, tempo e utilidade com os dez participantes reais permanecem necessários; nenhum participante foi simulado.

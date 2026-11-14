@@ -180,7 +180,7 @@ def ler_pagina(conteudo, url):
     campos_rede = []
     for linha in arvore.xpath('//tr'):
         celulas = linha.xpath('./th|./td')
-        if len(celulas) == 2 and any(p in app.normalizar(celulas[0].text_content()) for p in ("rede", "conectiv", "armazenamento")):
+        if len(celulas) == 2 and any(p in app.normalizar(celulas[0].text_content()) for p in ("rede", "conectiv", "conex", "armazenamento")):
             campos_rede.append([" ".join(c.text_content().split())[:220] for c in celulas])
     for no in arvore.xpath('//script|//style|//noscript'):
         no.drop_tree()
@@ -262,16 +262,17 @@ def main():
     parser.add_argument("--coletar", action="store_true")
     parser.add_argument("--amostra", action="store_true")
     parser.add_argument("--saida", default="revisao_paginas.json")
+    parser.add_argument("--registro", default="validacao_fontes_adicionais.json")
     parser.add_argument("--cache", default="../investigacao/paginas_revisao")
     args = parser.parse_args()
     if not args.coletar:
         parser.error("informe --coletar para consultar as páginas públicas")
-    registro = json.loads(Path("validacao_fontes_adicionais.json").read_text())
+    registro = json.loads(Path(args.registro).read_text())
     inicio = datetime.now(app.FUSO).isoformat(timespec="seconds")
     paginas = coletar_paginas(registro, Path(args.cache), args.amostra)
     saida = {"origem": "Revisão técnica por IA e leitura automática de páginas públicas", "inicio": inicio,
              "fim": datetime.now(app.FUSO).isoformat(timespec="seconds"),
-             "fonte_registros": "validacao_fontes_adicionais.json", "conferencia_humana": False,
+             "fonte_registros": args.registro, "conferencia_humana": False,
              "limite": "Esta visita posterior não comprova retrospectivamente o preço no horário da bateria.",
              "resumo_acesso": dict(Counter(p["status"] for p in paginas)), "paginas": paginas}
     Path(args.saida).write_text(json.dumps(saida, ensure_ascii=False, indent=2) + "\n")

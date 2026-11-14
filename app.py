@@ -2091,6 +2091,7 @@ ARQUIVO_PROTOCOLO = "PROTOCOLO.md"  # protocolo de validação, publicado ao lad
 ARQUIVO_VALIDACAO = "validacao_tecnica.json"
 ARQUIVO_NAVEGADOR = "validacao_navegador.json"
 ARQUIVO_FONTES_ADICIONAIS = "validacao_fontes_adicionais.json"
+ARQUIVO_LOJAS_DIRETAS = "validacao_lojas_diretas.json"
 
 
 def mostrar_validacao_tecnica():
@@ -2172,6 +2173,13 @@ def mostrar_validacao_navegador(arquivo=ARQUIVO_NAVEGADOR):
                 f"({registro['confirmadas']} com preço confirmado e {registro['a_parte']} à parte). "
                 "Também faltam a revisão dos 50 rótulos e as sessões com 5 lojistas e 5 consumidores, "
                 "para medir digitação, redução do tempo de pesquisa e utilidade.")
+    if registro.get("revisao_ia"):
+        revisao = registro["revisao_ia"]
+        st.write(f"Revisão técnica por IA: {revisao['compativeis']} de {registro['ofertas']} ofertas compatíveis "
+                 f"({revisao['equivalencia_percentual']:.1f}%), com {revisao['inconclusivas']} inconclusivas no denominador. "
+                 f"Cobertura depois dessa revisão: {revisao['cobertura_conferida']} de 20 buscas em duas lojas. "
+                 "A revisão não é humana e não substitui os testes com participantes.")
+        st.markdown("[Ver a conferência por oferta e os casos inconclusivos](?revisao=1)")
     st.dataframe(pd.DataFrame([{
         "Nº": busca["n"], "Entrada": busca["entrada"], "Tempo no navegador (s)": busca["segundos"],
         **({"Lojas equivalentes (antes da conferência)": busca["lojas_distintas"],
@@ -2185,6 +2193,8 @@ def mostrar_validacao_navegador(arquivo=ARQUIVO_NAVEGADOR):
         with st.expander("Ofertas exibidas no app publicado, para revisão humana"):
             st.dataframe(pd.DataFrame(ofertas), hide_index=True, column_config={"link": st.column_config.LinkColumn("URL")})
     st.caption("Execução automatizada no navegador; não é um teste com usuários. A conferência humana das ofertas permanece pendente.")
+    if registro.get("desvio"):
+        st.caption(registro["desvio"])
     st.divider()
 
 
@@ -2279,6 +2289,12 @@ def mostrar_revisao_ia():
     except FileNotFoundError:
         st.info("A revisão ainda não foi publicada.")
         return
+    anterior = None
+    caminho_atual = os.path.join(base, "revisao_ia_diretas.json")
+    if os.path.exists(caminho_atual):
+        anterior = revisao
+        with open(caminho_atual, encoding="utf-8") as arquivo:
+            revisao = json.load(arquivo)
     st.caption(f"{revisao['inicio']} a {revisao['fim']} · {revisao['origem']}")
     st.info("Revisão por IA, identificada como tal. Não é conferência humana nem sessão com participantes. "
             "Os 50 rótulos e os resultados originais dos métodos e das buscas foram preservados.")
@@ -2287,10 +2303,10 @@ def mostrar_revisao_ia():
              f"e {revisao['paginas_inconclusivas']} permaneceram inconclusivas.")
     tabela_fixa([{"Verificação de preço": k, "Ofertas": v} for k, v in revisao["resumo_precos"].items()])
     st.warning(revisao["equivalencia_meta"])
-    st.write("Correções na busca: a lista da Gazin passa a informar pagamento não confirmado; "
+    st.write("Correções na busca: a lista da Gazin informa pagamento não confirmado; "
              "o Compare Livre deixa de integrar a coleta padrão. Os registros anteriores continuam disponíveis. "
-             "A nova coleta usa lojas diretas e será registrada separadamente.")
-    abas = st.tabs(["Rótulos (50)", "Ofertas (207)", "Páginas não confirmadas (70)"])
+             "A rodada atual usa lojas diretas e está registrada separadamente.")
+    abas = st.tabs(["Rótulos (50)", f"Ofertas ({revisao['total']})", f"Páginas não confirmadas ({revisao['paginas_inconclusivas']})"])
     with abas[0]:
         st.dataframe(pd.DataFrame([{"Nº": r["n"], "Título": r["titulo"], "Busca": r["busca"],
                                     "Parecer": r["parecer"], "Justificativa": r["observacao_revisao"]}
@@ -2310,6 +2326,14 @@ def mostrar_revisao_ia():
                      column_config={"URL": st.column_config.LinkColumn("URL")})
     for limite in revisao["limites"]:
         st.caption(limite)
+    if anterior:
+        with st.expander("Revisão anterior das 207 ofertas, preservada"):
+            st.write(f"{anterior['paginas_identificadas']} produtos identificados e "
+                     f"{anterior['paginas_inconclusivas']} páginas inconclusivas. Essa rodada ainda incluía o Compare Livre.")
+            st.dataframe(pd.DataFrame([{"ID": o["id"], "Título": o["titulo_registrado"],
+                                        "Parecer": o["parecer_produto"], "Preço": o["revisao_preco"]["status"],
+                                        "URL": o["url"]} for o in anterior["ofertas"]]), hide_index=True,
+                         column_config={"URL": st.column_config.LinkColumn("URL")})
     st.subheader("Testes com participantes")
     st.write("Continuam necessários os 5 lojistas e 5 consumidores reais, incluindo 2 idosos. "
              "As sessões medem digitação, tempo de pesquisa manual e com o app e se usariam a ferramenta.")
@@ -2329,7 +2353,8 @@ def mostrar_avaliacao():
                f"{versao_do_prompt()}, LLM principal {LLM_MODELO}, reserva {LLM_MODELO_RESERVA}, {LOTE_LLM} títulos por "
                f"chamada. Regras: filtro de acessórios, marca e modelo como na tela de escolha, armazenamento, condição, "
                "rede e defeito lidos no título. Cada resultado registrado traz a versão em que foi obtido.")
-    st.markdown("[Revisão dos 50 rótulos e das 207 ofertas por IA](?revisao=1)")
+    st.markdown("[Revisão dos 50 rótulos e das ofertas por IA](?revisao=1)")
+    mostrar_validacao_navegador(ARQUIVO_LOJAS_DIRETAS)
     mostrar_validacao_navegador(ARQUIVO_FONTES_ADICIONAIS)
     mostrar_validacao_final()
     mostrar_validacao_navegador()

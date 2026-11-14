@@ -516,3 +516,29 @@ A captura do navegador alterou a formatação de alguns preços e traduziu o nom
 **Alteração anterior à próxima bateria:** a coleta padrão passa a usar lojas diretas. O Compare Livre foi retirado porque suas páginas de destino não puderam ser confirmadas anonimamente e os preços não informam modalidade; seus leitores e registros antigos permanecem no repositório. Não se mudam a lista das 20 buscas, os critérios de equivalência, a base de preço, o mínimo de três ofertas, os rótulos, a extração ou o prompt. A próxima bateria e a respectiva revisão serão registradas à parte, inclusive se houver falhas.
 
 A revisão por IA não produz respostas de pessoas. Continuam necessários os dez participantes reais para medir correção de digitação, redução do tempo de pesquisa e utilidade, conforme o roteiro publicado.
+
+### Bateria com lojas diretas e revisão das 136 ofertas (14/11/2026)
+
+Após as duas correções de fontes descritas acima, foram executadas as mesmas 20 buscas no app publicado, das **13h18 às 13h22 (UTC−3)**, uma vez cada na rodada formal e com coleta nova. Código avaliado: commit **865969a50b9b8d2463ceead2398b48b44362144f**, SHA-256 de `app.py` **0a835274e9ad029344726af0f9d000a3bb8462002626439c4209b7ee6ac218b5**; prompt **6953e9ae9a95**. A medição no Chrome foi do clique até a mensagem de conclusão e as tabelas completas, incluindo o tempo da automação, no mesmo servidor `/~/+/?coleta_nova=1`.
+
+| Medida | Resultado |
+| --- | --- |
+| Buscas em até 15 segundos | **20 de 20**; mediana **3,027 s**, máximo **3,988 s** |
+| Duas lojas de compra, incluindo ofertas à parte | **18 de 20**, também após a revisão por IA das páginas identificadas |
+| Duas lojas somente com pagamento confirmado | **16 de 20** |
+| Faixas geradas | **16 de 20** |
+| Ofertas exibidas | **136: 120 com pagamento confirmado e 16 à parte** |
+| Equivalência na revisão por IA | **132 de 136 (97,1%)**; as 4 inconclusivas permanecem no denominador |
+| Preços na visita posterior | 116 valores à vista/Pix compatíveis; 16 valores compatíveis com pagamento ainda não confirmado; 4 não confirmados |
+
+Todas as 136 páginas foram consultadas em uma nova coleta de evidências, das 13h28 às 13h31 (UTC−3). Foram identificados 132 produtos compatíveis com modelo, variante, armazenamento, condição e rede pedidos. Os quatro casos inconclusivos foram: Fast Shop/Galaxy A07 (HTTP 404); Motorola/Moto G06 (resposta sem dados verificáveis do produto); KaBuM!/iPhone 13 usado, anúncio 578307 (HTTP 503); e KaBuM!/iPhone 13 usado, anúncio 1089208 (prazo esgotado). Não houve repetição dessas quatro consultas. Os demais anúncios confirmados nas mesmas lojas preservaram a cobertura de 18 buscas. Não foram substituídas as buscas 5 (A14 usado 4G) e 20 (iPhone 14 recondicionado), que permaneceram sem resultado equivalente.
+
+A compatibilidade dos preços na visita posterior não comprova retrospectivamente o preço exato no instante da bateria. A revisão foi feita por ChatGPT/Codex e está identificada como **IA**, sem assinatura humana. Não é uma nova amostra independente; as regras, o prompt, os 50 rótulos e os critérios de decisão não foram alterados para esta rodada. A conferência humana prevista no protocolo continua separada.
+
+O registro completo está em `validacao_lojas_diretas.json` e no início de `?avaliar=1`. A revisão individual com data, URL, evidência de preço e hash da página está em `revisao_ia_diretas.json` e em `?revisao=1`. Os títulos capturados foram normalizados somente para minúsculas, remoção de acentos e espaços, preservando variantes e unidades. A reconstrução da captura compacta verifica os hashes de todos os 136 títulos e URLs; os arquivos de transporte estão em `validacoes/captura-diretas-20261114.json` e `validacoes/diretas-referencias-20261114.json`. Nenhum resultado anterior foi apagado.
+
+Falhas das fontes: Magazine Luiza respondeu HTTP 403 nas 20 buscas; Fast Shop respondeu HTTP 500 na busca 2. As demais fontes permitiram os resultados informados. Não se contornaram as restrições de acesso.
+
+Preparação da medição: três buscas preparatórias ficaram registradas. Na primeira, o indicador de faixa foi capturado antes de a tela terminar de exibi-lo. A instrumentação passou a esperar também as tabelas e o indicador, antes de iniciar uma rodada formal completa, com novas coletas. Nenhuma tentativa da rodada formal foi descartada. A preparação não entra nos 20 tempos.
+
+Os **79 testes de regressão passaram**. A publicação seguinte apenas apresenta os novos registros e amplia a ferramenta de revisão para aceitar o arquivo de entrada escolhido. Os testes de digitação com entradas reais, redução de tempo e utilidade continuam exigindo 5 lojistas e 5 consumidores reais, incluindo 2 idosos. Não foram gerados tempos ou respostas em nome de participantes.
