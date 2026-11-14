@@ -1543,8 +1543,6 @@ def mostrar_avaliacao():
     st.table(erros[[c for c in COLUNAS_DOS_ERROS if c in erros.columns]].fillna("").astype(str).set_index("n"))
     st.subheader("Todos os títulos")
     st.dataframe(resultado.fillna("").astype(str), hide_index=True)
-    csv = resultado.to_csv(index=False)
-    st.download_button("Baixar o resultado (CSV)", csv.encode("utf-8"), "avaliacao_50_titulos_resultado.csv", "text/csv")
 
 
 # Interface
