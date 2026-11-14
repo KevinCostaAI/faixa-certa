@@ -28,7 +28,7 @@ TEMPO_LLM = 15  # segundos, no total, para o LLM classificar os títulos de uma 
 ESPERA_REPETIR = 5  # segundos sem resposta do LLM até o mesmo pedido sair de novo; vale a resposta que chegar primeiro
 COPIAS_LLM = 3  # no máximo, pedidos iguais ao mesmo tempo para cada lote de títulos
 LOTE_LLM = 15  # títulos por chamada ao LLM; com mais títulos, as chamadas são feitas em paralelo
-METODO_PRINCIPAL = "regras"  # avaliação dos 50 títulos (14/11/2026): LLM e regras com 90%; sem 10 pontos de vantagem do LLM, ficam as regras
+METODO_PRINCIPAL = "regras"  # avaliação dos 50 títulos (14/11/2026): LLM 92%, regras 90%; sem 10 pontos de vantagem, ficam as regras
 CACHE_SEGUNDOS = 15 * 60  # o resultado de uma busca bem-sucedida é reutilizado por 15 minutos e depois apagado
 MINIMO_OFERTAS = 3  # abaixo disso, a faixa de preço não é exibida
 PAGAMENTOS_DA_FAIXA = {"Pix", "à vista"}  # só entram na faixa ofertas com uma dessas formas de pagamento confirmada
@@ -43,6 +43,9 @@ WEBCONTINENTAL = os.environ.get("WEBCONTINENTAL_URL", "https://www.webcontinenta
 TROCAFY = os.environ.get("TROCAFY_URL", "https://www.trocafy.com.br").rstrip("/")
 MOTOROLA = os.environ.get("MOTOROLA_URL", "https://www.motorola.com.br").rstrip("/")
 SAMSUNG = os.environ.get("SAMSUNG_URL", "https://shop.samsung.com/br").rstrip("/")
+FASTSHOP = os.environ.get("FASTSHOP_URL", "https://site.fastshop.com.br").rstrip("/")
+FONEMIX = os.environ.get("FONEMIX_URL", "https://fonemix.com.br").rstrip("/")
+ELETROINFO = os.environ.get("ELETROINFO_URL", "https://eletroinfoonline.com").rstrip("/")
 
 
 def configuracao(nome, padrao=None):
@@ -633,6 +636,7 @@ LOJAS_CONHECIDAS = {
     "casasbahia": "Casas Bahia", "americanas": "Americanas", "kabum": "KaBuM!", "carrefour": "Carrefour",
     "fastshop": "Fast Shop", "pontofrio": "Ponto", "extra": "Extra", "aliexpress": "AliExpress",
     "gazin": "Gazin", "novomundo": "Novo Mundo", "webcontinental": "Webcontinental",
+    "fonemix": "FoneMix", "eletroinfoonline": "EletroInfo Outlet",
 }
 
 
@@ -805,6 +809,8 @@ def ler_catalogo_vtex(conteudo, base, fonte, loja, refazer_link=False, titulo_do
     ofertas = []
     for produto in produtos if isinstance(produtos, list) else []:
         link = produto.get("link") or urljoin(base + "/", (produto.get("linkText") or "") + "/p")
+        if urlparse(link).scheme not in {"https", "http"}:
+            continue
         if urlparse(link).netloc != urlparse(base).netloc:
             if not (refazer_link and produto.get("linkText")):
                 continue
@@ -864,6 +870,96 @@ def ler_motorola(conteudo, url):
 
 def ler_samsung(conteudo, url):
     return ler_catalogo_vtex(conteudo, SAMSUNG, "Samsung", loja_oficial("Samsung"), refazer_link=True, titulo_do_produto=True)
+
+
+def ler_fastshop(conteudo, url):
+    return ler_catalogo_vtex(conteudo, FASTSHOP, "Fast Shop", lambda vendedor: "Fast Shop · " + vendedor)
+
+
+def links_de_produtos(conteudo, base, seletor):
+    """Só páginas de produto da própria loja; sugestões ainda passam pela comparação de modelo."""
+    vistos, links = set(), []
+    for no in arvore_utf8(conteudo).xpath(seletor):
+        link = urljoin(base + "/", no.get("href") or "")
+        partes = urlparse(link)
+        if partes.scheme not in {"http", "https"} or partes.netloc != urlparse(base).netloc:
+            continue
+        link = partes._replace(query="", fragment="").geturl()
+        titulo = (no.get("data-waoti-item-name") or no.text_content()).strip()
+        if titulo and link not in vistos:
+            vistos.add(link)
+            links.append({"titulo": titulo, "link": link})
+    return links
+
+
+def ler_busca_fonemix(conteudo, url):
+    return links_de_produtos(conteudo, FONEMIX, '//a[@data-waoti-item-name and starts-with(@href,"/shop/")]')
+
+
+def ler_produto_fonemix(conteudo, url):
+    arvore = arvore_utf8(conteudo)
+    titulo = arvore.xpath('string(//h1[@id="pp-title"]/@aria-label)').strip()
+    escolhida = arvore.xpath('//button[@aria-pressed="true" and contains(concat(" ",normalize-space(@class)," ")," rc-qv-row ")]')
+    if not titulo or len(escolhida) != 1:
+        return []
+    escolhida = escolhida[0]
+    rotulo = escolhida.xpath('.//span[@class="rc-qv-row__label"]/text()')
+    detalhe = " ".join(rotulo).strip()
+    estoque = escolhida.xpath('normalize-space(string(.//span[contains(@class,"variant-dispatch-badge")]))')
+    if escolhida.get("disabled") is not None or escolhida.get("aria-disabled") == "true" or normalizar(estoque) != "pronta entrega":
+        return []
+    bloco = arvore.xpath('//div[@class="rdc-hero-pricecard__pix-row"]')
+    if len(bloco) != 1 or bloco[0].xpath('normalize-space(string(.//span[@class="rdc-hero-pricecard__pix-label"]))') != "No Pix":
+        return []
+    preco = preco_brl(bloco[0].text_content())
+    preco_variante = preco_brl(escolhida.xpath('string(.//span[@class="rc-qv-row__price"])'))
+    if not preco_valido(preco) or preco != preco_variante or not detalhe:
+        return []
+    # O JSON-LD confirma estoque e condição do produto; o botão selecionado confirma memória e preço da variante.
+    for texto in arvore.xpath('//script[@type="application/ld+json"]/text()'):
+        try:
+            produto = json.loads(texto)
+        except ValueError:
+            continue
+        if not isinstance(produto, dict) or produto.get("@type") != "Product" or normalizar(produto.get("name", "")) != normalizar(titulo):
+            continue
+        oferta = produto.get("offers") or {}
+        if (not isinstance(oferta, dict) or oferta.get("availability", "").rsplit("/", 1)[-1] != "InStock"
+                or oferta.get("itemCondition", "").rsplit("/", 1)[-1] != "NewCondition"
+                or oferta.get("priceCurrency") != "BRL" or numero(oferta.get("price")) != preco):
+            continue
+        return [{"titulo": titulo + " · " + detalhe, "titulo_pagina": titulo, "detalhe_variante": detalhe,
+                 "preco": preco, "pagamento": "Pix", "loja": "FoneMix", "fonte": "FoneMix", "link": url, "pagina": url}]
+    return []
+
+
+def ler_busca_eletroinfo(conteudo, url):
+    return links_de_produtos(conteudo, ELETROINFO,
+                            '//a[contains(concat(" ",normalize-space(@class)," ")," product-item__title ") and starts-with(@href,"/products/")]')
+
+
+def ler_produto_eletroinfo(conteudo, url):
+    arvore = arvore_utf8(conteudo)
+    titulo = arvore.xpath('normalize-space(string(//h1))')
+    for texto in arvore.xpath('//script[@type="application/json" and @data-product-json]/text()'):
+        dados = json.loads(texto)
+        produto = dados.get("product") or {}
+        if produto.get("title") != titulo or not produto.get("available") or produto.get("requires_selling_plan"):
+            continue
+        variante = next((v for v in produto.get("variants", []) if v.get("id") == dados.get("selected_variant_id")), {})
+        centavos = numero(variante.get("price"))
+        preco = centavos / 100 if centavos is not None else None
+        if not variante.get("available") or variante.get("requires_selling_plan") or not preco_valido(preco):
+            continue
+        # A página mostra parcelamento e um cupom para Pix. Não calcula desconto nem declara esse preço como à vista.
+        return [{"titulo": variante.get("name") or titulo, "preco": preco, "pagamento": "não informada",
+                 "loja": "EletroInfo Outlet", "fonte": "EletroInfo Outlet", "link": url, "pagina": url}]
+    return []
+
+
+def busca_pelo_modelo(busca):
+    """Alguns catálogos pesquisam o nome, mas não indexam memória ou condição na busca."""
+    return modelo_do_titulo(busca)[1] or busca
 
 
 def ler_rotas_trocafy(conteudo, url):
@@ -951,8 +1047,12 @@ FONTES = {
     "Webcontinental": (lambda busca: f"{WEBCONTINENTAL}/api/catalog_system/pub/products/search/?ft={quote(busca)}&_from=0&_to=29", ler_webcontinental),
     "Motorola": (lambda busca: f"{MOTOROLA}/api/catalog_system/pub/products/search/?ft={quote(busca)}&_from=0&_to=29", ler_motorola),
     "Samsung": (lambda busca: f"{SAMSUNG}/api/catalog_system/pub/products/search/?ft={quote(busca)}&_from=0&_to=29", ler_samsung),
+    "Fast Shop": (lambda busca: f"{FASTSHOP}/api/catalog_system/pub/products/search/?ft={quote(busca)}&_from=0&_to=29", ler_fastshop),
+    "FoneMix": (lambda busca: f"{FONEMIX}/busca?q={quote(busca_pelo_modelo(busca))}", ler_busca_fonemix),
+    "EletroInfo Outlet": (lambda busca: f"{ELETROINFO}/search?q={quote(busca)}&type=product", ler_busca_eletroinfo),
     "Trocafy": (lambda busca: f"{TROCAFY}/#consulta={quote(busca)}", ler_trocafy),
 }
+LEITORES_DE_PRODUTO = {"FoneMix": ler_produto_fonemix, "EletroInfo Outlet": ler_produto_eletroinfo}
 # Lojas oficiais das fabricantes: só vendem aparelhos novos da própria marca.
 LOJAS_DA_MARCA = {"Motorola": "motorola", "Samsung": "samsung"}
 CABECALHOS = {"User-Agent": USER_AGENT, "Accept": "text/html,application/xhtml+xml", "Accept-Language": "pt-BR,pt;q=0.9"}
@@ -1196,6 +1296,8 @@ def coletar(nome, busca, mem, prazo=None, usar_cache=True):
     prazo = prazo if prazo is not None else inicio + TEMPO_TOTAL_COLETA
     if nome == "Trocafy":
         return coletar_trocafy(busca, mem, prazo, usar_cache)
+    if nome in LEITORES_DE_PRODUTO:
+        return coletar_paginas_de_produto(nome, busca, mem, prazo, usar_cache)
     montar_url, ler = FONTES[nome]
     url = montar_url(busca)
     if nome in LOJAS_DA_MARCA:
@@ -1244,6 +1346,49 @@ def coletar(nome, busca, mem, prazo=None, usar_cache=True):
     finally:
         sessao.close()
     return resultado
+
+
+def coletar_paginas_de_produto(nome, busca, mem, prazo, usar_cache):
+    """A busca descobre links; só a página do produto confirma a variante e o estoque. Até três páginas por fonte."""
+    inicio = time.monotonic()
+    montar_url, ler_busca = FONTES[nome]
+    chave = montar_url(busca)
+    guardado = mem["paginas"].get(chave)
+    if usar_cache and guardado and time.time() - guardado["momento"] < CACHE_SEGUNDOS:
+        return dict(guardado, cache=True, segundos=time.monotonic() - inicio)
+    resultado = {"fonte": nome, "url": chave, "ofertas": [], "momento": time.time(), "cache": False}
+    with requests.Session() as sessao:
+        links, erro = baixar(chave, ler_busca, mem, prazo, sessao)
+        if erro:
+            return dict(resultado, status=erro)
+        alvo, _ = classificar_por_regras(busca, [])
+        links = [p for p in links if menciona_o_modelo(p["titulo"], busca)]
+        links.sort(key=lambda p: chave_modelo(modelo_do_titulo(p["titulo"])[1], sem_rede=True)
+                   != chave_modelo(alvo["modelo"], sem_rede=True))
+        erros = []
+        for produto in links[:3]:
+            if prazo - time.monotonic() < 0.5:
+                erros.append("tempo limite na conferência de produtos")
+                break
+            ofertas, erro = baixar(produto["link"], LEITORES_DE_PRODUTO[nome], mem, prazo, sessao)
+            if erro:
+                erros.append(erro)
+                continue
+            resultado["ofertas"].extend(ofertas)
+            resultado.update(status=f"{len(resultado['ofertas'])} ofertas", segundos=time.monotonic() - inicio,
+                             coletado=datetime.now(FUSO).strftime("%H:%M"))
+            if resultado["ofertas"]:
+                # A fonte pode atingir o prazo na próxima página. Mantém as ofertas que já foram confirmadas.
+                with mem["trava"]:
+                    mem["paginas"][chave] = dict(resultado, ofertas=list(resultado["ofertas"]))
+        resultado.update(status=f"{len(resultado['ofertas'])} ofertas" if resultado["ofertas"] else
+                         erros[0] if erros else "nenhuma oferta encontrada",
+                         segundos=time.monotonic() - inicio, coletado=datetime.now(FUSO).strftime("%H:%M"))
+        if erros:
+            resultado["aviso"] = "; ".join(dict.fromkeys(erros))
+        with mem["trava"]:
+            mem["paginas"][chave] = resultado
+        return resultado
 
 
 def esquecer_vencidas(mem):
@@ -1568,7 +1713,7 @@ def mostrar_resultados(busca, coletas, mem):
         tabela_de_ofertas(iguais)
     if not sem_pagamento.empty:
         st.subheader("Fora da faixa: pagamento não informado")
-        st.caption("Ofertas equivalentes em que a loja não informa se o preço é à vista ou parcelado. Ficam aqui para consulta.")
+        st.caption("Ofertas equivalentes cujo preço à vista ou no Pix não foi confirmado pela loja. Ficam aqui para consulta.")
         tabela_de_ofertas(sem_pagamento)
     with st.expander(f"Ofertas descartadas ({len(descartadas)})"):
         if descartadas.empty:
@@ -2184,6 +2329,9 @@ def mostrar_diagnostico_fontes():
         "Efácil": "https://www.efacil.com.br/loja/departamento/Smartphones",
         "Trocafy": TROCAFY + "/",
         "Magalu móvel": "https://m.magazineluiza.com.br/busca/galaxy+a17+128gb/",
+        "Fast Shop": FONTES["Fast Shop"][0]("galaxy a36 5g 128gb"),
+        "FoneMix": FONEMIX + "/busca?q=moto%20e15",
+        "EletroInfo Outlet": ELETROINFO + "/search?q=redmi%20note%2015&type=product",
     }
     def diagnosticar(item):
         nome, url = item
