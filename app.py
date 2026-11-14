@@ -26,6 +26,7 @@ TEMPO_LLM = 15  # segundos, no total, para o LLM classificar os títulos de uma 
 ESPERA_REPETIR = 5  # segundos sem resposta do LLM até o mesmo pedido sair de novo; vale a resposta que chegar primeiro
 COPIAS_LLM = 3  # no máximo, pedidos iguais ao mesmo tempo para cada lote de títulos
 LOTE_LLM = 15  # títulos por chamada ao LLM; com mais títulos, as chamadas são feitas em paralelo
+METODO_PRINCIPAL = "LLM"  # "LLM" ou "regras": definido pela avaliação dos 50 títulos (critério de 10 pontos)
 CACHE_SEGUNDOS = 15 * 60  # o resultado de uma busca bem-sucedida é reutilizado por 15 minutos e depois apagado
 MINIMO_OFERTAS = 3  # abaixo disso, a faixa de preço não é exibida
 PAGAMENTOS_DA_FAIXA = {"Pix", "à vista"}  # só entram na faixa ofertas com uma dessas formas de pagamento confirmada
@@ -491,7 +492,7 @@ def memoria():
 
 
 def classificar(busca, titulos, mem):
-    if LLM_CHAVE:
+    if LLM_CHAVE and METODO_PRINCIPAL == "LLM":
         chave = (busca, tuple(titulos))
         guardado = mem["classificacoes"].get(chave)
         if guardado and time.time() - guardado[0] < CACHE_SEGUNDOS:
@@ -509,7 +510,7 @@ def classificar(busca, titulos, mem):
             motivo = "resposta inválida"
         origem = f"regras (serviço de IA indisponível: {motivo})"
     else:
-        origem = "regras (sem chave de IA configurada)"
+        origem = "regras (sem chave de IA configurada)" if not LLM_CHAVE else "regras (método principal pela avaliação dos 50 títulos)"
     alvo, itens = classificar_por_regras(busca, titulos)
     return alvo, itens, origem
 
@@ -1450,6 +1451,13 @@ COLUNAS_DA_TABELA = {"n": "Nº", "titulo": "Título", "fonte": "Fonte", "url": "
                      "rotulo_observacao": "Observação"}
 
 
+COLUNAS_DOS_ERROS = ["n", "titulo", "busca", "rotulo_modelo", "rotulo_armazenamento", "rotulo_condicao", "rotulo_rede",
+                     "rotulo_defeito", "rotulo_decisao", "pagina_confirma", "llm_falha", "llm_modelo", "llm_armazenamento",
+                     "llm_condicao", "llm_rede", "llm_defeito", "llm_acertou", "llm_decisao", "llm_resultado_decisao",
+                     "regras_modelo", "regras_armazenamento", "regras_condicao", "regras_rede", "regras_defeito",
+                     "regras_acertou", "regras_decisao", "regras_resultado_decisao"]
+
+
 def rotulo_completo(linha):
     """Rótulo pronto: todos os campos preenchidos e, quando a decisão é excluir, o motivo."""
     if any(not str(linha.get(campo, "")).strip() for campo in CAMPOS_DO_ROTULO):
@@ -1532,7 +1540,7 @@ def mostrar_avaliacao():
     erros = resultado[~resultado["llm_acertou"].astype(bool) | ~resultado["regras_acertou"].astype(bool)
                       | (resultado["llm_resultado_decisao"] != "acerto") | (resultado["regras_resultado_decisao"] != "acerto")]
     st.subheader(f"Erros caso a caso ({len(erros)} títulos)")
-    st.dataframe(erros.fillna("").astype(str), hide_index=True)
+    st.table(erros[[c for c in COLUNAS_DOS_ERROS if c in erros.columns]].fillna("").astype(str).set_index("n"))
     st.subheader("Todos os títulos")
     st.dataframe(resultado.fillna("").astype(str), hide_index=True)
     csv = resultado.to_csv(index=False)
@@ -1553,7 +1561,8 @@ st.write("Compara o preço de um smartphone em várias lojas.")
 st.caption("A faixa usa só preços à vista ou no Pix confirmados pela loja, sem frete; ofertas sem forma de pagamento informada "
            "aparecem à parte. Os preços são coletados nas lojas na hora da busca, e uma busca repetida em até 15 minutos "
            "reaproveita o resultado.")
-st.caption(f"Extrator principal: {'LLM' if LLM_CHAVE else 'regras (sem chave de IA configurada)'}. Fontes: {', '.join(FONTES)}.")
+st.caption(f"Extrator principal: {'LLM' if LLM_CHAVE and METODO_PRINCIPAL == 'LLM' else 'regras' if LLM_CHAVE else 'regras (sem chave de IA configurada)'}. "
+           f"Fontes: {', '.join(FONTES)}.")
 
 nova_busca = st.session_state.pop("nova_busca", False)
 with st.form("busca"):
