@@ -2069,8 +2069,8 @@ def mostrar_avaliacao():
                f"{versao_do_prompt()}, LLM principal {LLM_MODELO}, reserva {LLM_MODELO_RESERVA}, {LOTE_LLM} títulos por "
                f"chamada. Regras: filtro de acessórios, marca e modelo como na tela de escolha, armazenamento, condição, "
                "rede e defeito lidos no título. Cada resultado registrado traz a versão em que foi obtido.")
-    mostrar_validacao_tecnica()
     mostrar_validacao_navegador()
+    mostrar_validacao_tecnica()
     mostrar_resultados_registrados()
     arquivo = os.path.join(os.path.dirname(os.path.abspath(__file__)), ARQUIVO_AVALIACAO)
     if not os.path.exists(arquivo):
