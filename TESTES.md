@@ -57,3 +57,7 @@ Instalação para desenvolvimento: `python -m pip install -r requirements-dev.tx
 - `?coleta_nova=1` abre o app em modo de validação: buscas por modelo ignoram o cache de preços. A última mensagem identifica a consulta concluída e o tipo de coleta. Isso permite medir do clique até a conclusão visível; `validacao_navegador.json`, quando presente, publica essa medição separadamente.
 
 Os resultados automáticos são separados da revisão humana e das sessões com os dez participantes. A rodada técnica não gera respostas de utilidade, tempos de pessoas nem rótulos humanos.
+
+- `tests/test_revisao_evidencias.py`: leitura de valores capturados com separadores alterados, rejeição de parcelas como preço total, confirmação de modalidade na página, tratamento de cupons e correção da suposição de Pix na Gazin.
+- `python revisar_evidencias.py --coletar`: consulta as páginas públicas das ofertas registradas, respeitando robots.txt e o prazo por página. Não usa o extrator do MVP para produzir um rótulo de produto nem gera participantes. Os arquivos de cache retêm a data original da visita; uma página relida não ganha uma data nova de coleta.
+- A rota `?revisao=1` publica a revisão por IA dos 50 títulos e das 207 ofertas, preservando os casos inconclusivos e os registros originais.

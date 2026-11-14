@@ -1,0 +1,1036 @@
+{
+  "titulo": "Revisão dos 50 rótulos por IA",
+  "origem": "ChatGPT / Codex",
+  "tipo": "Revisão posterior à avaliação; não é amostra independente nem conferência humana",
+  "gabarito_alterado": false,
+  "resultados_dos_metodos_alterados": false,
+  "rotulos_revistos": 50,
+  "conferencia_humana": false,
+  "criterio": "Leitura dos títulos e das buscas de referência, sem usar atributos da página para completar campos ausentes. Códigos de fábrica, kits com aparelho, variantes, memória RAM, condição, rede e defeitos são tratados conforme o protocolo.",
+  "referencias_de_rede": [
+    {
+      "modelo": "Redmi Note 14",
+      "urls": [
+        "https://www.mi.com/br/product/redmi-note-14/specs/",
+        "https://www.mi.com/br/product/redmi-note-14-5g/specs/"
+      ]
+    },
+    {
+      "modelo": "Redmi Note 13",
+      "urls": [
+        "https://www.mi.com/global/product/redmi-note-13/specs/",
+        "https://www.mi.com/br/product/redmi-note-13-5g/specs/"
+      ]
+    },
+    {
+      "modelo": "Galaxy S20 FE",
+      "urls": [
+        "https://news.samsung.com/br/samsung-bundles-especiais-ecossistema-galaxy-dia-dos-namorados-2022",
+        "https://news.samsung.com/br/samsung-apresenta-versao-5g-do-galaxy-s20-fe-no-brasil"
+      ]
+    }
+  ],
+  "rotulos": [
+    {
+      "n": 1,
+      "titulo": "Usado Samsung Galaxy S24 Fe 256gb - Grafite - Bom",
+      "busca": "galaxy s24 fe 256gb usado",
+      "parecer": "Sem alteração proposta",
+      "observacao_revisao": "Usado, Galaxy S24 FE e 256 GB; corresponde à condição pedida.",
+      "rotulo_publicado": {
+        "rotulo_tipo": "celular",
+        "rotulo_marca": "Samsung",
+        "rotulo_modelo": "Galaxy S24 FE",
+        "rotulo_armazenamento": "256 GB",
+        "rotulo_condicao": "usado",
+        "rotulo_rede": "não informado",
+        "rotulo_defeito": "não",
+        "rotulo_mesmo_modelo": "sim",
+        "rotulo_decisao": "aceitar",
+        "rotulo_motivo": "",
+        "rotulo_observacao": ""
+      }
+    },
+    {
+      "n": 2,
+      "titulo": "Usado - Samsung Galaxy S24 Fe 256gb Cinza; Como Novo - Grade A",
+      "busca": "galaxy s24 fe 256gb",
+      "parecer": "Sem alteração proposta",
+      "observacao_revisao": "Grade A e 'Como Novo' não apagam a indicação de usado; a busca pede novo.",
+      "rotulo_publicado": {
+        "rotulo_tipo": "celular",
+        "rotulo_marca": "Samsung",
+        "rotulo_modelo": "Galaxy S24 FE",
+        "rotulo_armazenamento": "256 GB",
+        "rotulo_condicao": "usado",
+        "rotulo_rede": "não informado",
+        "rotulo_defeito": "não",
+        "rotulo_mesmo_modelo": "sim",
+        "rotulo_decisao": "excluir",
+        "rotulo_motivo": "outra condição",
+        "rotulo_observacao": "Grade A continua usado; a busca pede novo."
+      }
+    },
+    {
+      "n": 3,
+      "titulo": "Samsung Galaxy S24 Fe 256gb Cinza;Usado - Com Cuidado - Grade B",
+      "busca": "galaxy s24 fe 256gb usado",
+      "parecer": "Sem alteração proposta",
+      "observacao_revisao": "Grade B continua usado; modelo e armazenamento correspondem.",
+      "rotulo_publicado": {
+        "rotulo_tipo": "celular",
+        "rotulo_marca": "Samsung",
+        "rotulo_modelo": "Galaxy S24 FE",
+        "rotulo_armazenamento": "256 GB",
+        "rotulo_condicao": "usado",
+        "rotulo_rede": "não informado",
+        "rotulo_defeito": "não",
+        "rotulo_mesmo_modelo": "sim",
+        "rotulo_decisao": "aceitar",
+        "rotulo_motivo": "",
+        "rotulo_observacao": "Grade B continua usado."
+      }
+    },
+    {
+      "n": 4,
+      "titulo": "Usado - Samsung Galaxy S24 Fe 256gb Cinza; Tenho Minhas Marcas De Uso - Grade C",
+      "busca": "galaxy s24 fe 256gb",
+      "parecer": "Sem alteração proposta",
+      "observacao_revisao": "Grade C e marcas de uso indicam usado, enquanto a busca pede novo; não há defeito funcional declarado.",
+      "rotulo_publicado": {
+        "rotulo_tipo": "celular",
+        "rotulo_marca": "Samsung",
+        "rotulo_modelo": "Galaxy S24 FE",
+        "rotulo_armazenamento": "256 GB",
+        "rotulo_condicao": "usado",
+        "rotulo_rede": "não informado",
+        "rotulo_defeito": "não",
+        "rotulo_mesmo_modelo": "sim",
+        "rotulo_decisao": "excluir",
+        "rotulo_motivo": "outra condição",
+        "rotulo_observacao": "Grade C continua usado; marcas de uso não são defeito funcional."
+      }
+    },
+    {
+      "n": 5,
+      "titulo": "Usado - Samsung Galaxy S23 Fe 256gb Verde Excelente",
+      "busca": "galaxy s23 fe 256gb usado",
+      "parecer": "Sem alteração proposta",
+      "observacao_revisao": "Galaxy S23 FE usado, 256 GB; corresponde à busca.",
+      "rotulo_publicado": {
+        "rotulo_tipo": "celular",
+        "rotulo_marca": "Samsung",
+        "rotulo_modelo": "Galaxy S23 FE",
+        "rotulo_armazenamento": "256 GB",
+        "rotulo_condicao": "usado",
+        "rotulo_rede": "não informado",
+        "rotulo_defeito": "não",
+        "rotulo_mesmo_modelo": "sim",
+        "rotulo_decisao": "aceitar",
+        "rotulo_motivo": "",
+        "rotulo_observacao": ""
+      }
+    },
+    {
+      "n": 6,
+      "titulo": "Smartphone Samsung Galaxy S25 Fe 5g 256gb Jetblack, Ram 8GB, Câmera 50mp, Selfie De 12mp, Tela 6.7\"",
+      "busca": "galaxy s24 fe 256gb",
+      "parecer": "Sem alteração proposta",
+      "observacao_revisao": "Galaxy S25 FE é diferente de Galaxy S24 FE.",
+      "rotulo_publicado": {
+        "rotulo_tipo": "celular",
+        "rotulo_marca": "Samsung",
+        "rotulo_modelo": "Galaxy S25 FE",
+        "rotulo_armazenamento": "256 GB",
+        "rotulo_condicao": "novo",
+        "rotulo_rede": "5G",
+        "rotulo_defeito": "não",
+        "rotulo_mesmo_modelo": "não",
+        "rotulo_decisao": "excluir",
+        "rotulo_motivo": "outro modelo ou variante",
+        "rotulo_observacao": ""
+      }
+    },
+    {
+      "n": 7,
+      "titulo": "Samsung Galaxy S25 5G 256GB Galaxy AI Prata 6,2\" 12GB RAM Câm. Tripla 50+12+10MP Bateria 4000mAh Dual Chip",
+      "busca": "galaxy s25 5g 256gb",
+      "parecer": "Sem alteração proposta",
+      "observacao_revisao": "Galaxy S25, 256 GB e 5G constam no título.",
+      "rotulo_publicado": {
+        "rotulo_tipo": "celular",
+        "rotulo_marca": "Samsung",
+        "rotulo_modelo": "Galaxy S25",
+        "rotulo_armazenamento": "256 GB",
+        "rotulo_condicao": "novo",
+        "rotulo_rede": "5G",
+        "rotulo_defeito": "não",
+        "rotulo_mesmo_modelo": "sim",
+        "rotulo_decisao": "aceitar",
+        "rotulo_motivo": "",
+        "rotulo_observacao": ""
+      }
+    },
+    {
+      "n": 8,
+      "titulo": "Samsung Galaxy S23 Fe 256gb Verde;Usado - Com Cuidado - Grade B",
+      "busca": "galaxy s24 fe 256gb",
+      "parecer": "Sem alteração proposta",
+      "observacao_revisao": "Galaxy S23 FE é outro modelo; também é usado enquanto a busca pede novo.",
+      "rotulo_publicado": {
+        "rotulo_tipo": "celular",
+        "rotulo_marca": "Samsung",
+        "rotulo_modelo": "Galaxy S23 FE",
+        "rotulo_armazenamento": "256 GB",
+        "rotulo_condicao": "usado",
+        "rotulo_rede": "não informado",
+        "rotulo_defeito": "não",
+        "rotulo_mesmo_modelo": "não",
+        "rotulo_decisao": "excluir",
+        "rotulo_motivo": "outro modelo ou variante",
+        "rotulo_observacao": "Também é usado."
+      }
+    },
+    {
+      "n": 9,
+      "titulo": "Celular Samsung Galaxy S24 Ultra 512 Gb 12gb Ram Recondicionado",
+      "busca": "galaxy s24 ultra 512gb recondicionado",
+      "parecer": "Sem alteração proposta",
+      "observacao_revisao": "Galaxy S24 Ultra, 512 GB, recondicionado; corresponde.",
+      "rotulo_publicado": {
+        "rotulo_tipo": "celular",
+        "rotulo_marca": "Samsung",
+        "rotulo_modelo": "Galaxy S24 Ultra",
+        "rotulo_armazenamento": "512 GB",
+        "rotulo_condicao": "recondicionado",
+        "rotulo_rede": "não informado",
+        "rotulo_defeito": "não",
+        "rotulo_mesmo_modelo": "sim",
+        "rotulo_decisao": "aceitar",
+        "rotulo_motivo": "",
+        "rotulo_observacao": ""
+      }
+    },
+    {
+      "n": 10,
+      "titulo": "Capa Capinha Case Brilho Glitter Luxo Premium Magsafe Magnética Com Suporte Braket Para Samsung S24 Fe - Preto",
+      "busca": "galaxy s24 fe 256gb",
+      "parecer": "Sem alteração proposta",
+      "observacao_revisao": "Capa, não aparelho completo; demais atributos não se aplicam.",
+      "rotulo_publicado": {
+        "rotulo_tipo": "acessório",
+        "rotulo_marca": "não se aplica",
+        "rotulo_modelo": "não se aplica",
+        "rotulo_armazenamento": "não se aplica",
+        "rotulo_condicao": "não se aplica",
+        "rotulo_rede": "não se aplica",
+        "rotulo_defeito": "não se aplica",
+        "rotulo_mesmo_modelo": "não se aplica",
+        "rotulo_decisao": "excluir",
+        "rotulo_motivo": "acessório ou outro produto",
+        "rotulo_observacao": "Capa."
+      }
+    },
+    {
+      "n": 11,
+      "titulo": "Carregador Turbo Preto Rápido Veloz Para Samsung S24 Fe",
+      "busca": "galaxy s24 fe 256gb",
+      "parecer": "Sem alteração proposta",
+      "observacao_revisao": "Carregador, não aparelho completo; demais atributos não se aplicam.",
+      "rotulo_publicado": {
+        "rotulo_tipo": "acessório",
+        "rotulo_marca": "não se aplica",
+        "rotulo_modelo": "não se aplica",
+        "rotulo_armazenamento": "não se aplica",
+        "rotulo_condicao": "não se aplica",
+        "rotulo_rede": "não se aplica",
+        "rotulo_defeito": "não se aplica",
+        "rotulo_mesmo_modelo": "não se aplica",
+        "rotulo_decisao": "excluir",
+        "rotulo_motivo": "acessório ou outro produto",
+        "rotulo_observacao": "Carregador."
+      }
+    },
+    {
+      "n": 12,
+      "titulo": "Película Cerâmica Compatível Para Smartphone Samsung Galaxy S24 Fe / A56 / A36",
+      "busca": "galaxy s24 fe 256gb",
+      "parecer": "Sem alteração proposta",
+      "observacao_revisao": "Película, não aparelho completo; citar modelos não a transforma em celular.",
+      "rotulo_publicado": {
+        "rotulo_tipo": "acessório",
+        "rotulo_marca": "não se aplica",
+        "rotulo_modelo": "não se aplica",
+        "rotulo_armazenamento": "não se aplica",
+        "rotulo_condicao": "não se aplica",
+        "rotulo_rede": "não se aplica",
+        "rotulo_defeito": "não se aplica",
+        "rotulo_mesmo_modelo": "não se aplica",
+        "rotulo_decisao": "excluir",
+        "rotulo_motivo": "acessório ou outro produto",
+        "rotulo_observacao": "Película."
+      }
+    },
+    {
+      "n": 13,
+      "titulo": "Kit Película Lente Câmera Compatível Com Samsung Galaxy S22 S23 S24 S25 Fe Plus Ultra Cor:prata Brilho;tamanho:s24 Ultra",
+      "busca": "galaxy s24 fe 256gb",
+      "parecer": "Sem alteração proposta",
+      "observacao_revisao": "Kit de proteção das lentes, sem aparelho; excluir como acessório.",
+      "rotulo_publicado": {
+        "rotulo_tipo": "acessório",
+        "rotulo_marca": "não se aplica",
+        "rotulo_modelo": "não se aplica",
+        "rotulo_armazenamento": "não se aplica",
+        "rotulo_condicao": "não se aplica",
+        "rotulo_rede": "não se aplica",
+        "rotulo_defeito": "não se aplica",
+        "rotulo_mesmo_modelo": "não se aplica",
+        "rotulo_decisao": "excluir",
+        "rotulo_motivo": "acessório ou outro produto",
+        "rotulo_observacao": "Kit de películas para a lente da câmera."
+      }
+    },
+    {
+      "n": 14,
+      "titulo": "Celular Xiaomi Redmi Note 15 Pro De 256gb 8GB Ram Preto",
+      "busca": "iphone 15 pro 256gb",
+      "parecer": "Sem alteração proposta",
+      "observacao_revisao": "Redmi Note 15 Pro é outra marca e outro modelo em relação ao iPhone 15 Pro.",
+      "rotulo_publicado": {
+        "rotulo_tipo": "celular",
+        "rotulo_marca": "Xiaomi",
+        "rotulo_modelo": "Redmi Note 15 Pro",
+        "rotulo_armazenamento": "256 GB",
+        "rotulo_condicao": "novo",
+        "rotulo_rede": "não informado",
+        "rotulo_defeito": "não",
+        "rotulo_mesmo_modelo": "não",
+        "rotulo_decisao": "excluir",
+        "rotulo_motivo": "outro modelo ou variante",
+        "rotulo_observacao": "Outra marca e outro modelo."
+      }
+    },
+    {
+      "n": 15,
+      "titulo": "Carregador Turbo Usb-c 40w Para Iphone 15 16 17 Pro Max",
+      "busca": "iphone 15 pro 256gb",
+      "parecer": "Sem alteração proposta",
+      "observacao_revisao": "Carregador USB-C, sem aparelho; excluir como acessório.",
+      "rotulo_publicado": {
+        "rotulo_tipo": "acessório",
+        "rotulo_marca": "não se aplica",
+        "rotulo_modelo": "não se aplica",
+        "rotulo_armazenamento": "não se aplica",
+        "rotulo_condicao": "não se aplica",
+        "rotulo_rede": "não se aplica",
+        "rotulo_defeito": "não se aplica",
+        "rotulo_mesmo_modelo": "não se aplica",
+        "rotulo_decisao": "excluir",
+        "rotulo_motivo": "acessório ou outro produto",
+        "rotulo_observacao": "Carregador."
+      }
+    },
+    {
+      "n": 16,
+      "titulo": "Smartphone Xiaomi Redmi Note 14 8+8GB + 256gb, Verde",
+      "busca": "redmi note 14 256gb",
+      "parecer": "Sem alteração proposta",
+      "observacao_revisao": "Redmi Note 14 e 256 GB identificados; a rede não consta e existem versões 4G e 5G. Não presumir 4G.",
+      "rotulo_publicado": {
+        "rotulo_tipo": "celular",
+        "rotulo_marca": "Xiaomi",
+        "rotulo_modelo": "Redmi Note 14",
+        "rotulo_armazenamento": "256 GB",
+        "rotulo_condicao": "novo",
+        "rotulo_rede": "não informado",
+        "rotulo_defeito": "não",
+        "rotulo_mesmo_modelo": "sim",
+        "rotulo_decisao": "excluir",
+        "rotulo_motivo": "atributo exigido não informado no título",
+        "rotulo_observacao": "Rede não informada: o Redmi Note 14 existe em 4G e 5G, e a busca espera 4G."
+      }
+    },
+    {
+      "n": 17,
+      "titulo": "Smartphone Xiaomi Redmi 14c 256gb 4+4gb Ram Virtual Azul",
+      "busca": "redmi note 14 256gb",
+      "parecer": "Sem alteração proposta",
+      "observacao_revisao": "Redmi 14C não é Redmi Note 14.",
+      "rotulo_publicado": {
+        "rotulo_tipo": "celular",
+        "rotulo_marca": "Xiaomi",
+        "rotulo_modelo": "Redmi 14C",
+        "rotulo_armazenamento": "256 GB",
+        "rotulo_condicao": "novo",
+        "rotulo_rede": "não informado",
+        "rotulo_defeito": "não",
+        "rotulo_mesmo_modelo": "não",
+        "rotulo_decisao": "excluir",
+        "rotulo_motivo": "outro modelo ou variante",
+        "rotulo_observacao": ""
+      }
+    },
+    {
+      "n": 18,
+      "titulo": "Smartphone Realme 14t 256gb 8ram 5g Roxo",
+      "busca": "realme 14t 5g 256gb",
+      "parecer": "Sem alteração proposta",
+      "observacao_revisao": "Realme 14T, 256 GB e 5G constam no título.",
+      "rotulo_publicado": {
+        "rotulo_tipo": "celular",
+        "rotulo_marca": "Realme",
+        "rotulo_modelo": "Realme 14T",
+        "rotulo_armazenamento": "256 GB",
+        "rotulo_condicao": "novo",
+        "rotulo_rede": "5G",
+        "rotulo_defeito": "não",
+        "rotulo_mesmo_modelo": "sim",
+        "rotulo_decisao": "aceitar",
+        "rotulo_motivo": "",
+        "rotulo_observacao": ""
+      }
+    },
+    {
+      "n": 19,
+      "titulo": "Câmera Traseira Abertura Da Lente Azul Para iPhone 7 8 8P X XS XSMAX 11 11 12 13 14 PRO MAX Reparo Peças De Problemas De Ângulo Amplo Blue Bead",
+      "busca": "iphone 11 usado",
+      "parecer": "Sem alteração proposta",
+      "observacao_revisao": "Peça de câmera traseira, não aparelho completo.",
+      "rotulo_publicado": {
+        "rotulo_tipo": "acessório",
+        "rotulo_marca": "não se aplica",
+        "rotulo_modelo": "não se aplica",
+        "rotulo_armazenamento": "não se aplica",
+        "rotulo_condicao": "não se aplica",
+        "rotulo_rede": "não se aplica",
+        "rotulo_defeito": "não se aplica",
+        "rotulo_mesmo_modelo": "não se aplica",
+        "rotulo_decisao": "excluir",
+        "rotulo_motivo": "acessório ou outro produto",
+        "rotulo_observacao": "Peça de reposição (câmera traseira)."
+      }
+    },
+    {
+      "n": 20,
+      "titulo": "Bateria Foxconn Compativel Com Iphone 11",
+      "busca": "iphone 11 recondicionado",
+      "parecer": "Sem alteração proposta",
+      "observacao_revisao": "Bateria de reposição, não aparelho completo.",
+      "rotulo_publicado": {
+        "rotulo_tipo": "acessório",
+        "rotulo_marca": "não se aplica",
+        "rotulo_modelo": "não se aplica",
+        "rotulo_armazenamento": "não se aplica",
+        "rotulo_condicao": "não se aplica",
+        "rotulo_rede": "não se aplica",
+        "rotulo_defeito": "não se aplica",
+        "rotulo_mesmo_modelo": "não se aplica",
+        "rotulo_decisao": "excluir",
+        "rotulo_motivo": "acessório ou outro produto",
+        "rotulo_observacao": "Peça de reposição (bateria)."
+      }
+    },
+    {
+      "n": 21,
+      "titulo": "Celular Samsung Galaxy S25 Ultra 512 Gb 12gb Ram Recondicionado Preto",
+      "busca": "galaxy s21 fe recondicionado",
+      "parecer": "Sem alteração proposta",
+      "observacao_revisao": "Galaxy S25 Ultra não é Galaxy S21 FE; condição recondicionada e 512 GB estão explícitos.",
+      "rotulo_publicado": {
+        "rotulo_tipo": "celular",
+        "rotulo_marca": "Samsung",
+        "rotulo_modelo": "Galaxy S25 Ultra",
+        "rotulo_armazenamento": "512 GB",
+        "rotulo_condicao": "recondicionado",
+        "rotulo_rede": "não informado",
+        "rotulo_defeito": "não",
+        "rotulo_mesmo_modelo": "não",
+        "rotulo_decisao": "excluir",
+        "rotulo_motivo": "outro modelo ou variante",
+        "rotulo_observacao": ""
+      }
+    },
+    {
+      "n": 22,
+      "titulo": "Celular Smartphone Infinix HOT 60i Dual Chip 4G Tela 6,7 pol. 4GB + 4GB RAM 256 GB",
+      "busca": "infinix hot 60i 256gb",
+      "parecer": "Sem alteração proposta",
+      "observacao_revisao": "Hot 60i 4G, 256 GB: o título corresponde. Isso não confirma a página da Shopee, ainda não verificada no registro.",
+      "rotulo_publicado": {
+        "rotulo_tipo": "celular",
+        "rotulo_marca": "Infinix",
+        "rotulo_modelo": "Hot 60i",
+        "rotulo_armazenamento": "256 GB",
+        "rotulo_condicao": "novo",
+        "rotulo_rede": "4G",
+        "rotulo_defeito": "não",
+        "rotulo_mesmo_modelo": "sim",
+        "rotulo_decisao": "aceitar",
+        "rotulo_motivo": "",
+        "rotulo_observacao": ""
+      }
+    },
+    {
+      "n": 23,
+      "titulo": "Infinix Hot 60i 4G 256GB + 4GB/8GB RAM, Processador Mediatek G81 Ultimate, Câmera 50MP, Versão Global",
+      "busca": "infinix hot 50 256gb",
+      "parecer": "Sem alteração proposta",
+      "observacao_revisao": "Hot 60i não é Hot 50; preservar a letra i e o número do modelo.",
+      "rotulo_publicado": {
+        "rotulo_tipo": "celular",
+        "rotulo_marca": "Infinix",
+        "rotulo_modelo": "Hot 60i",
+        "rotulo_armazenamento": "256 GB",
+        "rotulo_condicao": "novo",
+        "rotulo_rede": "4G",
+        "rotulo_defeito": "não",
+        "rotulo_mesmo_modelo": "não",
+        "rotulo_decisao": "excluir",
+        "rotulo_motivo": "outro modelo ou variante",
+        "rotulo_observacao": ""
+      }
+    },
+    {
+      "n": 24,
+      "titulo": "Infinix Hot 60i, Hot 50i 256GB e 4GB RAM, Câmera 48MP, Processador MediaTek Helio G81, Bateria 5000Mah, Versão",
+      "busca": "infinix hot 60i 256gb",
+      "parecer": "Sem alteração proposta",
+      "observacao_revisao": "Há dois modelos no mesmo título, Hot 60i e Hot 50i; manter modelo inconclusivo e excluir.",
+      "rotulo_publicado": {
+        "rotulo_tipo": "celular",
+        "rotulo_marca": "Infinix",
+        "rotulo_modelo": "não informado",
+        "rotulo_armazenamento": "256 GB",
+        "rotulo_condicao": "novo",
+        "rotulo_rede": "não informado",
+        "rotulo_defeito": "não",
+        "rotulo_mesmo_modelo": "inconclusivo",
+        "rotulo_decisao": "excluir",
+        "rotulo_motivo": "atributo exigido não informado no título",
+        "rotulo_observacao": "Modelo inconclusivo: o título cita Hot 60i e Hot 50i."
+      }
+    },
+    {
+      "n": 25,
+      "titulo": "Smartphone Realme C75 5G NFC 256 IP69 à Prova d’Água Bateria 5828mAh Câmera 50MP Robusto",
+      "busca": "realme c75 256gb",
+      "parecer": "Sem alteração proposta",
+      "observacao_revisao": "O título informa 5G; '256' sem GB/TB não confirma armazenamento. A referência espera a versão 4G.",
+      "rotulo_publicado": {
+        "rotulo_tipo": "celular",
+        "rotulo_marca": "Realme",
+        "rotulo_modelo": "Realme C75",
+        "rotulo_armazenamento": "não informado",
+        "rotulo_condicao": "novo",
+        "rotulo_rede": "5G",
+        "rotulo_defeito": "não",
+        "rotulo_mesmo_modelo": "sim",
+        "rotulo_decisao": "excluir",
+        "rotulo_motivo": "outra rede",
+        "rotulo_observacao": "A busca espera o C75 4G; \"256\" sem unidade não confirma o armazenamento."
+      }
+    },
+    {
+      "n": 26,
+      "titulo": "Celular Samsung Galaxy S23 Ultra 5G 512GB 12GB Ram Recondicionado Preto",
+      "busca": "galaxy s23 ultra 512gb recondicionado",
+      "parecer": "Sem alteração proposta",
+      "observacao_revisao": "Galaxy S23 Ultra, 512 GB, recondicionado e 5G: corresponde.",
+      "rotulo_publicado": {
+        "rotulo_tipo": "celular",
+        "rotulo_marca": "Samsung",
+        "rotulo_modelo": "Galaxy S23 Ultra",
+        "rotulo_armazenamento": "512 GB",
+        "rotulo_condicao": "recondicionado",
+        "rotulo_rede": "5G",
+        "rotulo_defeito": "não",
+        "rotulo_mesmo_modelo": "sim",
+        "rotulo_decisao": "aceitar",
+        "rotulo_motivo": "",
+        "rotulo_observacao": ""
+      }
+    },
+    {
+      "n": 27,
+      "titulo": "Usado - Samsung Galaxy S23 Ultra 256gb Branco; Tenho Minhas Marcas De Uso - Grade C",
+      "busca": "galaxy s23 ultra recondicionado",
+      "parecer": "Sem alteração proposta",
+      "observacao_revisao": "Grade C é usado, diferente de recondicionado.",
+      "rotulo_publicado": {
+        "rotulo_tipo": "celular",
+        "rotulo_marca": "Samsung",
+        "rotulo_modelo": "Galaxy S23 Ultra",
+        "rotulo_armazenamento": "256 GB",
+        "rotulo_condicao": "usado",
+        "rotulo_rede": "não informado",
+        "rotulo_defeito": "não",
+        "rotulo_mesmo_modelo": "sim",
+        "rotulo_decisao": "excluir",
+        "rotulo_motivo": "outra condição",
+        "rotulo_observacao": "Grade C continua usado; a busca pede recondicionado."
+      }
+    },
+    {
+      "n": 28,
+      "titulo": "Usado: Galaxy S23 128GB Preto - Muito Bom",
+      "busca": "galaxy s23 128gb usado",
+      "parecer": "Sem alteração proposta",
+      "observacao_revisao": "Galaxy S23, 128 GB, usado: corresponde; 'Muito Bom' é estado de conservação.",
+      "rotulo_publicado": {
+        "rotulo_tipo": "celular",
+        "rotulo_marca": "Samsung",
+        "rotulo_modelo": "Galaxy S23",
+        "rotulo_armazenamento": "128 GB",
+        "rotulo_condicao": "usado",
+        "rotulo_rede": "não informado",
+        "rotulo_defeito": "não",
+        "rotulo_mesmo_modelo": "sim",
+        "rotulo_decisao": "aceitar",
+        "rotulo_motivo": "",
+        "rotulo_observacao": ""
+      }
+    },
+    {
+      "n": 29,
+      "titulo": "Celular Samsung Galaxy Z Fold5 1TB 12gb Ram Recondicionado",
+      "busca": "galaxy s23 ultra recondicionado",
+      "parecer": "Sem alteração proposta",
+      "observacao_revisao": "Galaxy Z Fold5 não é Galaxy S23 Ultra; 1 TB está explícito.",
+      "rotulo_publicado": {
+        "rotulo_tipo": "celular",
+        "rotulo_marca": "Samsung",
+        "rotulo_modelo": "Galaxy Z Fold5",
+        "rotulo_armazenamento": "1 TB",
+        "rotulo_condicao": "recondicionado",
+        "rotulo_rede": "não informado",
+        "rotulo_defeito": "não",
+        "rotulo_mesmo_modelo": "não",
+        "rotulo_decisao": "excluir",
+        "rotulo_motivo": "outro modelo ou variante",
+        "rotulo_observacao": ""
+      }
+    },
+    {
+      "n": 30,
+      "titulo": "Samsung Galaxy S22 Ultra 256gb Preto;Usado - Com Cuidado - Grade B",
+      "busca": "galaxy s22 ultra 256gb usado",
+      "parecer": "Sem alteração proposta",
+      "observacao_revisao": "Galaxy S22 Ultra, 256 GB, usado; Grade B não altera a condição.",
+      "rotulo_publicado": {
+        "rotulo_tipo": "celular",
+        "rotulo_marca": "Samsung",
+        "rotulo_modelo": "Galaxy S22 Ultra",
+        "rotulo_armazenamento": "256 GB",
+        "rotulo_condicao": "usado",
+        "rotulo_rede": "não informado",
+        "rotulo_defeito": "não",
+        "rotulo_mesmo_modelo": "sim",
+        "rotulo_decisao": "aceitar",
+        "rotulo_motivo": "",
+        "rotulo_observacao": "Grade B continua usado."
+      }
+    },
+    {
+      "n": 31,
+      "titulo": "Usado: Samsung S23 128 Gb Verde - Bom",
+      "busca": "galaxy s23 ultra recondicionado",
+      "parecer": "Sem alteração proposta",
+      "observacao_revisao": "Galaxy S23 não é S23 Ultra e usado não é recondicionado.",
+      "rotulo_publicado": {
+        "rotulo_tipo": "celular",
+        "rotulo_marca": "Samsung",
+        "rotulo_modelo": "Galaxy S23",
+        "rotulo_armazenamento": "128 GB",
+        "rotulo_condicao": "usado",
+        "rotulo_rede": "não informado",
+        "rotulo_defeito": "não",
+        "rotulo_mesmo_modelo": "não",
+        "rotulo_decisao": "excluir",
+        "rotulo_motivo": "outro modelo ou variante",
+        "rotulo_observacao": "Também é usado; a busca pede recondicionado."
+      }
+    },
+    {
+      "n": 32,
+      "titulo": "Iphone 17 Pro Max 256gb Apple Blue",
+      "busca": "iphone 17 pro max 256gb",
+      "parecer": "Sem alteração proposta",
+      "observacao_revisao": "iPhone 17 Pro Max, 256 GB; preservar Pro Max na identificação.",
+      "rotulo_publicado": {
+        "rotulo_tipo": "celular",
+        "rotulo_marca": "Apple",
+        "rotulo_modelo": "iPhone 17 Pro Max",
+        "rotulo_armazenamento": "256 GB",
+        "rotulo_condicao": "novo",
+        "rotulo_rede": "não informado",
+        "rotulo_defeito": "não",
+        "rotulo_mesmo_modelo": "sim",
+        "rotulo_decisao": "aceitar",
+        "rotulo_motivo": "",
+        "rotulo_observacao": ""
+      }
+    },
+    {
+      "n": 33,
+      "titulo": "Iphone 16e 128GB Apple",
+      "busca": "iphone 16 plus 128gb",
+      "parecer": "Sem alteração proposta",
+      "observacao_revisao": "iPhone 16e não é iPhone 16 Plus.",
+      "rotulo_publicado": {
+        "rotulo_tipo": "celular",
+        "rotulo_marca": "Apple",
+        "rotulo_modelo": "iPhone 16e",
+        "rotulo_armazenamento": "128 GB",
+        "rotulo_condicao": "novo",
+        "rotulo_rede": "não informado",
+        "rotulo_defeito": "não",
+        "rotulo_mesmo_modelo": "não",
+        "rotulo_decisao": "excluir",
+        "rotulo_motivo": "outro modelo ou variante",
+        "rotulo_observacao": ""
+      }
+    },
+    {
+      "n": 34,
+      "titulo": "Apple Iphone 16 Plus 128GB Branco",
+      "busca": "iphone 16 plus 128gb",
+      "parecer": "Sem alteração proposta",
+      "observacao_revisao": "iPhone 16 Plus, 128 GB: corresponde.",
+      "rotulo_publicado": {
+        "rotulo_tipo": "celular",
+        "rotulo_marca": "Apple",
+        "rotulo_modelo": "iPhone 16 Plus",
+        "rotulo_armazenamento": "128 GB",
+        "rotulo_condicao": "novo",
+        "rotulo_rede": "não informado",
+        "rotulo_defeito": "não",
+        "rotulo_mesmo_modelo": "sim",
+        "rotulo_decisao": "aceitar",
+        "rotulo_motivo": "",
+        "rotulo_observacao": ""
+      }
+    },
+    {
+      "n": 35,
+      "titulo": "Apple Iphone 16e A3212 Esim 128GB 8GB Ram 6.1 - Black",
+      "busca": "iphone 16 plus 128gb",
+      "parecer": "Sem alteração proposta",
+      "observacao_revisao": "iPhone 16e não é 16 Plus; A3212 é código de fabricação, não outro modelo.",
+      "rotulo_publicado": {
+        "rotulo_tipo": "celular",
+        "rotulo_marca": "Apple",
+        "rotulo_modelo": "iPhone 16e",
+        "rotulo_armazenamento": "128 GB",
+        "rotulo_condicao": "novo",
+        "rotulo_rede": "não informado",
+        "rotulo_defeito": "não",
+        "rotulo_mesmo_modelo": "não",
+        "rotulo_decisao": "excluir",
+        "rotulo_motivo": "outro modelo ou variante",
+        "rotulo_observacao": ""
+      }
+    },
+    {
+      "n": 36,
+      "titulo": "S25 Ultra (256gb) - Titânio Azul + Buds3 Fe - Preto",
+      "busca": "galaxy s25 ultra 256gb",
+      "parecer": "Sem alteração proposta",
+      "observacao_revisao": "Kit com S25 Ultra de 256 GB e Buds3 FE inclui o aparelho. O rótulo usa a normalização S25 Ultra → Galaxy S25 Ultra, com marca inferida dessa linha.",
+      "rotulo_publicado": {
+        "rotulo_tipo": "celular",
+        "rotulo_marca": "Samsung",
+        "rotulo_modelo": "Galaxy S25 Ultra",
+        "rotulo_armazenamento": "256 GB",
+        "rotulo_condicao": "novo",
+        "rotulo_rede": "não informado",
+        "rotulo_defeito": "não",
+        "rotulo_mesmo_modelo": "sim",
+        "rotulo_decisao": "aceitar",
+        "rotulo_motivo": "",
+        "rotulo_observacao": "O anúncio inclui o fone Galaxy Buds3 FE."
+      }
+    },
+    {
+      "n": 37,
+      "titulo": "Usado -  Samsung A56 256 Gb Preto - Sem Face Id / Touch Id",
+      "busca": "galaxy a56 5g 256gb",
+      "parecer": "Sem alteração proposta",
+      "observacao_revisao": "Usado e com ausência funcional declarada de Face ID/Touch ID; excluir por defeito, independentemente de a busca pedir novo.",
+      "rotulo_publicado": {
+        "rotulo_tipo": "celular",
+        "rotulo_marca": "Samsung",
+        "rotulo_modelo": "Galaxy A56",
+        "rotulo_armazenamento": "256 GB",
+        "rotulo_condicao": "usado",
+        "rotulo_rede": "não informado",
+        "rotulo_defeito": "sim",
+        "rotulo_mesmo_modelo": "sim",
+        "rotulo_decisao": "excluir",
+        "rotulo_motivo": "defeito anunciado",
+        "rotulo_observacao": "Sem Face ID / Touch ID; também é usado, e a busca pede novo."
+      }
+    },
+    {
+      "n": 38,
+      "titulo": "Celular Samsung A37, 5g, 128GB, 6g (sm-a376bzajzto) Preto",
+      "busca": "galaxy a37 5g 128gb",
+      "parecer": "Sem alteração proposta",
+      "observacao_revisao": "Samsung A37 normalizado como Galaxy A37; 5G e 128 GB estão explícitos.",
+      "rotulo_publicado": {
+        "rotulo_tipo": "celular",
+        "rotulo_marca": "Samsung",
+        "rotulo_modelo": "Galaxy A37",
+        "rotulo_armazenamento": "128 GB",
+        "rotulo_condicao": "novo",
+        "rotulo_rede": "5G",
+        "rotulo_defeito": "não",
+        "rotulo_mesmo_modelo": "sim",
+        "rotulo_decisao": "aceitar",
+        "rotulo_motivo": "",
+        "rotulo_observacao": ""
+      }
+    },
+    {
+      "n": 39,
+      "titulo": "Realme C75 8 256 Gold",
+      "busca": "realme c75 256gb",
+      "parecer": "Sem alteração proposta",
+      "observacao_revisao": "'8 256' sem unidade não confirma armazenamento; não preencher GB por suposição.",
+      "rotulo_publicado": {
+        "rotulo_tipo": "celular",
+        "rotulo_marca": "Realme",
+        "rotulo_modelo": "Realme C75",
+        "rotulo_armazenamento": "não informado",
+        "rotulo_condicao": "novo",
+        "rotulo_rede": "não informado",
+        "rotulo_defeito": "não",
+        "rotulo_mesmo_modelo": "sim",
+        "rotulo_decisao": "excluir",
+        "rotulo_motivo": "atributo exigido não informado no título",
+        "rotulo_observacao": "\"8 256\" sem unidade não confirma o armazenamento; rede também não informada."
+      }
+    },
+    {
+      "n": 40,
+      "titulo": "Tablet Honor Pad X8a Lte 8GB (4gb Ram+4gb Turbo) + 128GB, Cinza",
+      "busca": "honor x6c 128gb",
+      "parecer": "Sem alteração proposta",
+      "observacao_revisao": "Honor Pad X8a é tablet, não o smartphone Honor X6c.",
+      "rotulo_publicado": {
+        "rotulo_tipo": "outro produto",
+        "rotulo_marca": "não se aplica",
+        "rotulo_modelo": "não se aplica",
+        "rotulo_armazenamento": "não se aplica",
+        "rotulo_condicao": "não se aplica",
+        "rotulo_rede": "não se aplica",
+        "rotulo_defeito": "não se aplica",
+        "rotulo_mesmo_modelo": "não se aplica",
+        "rotulo_decisao": "excluir",
+        "rotulo_motivo": "acessório ou outro produto",
+        "rotulo_observacao": "Tablet."
+      }
+    },
+    {
+      "n": 41,
+      "titulo": "Celular Xiaomi Redmi Note 13 6gb/128gb Verde Menta",
+      "busca": "redmi note 13 128gb",
+      "parecer": "Sem alteração proposta",
+      "observacao_revisao": "Redmi Note 13, 128 GB; rede ausente e versões 4G/5G distintas. Não presumir a versão 4G.",
+      "rotulo_publicado": {
+        "rotulo_tipo": "celular",
+        "rotulo_marca": "Xiaomi",
+        "rotulo_modelo": "Redmi Note 13",
+        "rotulo_armazenamento": "128 GB",
+        "rotulo_condicao": "novo",
+        "rotulo_rede": "não informado",
+        "rotulo_defeito": "não",
+        "rotulo_mesmo_modelo": "sim",
+        "rotulo_decisao": "excluir",
+        "rotulo_motivo": "atributo exigido não informado no título",
+        "rotulo_observacao": "Rede não informada: o Redmi Note 13 existe em 4G e 5G, e a busca espera 4G."
+      }
+    },
+    {
+      "n": 42,
+      "titulo": "Usado - Smartphone Samsung Galaxy S20 Fe, 6GB RAM, 128GB, Cloud Navy - Bom",
+      "busca": "galaxy s24 fe 128gb",
+      "parecer": "Sem alteração proposta",
+      "observacao_revisao": "Galaxy S20 FE não é Galaxy S24 FE; também é usado e a referência pede novo.",
+      "rotulo_publicado": {
+        "rotulo_tipo": "celular",
+        "rotulo_marca": "Samsung",
+        "rotulo_modelo": "Galaxy S20 FE",
+        "rotulo_armazenamento": "128 GB",
+        "rotulo_condicao": "usado",
+        "rotulo_rede": "não informado",
+        "rotulo_defeito": "não",
+        "rotulo_mesmo_modelo": "não",
+        "rotulo_decisao": "excluir",
+        "rotulo_motivo": "outro modelo ou variante",
+        "rotulo_observacao": "Também é usado."
+      }
+    },
+    {
+      "n": 43,
+      "titulo": "Usado - Samsung Galaxy S24 Fe 256gb - Grafite - Excelente",
+      "busca": "galaxy s24 fe 256gb usado",
+      "parecer": "Sem alteração proposta",
+      "observacao_revisao": "Galaxy S24 FE, 256 GB, usado: corresponde; 'Excelente' não significa novo.",
+      "rotulo_publicado": {
+        "rotulo_tipo": "celular",
+        "rotulo_marca": "Samsung",
+        "rotulo_modelo": "Galaxy S24 FE",
+        "rotulo_armazenamento": "256 GB",
+        "rotulo_condicao": "usado",
+        "rotulo_rede": "não informado",
+        "rotulo_defeito": "não",
+        "rotulo_mesmo_modelo": "sim",
+        "rotulo_decisao": "aceitar",
+        "rotulo_motivo": "",
+        "rotulo_observacao": ""
+      }
+    },
+    {
+      "n": 44,
+      "titulo": "Usado - Samsung Galaxy S24 128GB - Preto - Aceitável",
+      "busca": "galaxy s24 fe 128gb",
+      "parecer": "Sem alteração proposta",
+      "observacao_revisao": "Galaxy S24 não é S24 FE; usado também difere de novo.",
+      "rotulo_publicado": {
+        "rotulo_tipo": "celular",
+        "rotulo_marca": "Samsung",
+        "rotulo_modelo": "Galaxy S24",
+        "rotulo_armazenamento": "128 GB",
+        "rotulo_condicao": "usado",
+        "rotulo_rede": "não informado",
+        "rotulo_defeito": "não",
+        "rotulo_mesmo_modelo": "não",
+        "rotulo_decisao": "excluir",
+        "rotulo_motivo": "outro modelo ou variante",
+        "rotulo_observacao": "Também é usado."
+      }
+    },
+    {
+      "n": 45,
+      "titulo": "Usado -  Samsung S20 Fe 128 Gb Rosa - Regular",
+      "busca": "galaxy s20 fe 128gb usado",
+      "parecer": "Sem alteração proposta",
+      "observacao_revisao": "Galaxy S20 FE, 128 GB, usado; rede ausente em modelo com versões 4G e 5G. 'Regular' não é defeito funcional.",
+      "rotulo_publicado": {
+        "rotulo_tipo": "celular",
+        "rotulo_marca": "Samsung",
+        "rotulo_modelo": "Galaxy S20 FE",
+        "rotulo_armazenamento": "128 GB",
+        "rotulo_condicao": "usado",
+        "rotulo_rede": "não informado",
+        "rotulo_defeito": "não",
+        "rotulo_mesmo_modelo": "sim",
+        "rotulo_decisao": "excluir",
+        "rotulo_motivo": "atributo exigido não informado no título",
+        "rotulo_observacao": "Rede não informada: o S20 FE existe em 4G e 5G, e a busca espera 4G. \"Regular\" é estado, não defeito."
+      }
+    },
+    {
+      "n": 46,
+      "titulo": "Usado: Iphone 12 64 Gb Verde - Sem Face Id / Touch Id",
+      "busca": "iphone 12 usado",
+      "parecer": "Sem alteração proposta",
+      "observacao_revisao": "iPhone 12 usado com ausência de Face ID/Touch ID declarada; excluir por defeito.",
+      "rotulo_publicado": {
+        "rotulo_tipo": "celular",
+        "rotulo_marca": "Apple",
+        "rotulo_modelo": "iPhone 12",
+        "rotulo_armazenamento": "64 GB",
+        "rotulo_condicao": "usado",
+        "rotulo_rede": "não informado",
+        "rotulo_defeito": "sim",
+        "rotulo_mesmo_modelo": "sim",
+        "rotulo_decisao": "excluir",
+        "rotulo_motivo": "defeito anunciado",
+        "rotulo_observacao": "Sem Face ID / Touch ID."
+      }
+    },
+    {
+      "n": 47,
+      "titulo": "Smartphone Samsung Galaxy S24 Fe 5g 6.7 Exynos 128GB 8GB Câmera Tripla",
+      "busca": "galaxy s24 fe 5g 128gb",
+      "parecer": "Sem alteração proposta",
+      "observacao_revisao": "Galaxy S24 FE, 128 GB e 5G explícitos: corresponde.",
+      "rotulo_publicado": {
+        "rotulo_tipo": "celular",
+        "rotulo_marca": "Samsung",
+        "rotulo_modelo": "Galaxy S24 FE",
+        "rotulo_armazenamento": "128 GB",
+        "rotulo_condicao": "novo",
+        "rotulo_rede": "5G",
+        "rotulo_defeito": "não",
+        "rotulo_mesmo_modelo": "sim",
+        "rotulo_decisao": "aceitar",
+        "rotulo_motivo": "",
+        "rotulo_observacao": ""
+      }
+    },
+    {
+      "n": 48,
+      "titulo": "S25+ (512gb) - Prata + Watch7 Bt 40mm - Creme",
+      "busca": "galaxy s25 fe 256gb",
+      "parecer": "Sem alteração proposta",
+      "observacao_revisao": "S25+ é diferente de S25 FE e 512 GB difere de 256 GB. Preservar o sinal + na interpretação; o rótulo normaliza a linha como Galaxy S25+.",
+      "rotulo_publicado": {
+        "rotulo_tipo": "celular",
+        "rotulo_marca": "Samsung",
+        "rotulo_modelo": "Galaxy S25+",
+        "rotulo_armazenamento": "512 GB",
+        "rotulo_condicao": "novo",
+        "rotulo_rede": "não informado",
+        "rotulo_defeito": "não",
+        "rotulo_mesmo_modelo": "não",
+        "rotulo_decisao": "excluir",
+        "rotulo_motivo": "outro modelo ou variante",
+        "rotulo_observacao": "O anúncio inclui o relógio Galaxy Watch7. Na comparação automática, \"S25+\" e \"S25\" viram a mesma chave: conferir este caso à mão."
+      }
+    },
+    {
+      "n": 49,
+      "titulo": "Película Premium Hprime Vidro Temperado Samsung Galaxy S24fe",
+      "busca": "galaxy s24 fe 256gb",
+      "parecer": "Sem alteração proposta",
+      "observacao_revisao": "Película de proteção; demais atributos não se aplicam.",
+      "rotulo_publicado": {
+        "rotulo_tipo": "acessório",
+        "rotulo_marca": "não se aplica",
+        "rotulo_modelo": "não se aplica",
+        "rotulo_armazenamento": "não se aplica",
+        "rotulo_condicao": "não se aplica",
+        "rotulo_rede": "não se aplica",
+        "rotulo_defeito": "não se aplica",
+        "rotulo_mesmo_modelo": "não se aplica",
+        "rotulo_decisao": "excluir",
+        "rotulo_motivo": "acessório ou outro produto",
+        "rotulo_observacao": "Película."
+      }
+    },
+    {
+      "n": 50,
+      "titulo": "Película Para Samsung Galaxy S24 Fe 5g - Hydrogel Gamer Fosca - Gshield",
+      "busca": "galaxy s24 fe 256gb",
+      "parecer": "Sem alteração proposta",
+      "observacao_revisao": "Película Hydrogel, sem aparelho; demais atributos não se aplicam.",
+      "rotulo_publicado": {
+        "rotulo_tipo": "acessório",
+        "rotulo_marca": "não se aplica",
+        "rotulo_modelo": "não se aplica",
+        "rotulo_armazenamento": "não se aplica",
+        "rotulo_condicao": "não se aplica",
+        "rotulo_rede": "não se aplica",
+        "rotulo_defeito": "não se aplica",
+        "rotulo_mesmo_modelo": "não se aplica",
+        "rotulo_decisao": "excluir",
+        "rotulo_motivo": "acessório ou outro produto",
+        "rotulo_observacao": "Película."
+      }
+    }
+  ],
+  "quando": "2026-11-14T13:05:08-03:00"
+}

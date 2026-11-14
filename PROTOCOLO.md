@@ -127,9 +127,9 @@ Cada busca é feita uma vez, com coleta nova, e cada oferta exibida é conferida
 | Fonte | Preço que o app usa | Forma de pagamento | Tratamento |
 | --- | --- | --- | --- |
 | [KaBuM!](https://www.kabum.com.br/busca/galaxy-a17-128gb) | Preço “No PIX” | Pix; o parcelado em 10x tem outro total | Vale como base só com o Pix confirmado. Campanha que vale para todos usa o próprio preço no Pix; sem ele, o total entra como pagamento não informado. Preço Prime (assinatura) e oferta restrita a login ficam fora |
-| [Gazin](https://www.gazin.com.br/busca/galaxy-a17-128gb) | Preço “No Pix” | Pix; o parcelado em 12x sem juros tem total maior | Vale como base |
+| [Gazin](https://www.gazin.com.br/busca/galaxy-a17-128gb) | Preço da lista de busca | A modalidade não está confirmada nesse dado. Na revisão de 14/11, o valor apareceu como boleto nas páginas de seis produtos | Pagamento não informado, fora da faixa, até confirmação; corrige a suposição anterior de Pix |
 | [Novo Mundo](https://www.novomundo.com.br/produto/smartphone-samsung-galaxy-a17-com-ia-128gb-4gb-ram-152183) | Preço “Por” | A página não diz “à vista”, mas o parcelamento informado é com juros | Pagamento não informado: parcelamento com juros não comprova preço à vista. Fica fora da faixa e aparece à parte, para consulta |
-| [Compare Livre](https://comparelivre.com.br/busca?q=galaxy+a17+128gb) | “A partir de”, da loja de destino | Não informa | Fica fora da faixa e aparece à parte, com o aviso “fora da faixa: pagamento não informado”, para consulta. Na busca “galaxi a17 128gb” de 12/11, 13 das 21 ofertas equivalentes vieram dele |
+| [Compare Livre](https://comparelivre.com.br/busca?q=galaxy+a17+128gb) | “A partir de”, da loja de destino | Não informa | Retirado da coleta padrão após a revisão de 14/11: 70 páginas de destino não puderam ser confirmadas ao vivo. As ofertas e as falhas das rodadas antigas continuam publicadas |
 
 Menor preço, mediana, maior preço, destaque da oferta mais barata e filtro de preços fora do padrão usam só ofertas equivalentes com Pix ou à vista confirmado. Com menos de 3 delas, o app mostra o aviso e nenhuma faixa.
 
@@ -502,3 +502,17 @@ O Moto E15 ganhou a FoneMix, com Pix confirmado; o Galaxy A36 ganhou a Fast Shop
 O registro completo, com entrada, horário, conclusão do app, tempo, situação de cada fonte, lojas distintas, preços, títulos, pagamentos, rede exibida e links das 207 ofertas, está em `validacao_fontes_adicionais.json` e no alto da página pública `?avaliar=1`. A mudança seguinte apenas apresenta esse registro; busca, extração, decisão e prompt permanecem os mesmos. As rodadas anteriores, inclusive a validação das 11h27 publicada pelo Kevin, foram preservadas.
 
 Os 66 testes de regressão passaram, incluindo os resultados das regras nos 50 títulos (45 extrações e 44 decisões corretas sobre os rótulos publicados). Esta reconferência não cria uma nova amostra independente. A revisão humana dos 50 rótulos e das 207 ofertas continua pendente, assim como as sessões com os 5 lojistas e 5 consumidores para digitação, redução do tempo e utilidade. Nenhuma resposta de participante foi gerada nesta rodada.
+
+### Revisão adicional por IA e coleta com lojas diretas (14/11/2026)
+
+A pedido do Kevin, os 50 rótulos foram relidos um a um pelo ChatGPT/Codex, com o título e a busca de referência. Não houve alteração proposta no gabarito, nos resultados dos métodos ou nas regras de pontuação. É uma revisão posterior à avaliação, não uma segunda amostra independente nem conferência humana. O parecer de cada título está em `revisao_ia_50_titulos.json` e em `?revisao=1`.
+
+As 207 páginas das ofertas da rodada 1be2352 foram consultadas. Houve identificação do produto em 137 páginas; as outras 70 permaneceram inconclusivas (43 da Shopee sem dados do produto na resposta e 27 do Mercado Livre com HTTP 403). Uma oferta da KaBuM! respondeu 503 e foi consultada uma segunda vez, com sucesso, preservando a primeira tentativa no registro. No navegador, a Shopee exigiu login e o Mercado Livre mostrou erro de acesso. Não se contornou a restrição. Uma cópia indexada de uma oferta da Shopee estava desatualizada; não foi usada para confirmar preço atual.
+
+Nas 137 páginas identificadas, os valores registrados foram localizados: 121 em condições à vista/Pix, 10 como preço sem modalidade confirmada e 6 no boleto da Gazin. Isso não comprova retrospectivamente o preço no horário da bateria. As seis ofertas da Gazin estavam marcadas como Pix pela aplicação, embora o campo `price` da busca não confirme a modalidade. O leitor foi corrigido para pagamento não informado, fora da faixa. A revisão, com horário, link, hash da página, preço e parecer, está em `revisao_ia_ofertas.json` e na página pública de revisão. Os 70 casos inconclusivos não contam como acerto, e a meta de 95% não é declarada como atingida nessa rodada.
+
+A captura do navegador alterou a formatação de alguns preços e traduziu o nome EletroInfo Outlet em três linhas. A revisão preserva o texto capturado e informa o valor numérico interpretado separadamente. Não altera os preços nem a contagem da rodada original.
+
+**Alteração anterior à próxima bateria:** a coleta padrão passa a usar lojas diretas. O Compare Livre foi retirado porque suas páginas de destino não puderam ser confirmadas anonimamente e os preços não informam modalidade; seus leitores e registros antigos permanecem no repositório. Não se mudam a lista das 20 buscas, os critérios de equivalência, a base de preço, o mínimo de três ofertas, os rótulos, a extração ou o prompt. A próxima bateria e a respectiva revisão serão registradas à parte, inclusive se houver falhas.
+
+A revisão por IA não produz respostas de pessoas. Continuam necessários os dez participantes reais para medir correção de digitação, redução do tempo de pesquisa e utilidade, conforme o roteiro publicado.

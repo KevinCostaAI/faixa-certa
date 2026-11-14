@@ -757,9 +757,9 @@ def ler_gazin(conteudo, url):
         if produto.get("status") != "AVAILABLE" or not produto.get("name") or not produto.get("url") or not preco_valido(preco):
             continue
         link = GAZIN + produto["url"]
-        # A Gazin mostra o preço "No Pix"; o parcelado tem total maior.
+        # A lista informa o preço, mas não sua modalidade. Não presume Pix nem calcula desconto.
         ofertas.append({"titulo": produto["name"].strip(), "preco": preco, "loja": "Gazin", "fonte": "Gazin",
-                        "link": link, "pagina": link, "pagamento": "Pix"})
+                        "link": link, "pagina": link, "pagamento": "não informada"})
     return ofertas
 
 
@@ -1039,7 +1039,6 @@ def ler_magalu(conteudo, url):
 
 
 FONTES = {
-    "Compare Livre": (lambda busca: f"{COMPARELIVRE}/busca?q={quote_plus(busca)}", ler_comparelivre),
     "KaBuM!": (lambda busca: f"{KABUM}/busca/{quote('-'.join(busca.split()))}", ler_kabum),
     "Gazin": (lambda busca: f"{GAZIN}/busca/{quote('-'.join(busca.split()))}", ler_gazin),
     "Novo Mundo": (lambda busca: f"{NOVOMUNDO}/busca?busca={quote(busca)}", ler_novomundo),
@@ -1052,6 +1051,9 @@ FONTES = {
     "EletroInfo Outlet": (lambda busca: f"{ELETROINFO}/search?q={quote(busca)}&type=product", ler_busca_eletroinfo),
     "Trocafy": (lambda busca: f"{TROCAFY}/#consulta={quote(busca)}", ler_trocafy),
 }
+# O agregador fica preservado para reproduzir as rodadas antigas, mas não integra a coleta padrão:
+# seus links de destino não puderam ser conferidos anonimamente na revisão de 14/11/2026.
+FONTE_COMPARELIVRE = (lambda busca: f"{COMPARELIVRE}/busca?q={quote_plus(busca)}", ler_comparelivre)
 LEITORES_DE_PRODUTO = {"FoneMix": ler_produto_fonemix, "EletroInfo Outlet": ler_produto_eletroinfo}
 # Lojas oficiais das fabricantes: só vendem aparelhos novos da própria marca.
 LOJAS_DA_MARCA = {"Motorola": "motorola", "Samsung": "samsung"}
@@ -2266,6 +2268,54 @@ def mostrar_protocolo():
         st.markdown(arquivo.read())
 
 
+def mostrar_revisao_ia():
+    st.title("Faixa Certa: revisão técnica por IA")
+    base = os.path.dirname(os.path.abspath(__file__))
+    try:
+        with open(os.path.join(base, "revisao_ia_50_titulos.json"), encoding="utf-8") as arquivo:
+            rotulos = json.load(arquivo)
+        with open(os.path.join(base, "revisao_ia_ofertas.json"), encoding="utf-8") as arquivo:
+            revisao = json.load(arquivo)
+    except FileNotFoundError:
+        st.info("A revisão ainda não foi publicada.")
+        return
+    st.caption(f"{revisao['inicio']} a {revisao['fim']} · {revisao['origem']}")
+    st.info("Revisão por IA, identificada como tal. Não é conferência humana nem sessão com participantes. "
+            "Os 50 rótulos e os resultados originais dos métodos e das buscas foram preservados.")
+    st.write(f"50 rótulos revistos, sem alteração proposta no gabarito. Foram consultadas as {revisao['total']} "
+             f"páginas das ofertas da bateria: {revisao['paginas_identificadas']} permitiram identificar o produto, "
+             f"e {revisao['paginas_inconclusivas']} permaneceram inconclusivas.")
+    tabela_fixa([{"Verificação de preço": k, "Ofertas": v} for k, v in revisao["resumo_precos"].items()])
+    st.warning(revisao["equivalencia_meta"])
+    st.write("Correções na busca: a lista da Gazin passa a informar pagamento não confirmado; "
+             "o Compare Livre deixa de integrar a coleta padrão. Os registros anteriores continuam disponíveis. "
+             "A nova coleta usa lojas diretas e será registrada separadamente.")
+    abas = st.tabs(["Rótulos (50)", "Ofertas (207)", "Páginas não confirmadas (70)"])
+    with abas[0]:
+        st.dataframe(pd.DataFrame([{"Nº": r["n"], "Título": r["titulo"], "Busca": r["busca"],
+                                    "Parecer": r["parecer"], "Justificativa": r["observacao_revisao"]}
+                                   for r in rotulos["rotulos"]]), hide_index=True)
+        st.caption(rotulos["tipo"])
+    linhas = [{"ID": o["id"], "Busca": o["busca"], "Título registrado": o["titulo_registrado"],
+               "Título da página": o["titulo_pagina"], "Produto": o["parecer_produto"],
+               "Preço registrado": o["preco_registrado"],
+               "Valor interpretado": reais(o["revisao_preco"]["valor_registrado"]) if o["revisao_preco"].get("valor_registrado") is not None else "",
+               "Revisão do preço": o["revisao_preco"]["status"],
+               "Acesso": o["acesso"], "Visitado em": o["quando"], "Observação": " ".join(o["observacoes"]),
+               "URL": o["url"]} for o in revisao["ofertas"]]
+    with abas[1]:
+        st.dataframe(pd.DataFrame(linhas), hide_index=True, column_config={"URL": st.column_config.LinkColumn("URL")})
+    with abas[2]:
+        st.dataframe(pd.DataFrame([l for l in linhas if l["Produto"].startswith("Inconclusivo")]), hide_index=True,
+                     column_config={"URL": st.column_config.LinkColumn("URL")})
+    for limite in revisao["limites"]:
+        st.caption(limite)
+    st.subheader("Testes com participantes")
+    st.write("Continuam necessários os 5 lojistas e 5 consumidores reais, incluindo 2 idosos. "
+             "As sessões medem digitação, tempo de pesquisa manual e com o app e se usariam a ferramenta.")
+    st.markdown("[Resultados da avaliação](?avaliar=1) · [Roteiro e critérios](?protocolo=1)")
+
+
 def mostrar_avaliacao():
     st.title("Faixa Certa: avaliação dos métodos")
     # Tira o ícone de baixar da barra das tabelas; os resultados ficam só na página.
@@ -2279,6 +2329,7 @@ def mostrar_avaliacao():
                f"{versao_do_prompt()}, LLM principal {LLM_MODELO}, reserva {LLM_MODELO_RESERVA}, {LOTE_LLM} títulos por "
                f"chamada. Regras: filtro de acessórios, marca e modelo como na tela de escolha, armazenamento, condição, "
                "rede e defeito lidos no título. Cada resultado registrado traz a versão em que foi obtido.")
+    st.markdown("[Revisão dos 50 rótulos e das 207 ofertas por IA](?revisao=1)")
     mostrar_validacao_navegador(ARQUIVO_FONTES_ADICIONAIS)
     mostrar_validacao_final()
     mostrar_validacao_navegador()
@@ -2383,10 +2434,13 @@ def mostrar_diagnostico_fontes():
 
 
 def main():
-    st.set_page_config(page_title="Faixa Certa", layout="wide" if "1" in (st.query_params.get("avaliar"), st.query_params.get("protocolo"))
+    st.set_page_config(page_title="Faixa Certa", layout="wide" if "1" in (st.query_params.get("avaliar"), st.query_params.get("protocolo"), st.query_params.get("revisao"))
                        else "centered")
     if st.query_params.get("protocolo") == "1":
         mostrar_protocolo()  # protocolo de validação, aberto a qualquer pessoa pelo endereço ?protocolo=1
+        st.stop()
+    if st.query_params.get("revisao") == "1":
+        mostrar_revisao_ia()
         st.stop()
     if st.query_params.get("avaliar") == "1":
         mostrar_avaliacao()  # reprodução dos testes de extração; não aparece na tela de busca
