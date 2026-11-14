@@ -1258,5 +1258,453 @@
    "As 52 ofertas exibidas à parte, com pagamento não informado (Shopee e Mercado Livre pelo Compare Livre, e Novo Mundo), não foram conferidas uma a uma; a equivalência cobre só as 71 ofertas das tabelas da faixa."
   ]
  },
- "reconferencias": []
+ "reconferencias": [
+  {
+   "titulo": "Reconferência com a versão corrigida",
+   "quando": "14/11/2026, das 07:19 às 07:38",
+   "versao": "código 3ee19bd537a7 (commit 1f27166); algumas buscas também na versão f43279f1b93f (commit 2eb06fc)",
+   "conferencia": "ofertas exibidas conferidas por IA (Claude) nas páginas das lojas, das 07:28 às 07:40",
+   "textos": [
+    "Não substitui a avaliação nem a bateria registradas acima: refaz os casos que falharam e alguns controles, com a versão corrigida. As versões de rede conhecidas pelo app saíram dos mesmos 20 modelos da bateria, então esta reconferência não é um teste independente.",
+    "Avaliação dos 50 títulos rodada de novo na página de avaliação, às 07:24, em 66 s, com gemini-3.1-flash-lite e gemini-3.5-flash-lite e nenhuma falha da IA."
+   ],
+   "medidas": [
+    {
+     "Medida": "Cobertura",
+     "Resultado oficial (bateria acima)": "5 de 20 buscas",
+     "Na reconferência": "Só 9 buscas refeitas; 2 delas (16 e 15) têm ofertas equivalentes em 2 lojas",
+     "Situação": "Meta não atingida"
+    },
+    {
+     "Medida": "Tempo de resposta",
+     "Resultado oficial (bateria acima)": "16 de 20 em até 15 s",
+     "Na reconferência": "Das 9 coletas novas, 1 passou de 15 s (busca 16: 17,9 s)",
+     "Situação": "Meta não atingida"
+    },
+    {
+     "Medida": "Equivalência",
+     "Resultado oficial (bateria acima)": "70 de 71 (98,6%)",
+     "Na reconferência": "17 de 18 ofertas exibidas; 1 inconclusiva (a mesma da bateria)",
+     "Situação": "Meta atingida na bateria"
+    }
+   ],
+   "resumo": [
+    {
+     "Medida": "Extração correta (modelo, armazenamento e condição; tipo nos acessórios)",
+     "LLM": "46 de 50 (92%)",
+     "Regras": "45 de 50 (90%)"
+    },
+    {
+     "Medida": "Rede nos celulares",
+     "LLM": "40 de 40",
+     "Regras": "40 de 40"
+    },
+    {
+     "Medida": "Defeito nos celulares",
+     "LLM": "40 de 40",
+     "Regras": "40 de 40"
+    },
+    {
+     "Medida": "Decisão de aceitar ou excluir",
+     "LLM": "42 acertos, 7 erros, 1 inconclusiva",
+     "Regras": "44 acertos, 5 erros, 1 inconclusiva"
+    },
+    {
+     "Medida": "Falhas da IA",
+     "LLM": "0",
+     "Regras": "não se aplica"
+    }
+   ],
+   "decisao": "Diferença de 2 pontos: as regras continuam como método principal. Nas regras, o nº 38 (“Samsung A37”) passou a acerto e o nº 45 (“Samsung S20 Fe”) passou a erro, porque o modelo agora é reconhecido e o título não diz a rede.",
+   "erros": [
+    {
+     "Nº": 16,
+     "Título": "Smartphone Xiaomi Redmi Note 14 8+8GB + 256gb, Verde",
+     "Busca de referência": "redmi note 14 256gb",
+     "Rótulo": "Redmi Note 14 · 256 GB · novo · rede: não informado: excluir (atributo exigido não informado no título)",
+     "LLM": "Aceitou; o rótulo exclui (rede não informada): erro",
+     "Regras": "Igual: erro"
+    },
+    {
+     "Nº": 22,
+     "Título": "Celular Smartphone Infinix HOT 60i Dual Chip 4G Tela 6,7 pol. 4GB + 4GB RAM 256 GB",
+     "Busca de referência": "infinix hot 60i 256gb",
+     "Rótulo": "Hot 60i · 256 GB · novo · rede: 4G: aceitar",
+     "LLM": "Aceitou; página da Shopee não verificada: inconclusiva",
+     "Regras": "Igual: inconclusiva"
+    },
+    {
+     "Nº": 24,
+     "Título": "Infinix Hot 60i, Hot 50i 256GB e 4GB RAM, Câmera 48MP, Processador MediaTek Helio G81, Bateria 5000Mah, Versão",
+     "Busca de referência": "infinix hot 60i 256gb",
+     "Rótulo": "não informado · 256 GB · novo · rede: não informado: excluir (atributo exigido não informado no título)",
+     "LLM": "Extraiu Hot 60i (rótulo: modelo inconclusivo) e aceitou: erro",
+     "Regras": "Igual: erro"
+    },
+    {
+     "Nº": 25,
+     "Título": "Smartphone Realme C75 5G NFC 256 IP69 à Prova d’Água Bateria 5828mAh Câmera 50MP Robusto",
+     "Busca de referência": "realme c75 256gb",
+     "Rótulo": "Realme C75 · não informado · novo · rede: 5G: excluir (outra rede)",
+     "LLM": "Extraiu 256 GB (rótulo: não informado) e aceitou: erro",
+     "Regras": "Armazenamento não informado: acerto"
+    },
+    {
+     "Nº": 29,
+     "Título": "Celular Samsung Galaxy Z Fold5 1TB 12gb Ram Recondicionado",
+     "Busca de referência": "galaxy s23 ultra recondicionado",
+     "Rótulo": "Galaxy Z Fold5 · 1 TB · recondicionado · rede: não informado: excluir (outro modelo ou variante)",
+     "LLM": "Acerto",
+     "Regras": "Não extraiu o modelo; decisão certa"
+    },
+    {
+     "Nº": 35,
+     "Título": "Apple Iphone 16e A3212 Esim 128GB 8GB Ram 6.1 - Black",
+     "Busca de referência": "iphone 16 plus 128gb",
+     "Rótulo": "iPhone 16e · 128 GB · novo · rede: não informado: excluir (outro modelo ou variante)",
+     "LLM": "Acerto",
+     "Regras": "Extraiu “iphone 16e a3212” como modelo; decisão certa"
+    },
+    {
+     "Nº": 36,
+     "Título": "S25 Ultra (256gb) - Titânio Azul + Buds3 Fe - Preto",
+     "Busca de referência": "galaxy s25 ultra 256gb",
+     "Rótulo": "Galaxy S25 Ultra · 256 GB · novo · rede: não informado: aceitar",
+     "LLM": "Extraiu Galaxy S25 Ultra, mas excluiu porque o título não diz a marca: erro",
+     "Regras": "Não extraiu o modelo; excluiu porque o título não diz a marca: erro"
+    },
+    {
+     "Nº": 39,
+     "Título": "Realme C75 8 256 Gold",
+     "Busca de referência": "realme c75 256gb",
+     "Rótulo": "Realme C75 · não informado · novo · rede: não informado: excluir (atributo exigido não informado no título)",
+     "LLM": "Extraiu 256 GB (rótulo: não informado) e aceitou: erro",
+     "Regras": "Acerto"
+    },
+    {
+     "Nº": 41,
+     "Título": "Celular Xiaomi Redmi Note 13 6gb/128gb Verde Menta",
+     "Busca de referência": "redmi note 13 128gb",
+     "Rótulo": "Redmi Note 13 · 128 GB · novo · rede: não informado: excluir (atributo exigido não informado no título)",
+     "LLM": "Aceitou; o rótulo exclui (rede não informada): erro",
+     "Regras": "Igual: erro"
+    },
+    {
+     "Nº": 45,
+     "Título": "Usado -  Samsung S20 Fe 128 Gb Rosa - Regular",
+     "Busca de referência": "galaxy s20 fe 128gb usado",
+     "Rótulo": "Galaxy S20 FE · 128 GB · usado · rede: não informado: excluir (atributo exigido não informado no título)",
+     "LLM": "Aceitou; o rótulo exclui (rede não informada): erro",
+     "Regras": "Agora reconhece “Samsung S20 Fe” e aceita sem rede no título: erro (antes, acerto por excluir como outro modelo)"
+    },
+    {
+     "Nº": 48,
+     "Título": "S25+ (512gb) - Prata + Watch7 Bt 40mm - Creme",
+     "Busca de referência": "galaxy s25 fe 256gb",
+     "Rótulo": "Galaxy S25+ · 512 GB · novo · rede: não informado: excluir (outro modelo ou variante)",
+     "LLM": "Tratou como acessório; decisão certa",
+     "Regras": "Não extraiu o modelo; decisão certa"
+    }
+   ],
+   "buscas": [
+    {
+     "#": 16,
+     "Busca": "iphone 16e 128gb",
+     "Antes (código 096fc36d375f)": "Sem faixa: abriu com 4G marcado em modelo só 5G",
+     "Agora": "Faixa R$ 3.299,00 / R$ 3.899,45 / R$ 5.179,90, com 4 ofertas (KaBuM! 3, Gazin 1); abre sem opção de versão",
+     "Tempo": "17,9 s",
+     "Versão e coleta": "3ee19bd537a7, coleta nova (na f43279f1b93f: 21,1 s, mesmo resultado)"
+    },
+    {
+     "#": 17,
+     "Busca": "epone 16 128gb",
+     "Antes (código 096fc36d375f)": "Sem faixa: mesma falha da busca 16",
+     "Agora": "Grafia corrigida; faixa R$ 4.799,00 / R$ 4.799,00 / R$ 5.799,00, com 5 ofertas (KaBuM!); 1 à parte (Shopee)",
+     "Tempo": "13,1 s",
+     "Versão e coleta": "f43279f1b93f, coleta nova; na 3ee19bd537a7, coleta reaproveitada (0,5 s), mesmo resultado"
+    },
+    {
+     "#": 5,
+     "Busca": "galaxy a14 128gb usado",
+     "Antes (código 096fc36d375f)": "Sem faixa: “Samsung A14” virou outro modelo",
+     "Agora": "Modelo reconhecido. Abre em 4G e não gera faixa: 6 anúncios sem rede no título ficam fora e 7 são 5G. As páginas dos anúncios sem rede trazem o código SM-A146M, do A14 5G",
+     "Tempo": "12,3 s",
+     "Versão e coleta": "3ee19bd537a7, coleta nova (na f43279f1b93f, que aceitava os sem rede, a faixa saía com esses 5 anúncios)"
+    },
+    {
+     "#": 8,
+     "Busca": "moto g35 256gb",
+     "Antes (código 096fc36d375f)": "0 ofertas: “Motorola G35 5G” virou outro modelo",
+     "Agora": "2 ofertas “Motorola G35 5G” aceitas; ainda sem faixa (mínimo de 3); 4 à parte (Shopee, Mercado Livre)",
+     "Tempo": "11,5 s",
+     "Versão e coleta": "f43279f1b93f, coleta nova; na 3ee19bd537a7, coleta reaproveitada (0,6 s), mesmo resultado"
+    },
+    {
+     "#": 12,
+     "Busca": "redmi 15 256gb (controle)",
+     "Antes (código 096fc36d375f)": "Faixa com 10 ofertas cujos títulos não dizem a rede (a ficha confirmou 4G)",
+     "Agora": "Abre em 4G: 1 oferta com 4G no título; 11 sem rede ficam fora e 13 são 5G. Sem faixa",
+     "Tempo": "13,1 s",
+     "Versão e coleta": "3ee19bd537a7, coleta nova"
+    },
+    {
+     "#": 13,
+     "Busca": "poco c85 128gb (controle)",
+     "Antes (código 096fc36d375f)": "Faixa com 8 ofertas cujos títulos não dizem a rede",
+     "Agora": "Abre em 4G: 24 anúncios sem rede no título ficam fora. Sem faixa",
+     "Tempo": "12,8 s",
+     "Versão e coleta": "3ee19bd537a7, coleta nova"
+    },
+    {
+     "#": 15,
+     "Busca": "oppo a6x 128gb (controle)",
+     "Antes (código 096fc36d375f)": "Faixa com 4 ofertas",
+     "Agora": "Igual: o A6x de 128 GB só existe em 4G no Brasil",
+     "Tempo": "9,9 s",
+     "Versão e coleta": "3ee19bd537a7, coleta nova"
+    },
+    {
+     "#": 14,
+     "Busca": "redmi note 15 256gb (controle)",
+     "Antes (código 096fc36d375f)": "Sem faixa, com 4G marcado",
+     "Agora": "Igual",
+     "Tempo": "12,2 s",
+     "Versão e coleta": "f43279f1b93f, coleta nova (mesma regra da 3ee19bd537a7 para este caso)"
+    },
+    {
+     "#": 4,
+     "Busca": "galaxy a36 5g 128gb (controle)",
+     "Antes (código 096fc36d375f)": "2 ofertas, sem faixa",
+     "Agora": "Igual",
+     "Tempo": "13,2 s",
+     "Versão e coleta": "f43279f1b93f, coleta nova (mesma regra da 3ee19bd537a7 para este caso)"
+    }
+   ],
+   "ofertas": [
+    {
+     "Busca": 16,
+     "Loja": "Magalu",
+     "Fonte": "KaBuM!",
+     "Título exibido": "Apple Iphone 16e A3212 Esim 128GB 8GB Ram 6.1 - Black",
+     "URL": "https://www.kabum.com.br/produto/723885",
+     "Preço exibido": "R$ 3.299,00",
+     "Preço na página": "R$ 3.299,00 no Pix",
+     "Rede": "modelo só existe em 5G",
+     "Resultado": "equivalente",
+     "Observação": ""
+    },
+    {
+     "Busca": 16,
+     "Loja": "Magalu",
+     "Fonte": "KaBuM!",
+     "Título exibido": "Iphone 16e 128GB Apple",
+     "URL": "https://www.kabum.com.br/produto/724768",
+     "Preço exibido": "R$ 3.299,00",
+     "Preço na página": "R$ 3.299,00 no Pix",
+     "Rede": "modelo só existe em 5G",
+     "Resultado": "equivalente",
+     "Observação": ""
+    },
+    {
+     "Busca": 16,
+     "Loja": "KaBuM!",
+     "Fonte": "KaBuM!",
+     "Título exibido": "iPhone 16e Apple 128GB, Câmera 48MP, Tela Super Retina XDR",
+     "URL": "https://www.kabum.com.br/produto/717163",
+     "Preço exibido": "R$ 4.499,90",
+     "Preço na página": "R$ 4.499,90 no Pix",
+     "Rede": "modelo só existe em 5G",
+     "Resultado": "equivalente",
+     "Observação": ""
+    },
+    {
+     "Busca": 16,
+     "Loja": "Gazin",
+     "Fonte": "Gazin",
+     "Título exibido": "iPhone 16e Apple 5G 6,1\" IOS 18 128GB 8GB Câmera 48MP",
+     "URL": "https://www.gazin.com.br/produto/iphone-16e-apple-5g-61-ios-18-128gb-8gb-camera-48mp/9522/preto/quadriband",
+     "Preço exibido": "R$ 5.179,90",
+     "Preço na página": "R$ 5.179,90 à vista no Pix",
+     "Rede": "título diz 5G; modelo só existe em 5G",
+     "Resultado": "equivalente",
+     "Observação": "A página mostra “a partir de” para a cor preta."
+    },
+    {
+     "Busca": 17,
+     "Loja": "Magalu",
+     "Fonte": "KaBuM!",
+     "Título exibido": "Apple Iphone 16 128GB Rosa",
+     "URL": "https://www.kabum.com.br/produto/643113",
+     "Preço exibido": "R$ 4.799,00",
+     "Preço na página": "R$ 4.799,00 no Pix",
+     "Rede": "modelo só existe em 5G",
+     "Resultado": "equivalente",
+     "Observação": ""
+    },
+    {
+     "Busca": 17,
+     "Loja": "Magalu",
+     "Fonte": "KaBuM!",
+     "Título exibido": "Iphone 16 128GB 5g Branco Tela 6,1 Câmera 48mp Apple",
+     "URL": "https://www.kabum.com.br/produto/643121",
+     "Preço exibido": "R$ 4.799,00",
+     "Preço na página": "R$ 4.799,00 no Pix",
+     "Rede": "título diz 5G",
+     "Resultado": "equivalente",
+     "Observação": ""
+    },
+    {
+     "Busca": 17,
+     "Loja": "Magalu",
+     "Fonte": "KaBuM!",
+     "Título exibido": "Apple Iphone 16 128GB 8GB Ram A3287 Nano + Esim",
+     "URL": "https://www.kabum.com.br/produto/643118",
+     "Preço exibido": "R$ 4.799,00",
+     "Preço na página": "R$ 4.799,00 no Pix",
+     "Rede": "modelo só existe em 5G",
+     "Resultado": "equivalente",
+     "Observação": ""
+    },
+    {
+     "Busca": 17,
+     "Loja": "Magalu",
+     "Fonte": "KaBuM!",
+     "Título exibido": "Smartphone Apple Iphone 16 5g 128GB 48mp 6.1\" Preto",
+     "URL": "https://www.kabum.com.br/produto/643120",
+     "Preço exibido": "R$ 4.799,00",
+     "Preço na página": "R$ 4.799,00 no Pix",
+     "Rede": "título diz 5G",
+     "Resultado": "equivalente",
+     "Observação": ""
+    },
+    {
+     "Busca": 17,
+     "Loja": "KaBuM!",
+     "Fonte": "KaBuM!",
+     "Título exibido": "iPhone 16 Apple 128GB, Câmera Dupla de 48MP",
+     "URL": "https://www.kabum.com.br/produto/640913",
+     "Preço exibido": "R$ 5.799,00",
+     "Preço na página": "R$ 5.799,00 no Pix",
+     "Rede": "modelo só existe em 5G",
+     "Resultado": "equivalente",
+     "Observação": ""
+    },
+    {
+     "Busca": 8,
+     "Loja": "Magalu",
+     "Fonte": "KaBuM!",
+     "Título exibido": "Smartphone Motorola G35 5g 256gb 4GB Ram",
+     "URL": "https://www.kabum.com.br/produto/662346",
+     "Preço exibido": "R$ 1.259,10",
+     "Preço na página": "R$ 1.259,10 no Pix",
+     "Rede": "título diz 5G; modelo só existe em 5G",
+     "Resultado": "equivalente",
+     "Observação": ""
+    },
+    {
+     "Busca": 8,
+     "Loja": "UPDEFRUTA",
+     "Fonte": "KaBuM!",
+     "Título exibido": "Smartphone Motorola G35 5g 256gb 8GB Ram",
+     "URL": "https://www.kabum.com.br/produto/643126",
+     "Preço exibido": "R$ 1.769,00",
+     "Preço na página": "R$ 1.769,00 no Pix",
+     "Rede": "título diz 5G; modelo só existe em 5G",
+     "Resultado": "equivalente",
+     "Observação": ""
+    },
+    {
+     "Busca": 12,
+     "Loja": "MAGA'ABUR",
+     "Fonte": "KaBuM!",
+     "Título exibido": "Celular Xiaomi Redmi 15 256gb 8GB Preto 4g",
+     "URL": "https://www.kabum.com.br/produto/984772",
+     "Preço exibido": "R$ 1.619,10",
+     "Preço na página": "R$ 1.619,10 no Pix",
+     "Rede": "título e ficha dizem 4G",
+     "Resultado": "equivalente",
+     "Observação": ""
+    },
+    {
+     "Busca": 15,
+     "Loja": "Magalu",
+     "Fonte": "KaBuM!",
+     "Título exibido": "Celular Oppo A6x 4 128GB Cph 2819 - Cph 2819 Azul Quadriband",
+     "URL": "https://www.kabum.com.br/produto/1000527",
+     "Preço exibido": "R$ 1.169,10",
+     "Preço na página": "R$ 1.169,10 no Pix",
+     "Rede": "ficha diz “Rede: 4G LTE”",
+     "Resultado": "equivalente",
+     "Observação": ""
+    },
+    {
+     "Busca": 15,
+     "Loja": "Magalu",
+     "Fonte": "KaBuM!",
+     "Título exibido": "Smartphone OPPO A6x, 128GB, 4GB + 8GB",
+     "URL": "https://www.kabum.com.br/produto/1000528",
+     "Preço exibido": "R$ 1.169,10",
+     "Preço na página": "R$ 1.169,10 no Pix",
+     "Rede": "a página não informa a rede",
+     "Resultado": "inconclusiva",
+     "Observação": "O app aceita porque o A6x de 128 GB só existe em 4G no Brasil; como na conferência original, a página não confirma a rede."
+    },
+    {
+     "Busca": 15,
+     "Loja": "MUSIC POWER",
+     "Fonte": "KaBuM!",
+     "Título exibido": "Smartphone Oppo A6x 128GB 4gb Ram Púrpura",
+     "URL": "https://www.kabum.com.br/produto/1061032",
+     "Preço exibido": "R$ 1.399,00",
+     "Preço na página": "R$ 1.399,00 no Pix",
+     "Rede": "ficha diz “Conectividade: 4G”",
+     "Resultado": "equivalente",
+     "Observação": ""
+    },
+    {
+     "Busca": 15,
+     "Loja": "Gazin",
+     "Fonte": "Gazin",
+     "Título exibido": "Smartphone OPPO A6x 6.75\" 128GB 4GB Câmera Dupla",
+     "URL": "https://www.gazin.com.br/produto/smartphone-oppo-a6x-675-128gb-4gb-camera-dupla/10245/azul/quadriband",
+     "Preço exibido": "R$ 1.508,37",
+     "Preço na página": "R$ 1.508,37 à vista no Pix",
+     "Rede": "descrição diz “OPPO A6x 4G 128GB”",
+     "Resultado": "equivalente",
+     "Observação": ""
+    },
+    {
+     "Busca": 4,
+     "Loja": "ECOM ELETRO",
+     "Fonte": "KaBuM!",
+     "Título exibido": "Smartphone Samsung Galaxy A36 128GB 5g - Verde",
+     "URL": "https://www.kabum.com.br/produto/734582",
+     "Preço exibido": "R$ 2.229,44",
+     "Preço na página": "R$ 2.229,44 no Pix",
+     "Rede": "título diz 5G; modelo só existe em 5G",
+     "Resultado": "equivalente",
+     "Observação": ""
+    },
+    {
+     "Busca": 4,
+     "Loja": "TUDOSMART",
+     "Fonte": "KaBuM!",
+     "Título exibido": "Smartphone Samsung Galaxy A36 128GB 5g - Preto",
+     "URL": "https://www.kabum.com.br/produto/734633",
+     "Preço exibido": "R$ 2.389,00",
+     "Preço na página": "R$ 2.389,00 no Pix",
+     "Rede": "título diz 5G; ficha: SM-A366E",
+     "Resultado": "equivalente",
+     "Observação": ""
+    }
+   ],
+   "observacoes": [
+    "iPhone 16e e iPhone 16 deixaram de abrir com 4G marcado e passaram a gerar faixa.",
+    "“Samsung A14” e “Motorola G35” agora identificam o Galaxy A14 e o Moto G35.",
+    "Na primeira correção (código f43279f1b93f), a busca 5 gerou faixa com 5 anúncios sem rede no título; as páginas deles trazem o código SM-A146M, do A14 5G, e a busca esperava o A14 4G. Por isso, na versão final, modelo com versões 4G e 5G abre em 4G mesmo sem anúncio 5G, e anúncio sem rede no título fica fora.",
+    "Com essa regra, as buscas 12 e 13 deixaram de gerar faixa: os títulos não dizem a rede, embora a ficha das ofertas conferidas na bateria dissesse 4G.",
+    "O Compare Livre não respondeu em 4 das 9 coletas novas (16, 5, 14 e 4)."
+   ]
+  }
+ ]
 }

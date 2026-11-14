@@ -313,10 +313,39 @@ Desvios do protocolo na bateria:
 
 **Depois da bateria, 14/11/2026.** O commit 202e772 (app.py iniciado por db1ba952b6ba) tirou da página de avaliação o botão de baixar o resultado em arquivo, e o commit bf57a4a (app.py iniciado por 5822fe4f5f3b) escondeu o ícone de baixar da barra das tabelas dessa página. Os resultados continuam nas tabelas da própria página. A busca, a extração, a decisão e o prompt não mudaram, e o teste da página de avaliação com os 50 títulos rodou até o fim sem erro.
 
-**Correções depois da bateria, 14/11/2026 (código f43279f1b93f).** Pedidas pelo Kevin depois dos resultados. Os resultados registrados acima continuam valendo para as versões em que foram obtidos.
+**Correções depois da bateria, 14/11/2026 (commits 2eb06fc e 1f27166; código final 3ee19bd537a7).** Pedidas pelo Kevin depois dos resultados. Os resultados registrados acima continuam valendo para as versões em que foram obtidos.
 
-- Escolha de rede: anúncio sem rede no título deixou de contar como versão 4G. A opção 4G/5G só aparece quando o modelo tem as duas versões, conferidas no fabricante ou escritas nos títulos, e começa em 4G. Modelo de uma versão só, como todo iPhone a partir do 12, o Galaxy A36 e o Moto G35, abre sem a opção, e os anúncios sem rede no título entram como o mesmo aparelho. As versões dos 20 modelos da bateria vêm da tabela do passo 5.
+- Escolha de rede: anúncio sem rede no título deixou de contar como versão 4G. Modelo com versões 4G e 5G, conferidas no fabricante ou escritas nos títulos, abre com a opção em 4G mesmo sem anúncio 5G, e anúncio sem rede no título fica fora, com o motivo. Modelo de uma versão só, como todo iPhone a partir do 12, o Galaxy A36, o Moto G35 e o OPPO A6x de 128 GB, abre sem a opção, e os anúncios sem rede no título entram como o mesmo aparelho. As versões dos 20 modelos da bateria vêm da tabela do passo 5.
 - Nomes: “Galaxy” e “Moto” podem faltar na busca ou no título. “Samsung A14” identifica o Galaxy A14, e “Motorola G35”, o Moto G35.
 - A página de avaliação mostra, ao abrir, os resultados registrados da avaliação e da bateria, com data, versão, erros e o aviso de que rótulos e conferência foram feitos por IA. Uma execução nova aparece à parte e não substitui os registros.
 - Na avaliação, a decisão passou a seguir como a tela de resultado abre: versão única ou opção 4G/5G começando em 4G.
 - O protocolo ganhou um link público, que abre sem login: https://faixa-certa.streamlit.app/?protocolo=1. É uma cópia publicada a partir deste documento.
+
+**Reconferência com a versão corrigida, 14/11/2026, das 07:19 às 07:40.** Não substitui a avaliação nem a bateria registradas acima: refaz os casos que falharam e alguns controles. As versões de rede conhecidas pelo app saíram dos mesmos 20 modelos da bateria, então não é um teste independente. As ofertas exibidas foram conferidas pelo Claude nas páginas das lojas. Os resultados ficam registrados na página de avaliação, depois dos originais.
+
+A avaliação dos 50 títulos rodou de novo às 07:24, em 66 s, com o código 3ee19bd537a7. Responderam gemini-3.1-flash-lite e gemini-3.5-flash-lite, sem falha da IA. A diferença ficou em 2 pontos, e as regras continuam como método principal.
+
+| Medida | LLM | Regras |
+| --- | --- | --- |
+| Extração correta | 46 de 50 (92%) | 45 de 50 (90%) |
+| Decisão (aceitar ou excluir) | 42 acertos, 7 erros, 1 inconclusiva | 44 acertos, 5 erros, 1 inconclusiva |
+| Rede e defeito nos celulares | 40 de 40 cada | 40 de 40 cada |
+
+Nas regras, o nº 38 (“Samsung A37”) passou a acerto. O nº 45 (“Samsung S20 Fe”) passou a erro, porque o modelo agora é reconhecido e o título não diz a rede.
+
+| # | Busca | Antes (código 096fc36d375f) | Na versão corrigida | Tempo |
+| --- | --- | --- | --- | --- |
+| 16 | iphone 16e 128gb | Sem faixa, 4G marcado | Faixa com 4 ofertas (KaBuM! 3, Gazin 1), sem opção de versão | 17,9 s |
+| 17 | epone 16 128gb | Sem faixa, 4G marcado | Faixa com 5 ofertas (KaBuM!) | 13,1 s |
+| 5 | galaxy a14 128gb usado | “Samsung A14” virou outro modelo | Modelo reconhecido; abre em 4G, sem faixa. Os 6 anúncios sem rede trazem na página o código SM-A146M, do A14 5G | 12,3 s |
+| 8 | moto g35 256gb | 0 ofertas | 2 ofertas “Motorola G35 5G” aceitas; sem faixa (mínimo de 3) | 11,5 s |
+| 12 | redmi 15 256gb (controle) | Faixa com 10 ofertas | Abre em 4G; 1 oferta com 4G no título; sem faixa | 13,1 s |
+| 13 | poco c85 128gb (controle) | Faixa com 8 ofertas | Abre em 4G; 24 sem rede no título ficam fora; sem faixa | 12,8 s |
+| 15 | oppo a6x 128gb (controle) | Faixa com 4 ofertas | Igual: o A6x de 128 GB só existe em 4G no Brasil | 9,9 s |
+| 14 | redmi note 15 256gb (controle) | Sem faixa, 4G marcado | Igual | 12,2 s |
+| 4 | galaxy a36 5g 128gb (controle) | 2 ofertas | Igual | 13,2 s |
+
+- Conferência: 17 das 18 ofertas exibidas são equivalentes, com preço igual ao da página. A inconclusiva é a mesma da bateria (OPPO A6x 1000528, sem rede na página).
+- Na primeira correção (código f43279f1b93f), a busca 5 gerou faixa com os anúncios sem rede do A14, que são do A14 5G. Por isso a versão final abre em 4G os modelos com duas versões, mesmo sem anúncio 5G. Com essa regra, as buscas 12 e 13 deixaram de gerar faixa.
+- Algumas buscas usaram a primeira correção ou coleta reaproveitada, com a mesma regra para o caso; a página de avaliação traz a versão de cada uma.
+- Cobertura e tempo continuam como metas não atingidas: a reconferência refez só 9 buscas, 2 delas com ofertas em duas lojas, e o Compare Livre não respondeu em 4 das 9 coletas novas.
