@@ -1956,6 +1956,51 @@ def buscar_como_digitado():
     st.session_state.update(sem_correcao=True, nova_busca=True)
 
 
+def mostrar_diagnostico_fontes():
+    st.title("Diagnóstico das fontes no servidor publicado")
+    st.write("Verifica páginas públicas e robots.txt, sem registrar preços como resultados de validação.")
+    candidatas = {
+        "Webcontinental": "https://www.webcontinental.com.br/smartphone-poco-c85-6-6gb-128gb-preto-006293000067/p",
+        "Trocafone": "https://www.trocafone.com.br/",
+        "Casas Bahia": "https://www.casasbahia.com.br/galaxy-a17-128gb/b",
+        "Efácil": "https://www.efacil.com.br/loja/departamento/Smartphones",
+    }
+    def diagnosticar(item):
+        nome, url = item
+        inicio = time.monotonic()
+        mem = memoria()
+        with requests.Session() as sessao:
+            try:
+                prazo = inicio + TEMPO_TOTAL_COLETA
+                if not robots_permite(url, mem, prazo, sessao):
+                    return {"fonte": nome, "status": "coleta não permitida por robots.txt"}
+                resposta, conteudo = baixar_conteudo(url, prazo, sessao)
+                arvore = arvore_utf8(conteudo)
+                titulo = arvore.xpath('normalize-space(string(//title))')
+                dados = {"fonte": nome, "url": url, "status": resposta.status_code, "titulo": titulo,
+                         "bytes": len(conteudo), "segundos": round(time.monotonic() - inicio, 2),
+                         "scripts": [(n.get("id"), n.get("type")) for n in arvore.xpath('//script[@id or @type="application/ld+json"]')][:8],
+                         "formulario": arvore.xpath('//form/@action')[:3]}
+                for no in arvore.xpath('//script|//style|//noscript'):
+                    no.drop_tree()
+                texto = " ".join(arvore.text_content().split())
+                dados["pagamento"] = [texto[max(0, m.start() - 70):m.start() + 100]
+                                       for m in list(re.finditer(r"\bpix\b|a vista|à vista", texto, re.I))[:3]]
+                return dados
+            except Exception as erro:
+                return {"fonte": nome, "status": type(erro).__name__, "segundos": round(time.monotonic() - inicio, 2)}
+    if st.button("Verificar fontes públicas"):
+        with st.spinner("Verificando as fontes no servidor..."):
+            executor = ThreadPoolExecutor(max_workers=len(candidatas))
+            futuras = {nome: executor.submit(diagnosticar, (nome, url)) for nome, url in candidatas.items()}
+            prontas, _ = wait(futuras.values(), timeout=TEMPO_TOTAL_COLETA)
+            st.session_state.diagnostico_fontes = [f.result() if f in prontas else {"fonte": nome, "status": "tempo limite"}
+                                                  for nome, f in futuras.items()]
+            executor.shutdown(wait=False, cancel_futures=True)
+    if "diagnostico_fontes" in st.session_state:
+        st.code(json.dumps(st.session_state.diagnostico_fontes, ensure_ascii=False, indent=2), language="json")
+
+
 def main():
     st.set_page_config(page_title="Faixa Certa", layout="wide" if "1" in (st.query_params.get("avaliar"), st.query_params.get("protocolo"))
                        else "centered")
@@ -1964,6 +2009,9 @@ def main():
         st.stop()
     if st.query_params.get("avaliar") == "1":
         mostrar_avaliacao()  # reprodução dos testes de extração; não aparece na tela de busca
+        st.stop()
+    if st.query_params.get("diagnostico") == "1":
+        mostrar_diagnostico_fontes()
         st.stop()
     st.title("Faixa Certa")
     st.write("Compara o preço de um smartphone em várias lojas.")
