@@ -66,3 +66,14 @@ def test_modo_de_validacao_forca_coleta_nova(monkeypatch):
     assert not at.exception
     assert chamadas == [True]
     assert any("Consulta concluída:" in caption.value and "Coleta nova." in caption.value for caption in at.caption)
+
+
+def test_avaliacao_abre_com_a_validacao_final_antes_dos_registros_antigos():
+    at = AppTest.from_file(str(Path(app.__file__)), default_timeout=20)
+    at.query_params["avaliar"] = "1"
+    at.run()
+    assert not at.exception
+    cabecalhos = [h.value for h in at.header]
+    assert cabecalhos[0] == "Validação final"
+    assert "Resultados registrados" in cabecalhos[1:]
+    assert any("validação final" in s.value for s in at.subheader)
