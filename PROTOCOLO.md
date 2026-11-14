@@ -370,6 +370,17 @@ Kevin autorizou a implementação e os testes no repositório existente `KevinCo
 
 **Rodada no app publicado, código c31b5133feda:** 20 buscas reais com coleta nova, medidas no Edge do clique até a conclusão visível: 19 em até 15 segundos; cobertura de preços confirmados em duas lojas em 12 buscas; 13 faixas; 88 ofertas exibidas para conferência humana. A execução e as falhas estão em `validacao_navegador.json`, sem substituir as rodadas anteriores. A meta de tempo foi atingida nessa medição conservadora, que inclui a demora da automação. A cobertura de 18 de 20 não foi atingida no Streamlit. A Magazine Luiza retornou HTTP 403 nas 20 buscas; ofertas de outros modelos ou variantes das demais fontes continuaram excluídas. A equivalência dessas 88 ofertas ainda precisa de revisão humana.
 
+**Diagnóstico das buscas com uma loja no Streamlit, 14/11/2026, das 10h30 às 10h50.** As buscas 4, 8, 10, 12, 14 e 17 ficaram só com a KaBuM! porque a Magazine Luiza bloqueia o servidor do Streamlit. Os catálogos das outras fontes foram consultados no navegador para esses modelos:
+
+- Webcontinental: não vende Galaxy A36, Moto E15, Redmi 15 (só o 15C) nem iPhone 16; o Redmi Note 15 aparece só em 5G, e a busca 14 espera o 4G; o Moto G35 256 GB está esgotado.
+- Loja oficial da Motorola: tem o Moto G35 5G 256 GB em estoque, com total no Pix em uma parcela; não vende o Moto E15.
+- Loja oficial da Samsung: o Galaxy A36 5G 128 GB está esgotado em todas as cores.
+- Bemol: tem o iPhone 16 128 GB, mas o robots.txt da loja proíbe o caminho `/api/`, por isso não entra.
+- Compare Livre: uma busca levou cerca de 19 segundos no navegador, acima do prazo de 12 segundos da coleta, e quase todos os cartões levam a Mercado Livre e Shopee, sem forma de pagamento.
+- As buscas 5 e 20 continuam sem segunda loja; a 20 é a busca sem oferta esperada desde o passo 5.
+
+**Lojas oficiais da Motorola e da Samsung.** Entraram pelo catálogo público de cada loja, que o robots.txt permite. Vale o primeiro SKU com estoque do vendedor padrão, e só o total no Pix ou no boleto em uma parcela, sem juros, cupom ou assinatura, entra como pagamento confirmado. O link é a página do produto na própria loja. A rede vem do título ou de um campo de rede do catálogo; “USB-C” e Wi-Fi não contam como rede móvel. Cada loja só é consultada quando a busca é da própria marca e pede aparelho novo; nas outras buscas aparece como “não se aplica”. Com elas, o esperado no Streamlit é a busca 8 passar a ter duas lojas; a busca 4 depende de o A36 128 GB voltar ao estoque. A meta de 18 de 20 continua dependendo de lojas que hoje bloqueiam o servidor ou proíbem a coleta.
+
 ### Aplicação dos testes com pessoas
 
 O roteiro e as metas da seção “Correção de digitação e testes com usuários” permanecem os mesmos. Kevin aplica as sessões com os participantes reais, usando códigos L1 a L5 e C1 a C5, sem publicar nomes.

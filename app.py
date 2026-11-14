@@ -41,6 +41,8 @@ NOVOMUNDO = os.environ.get("NOVOMUNDO_URL", "https://www.novomundo.com.br").rstr
 MAGALU = os.environ.get("MAGALU_URL", "https://www.magazineluiza.com.br").rstrip("/")
 WEBCONTINENTAL = os.environ.get("WEBCONTINENTAL_URL", "https://www.webcontinental.com.br").rstrip("/")
 TROCAFY = os.environ.get("TROCAFY_URL", "https://www.trocafy.com.br").rstrip("/")
+MOTOROLA = os.environ.get("MOTOROLA_URL", "https://www.motorola.com.br").rstrip("/")
+SAMSUNG = os.environ.get("SAMSUNG_URL", "https://shop.samsung.com/br").rstrip("/")
 
 
 def configuracao(nome, padrao=None):
@@ -797,14 +799,17 @@ def rede_dos_atributos(produto):
     return {}
 
 
-def ler_webcontinental(conteudo, url):
+def ler_catalogo_vtex(conteudo, base, fonte, loja, refazer_link=False, titulo_do_produto=False):
     """Catálogo público da própria loja. Lê o total de uma parcela no Pix, sem usar o preço genérico parcelado."""
     produtos = json.loads(conteudo)
     ofertas = []
     for produto in produtos if isinstance(produtos, list) else []:
-        link = produto.get("link") or urljoin(WEBCONTINENTAL, (produto.get("linkText") or "") + "/p")
-        if urlparse(link).netloc != urlparse(WEBCONTINENTAL).netloc:
-            continue
+        link = produto.get("link") or urljoin(base + "/", (produto.get("linkText") or "") + "/p")
+        if urlparse(link).netloc != urlparse(base).netloc:
+            if not (refazer_link and produto.get("linkText")):
+                continue
+            # A Samsung devolve o link em outro domínio; a página pública do produto fica no endereço da própria loja.
+            link = urljoin(base + "/", produto["linkText"] + "/p")
         # O primeiro SKU disponível e o vendedor padrão são os que a página pública abre.
         for item in produto.get("items") or []:
             vendedores = item.get("sellers") or []
@@ -830,17 +835,35 @@ def ler_webcontinental(conteudo, url):
             if not preco_valido(preco):
                 continue
             titulo = (item.get("name") or produto.get("productName") or "").strip()
-            if titulo and not modelo_do_titulo(titulo)[1] and produto.get("productName"):
+            # Nas lojas oficiais, o nome do SKU é só cor ou ficha ("4GB RAM + 8GB RAM Boost..."); o modelo está no produto.
+            if titulo and (titulo_do_produto or not modelo_do_titulo(titulo)[1]) and produto.get("productName"):
                 titulo = produto["productName"].strip() + (" · " + titulo if titulo != produto["productName"].strip() else "")
             if not titulo:
                 continue
             rede = rede_dos_atributos(produto)
             if rede:
                 rede.update(pagina_rede=link, rede_conferida_em=datetime.now(FUSO).isoformat(timespec="seconds"))
-            ofertas.append({"titulo": titulo, "preco": preco, "loja": "Webcontinental · " + vendedor.get("sellerName", "não informado"),
-                            "fonte": "Webcontinental", "link": link, "pagina": link, "pagamento": pagamento, **rede})
+            ofertas.append({"titulo": titulo, "preco": preco, "loja": loja(vendedor.get("sellerName") or "não informado"),
+                            "fonte": fonte, "link": link, "pagina": link, "pagamento": pagamento, **rede})
             break
     return ofertas
+
+
+def ler_webcontinental(conteudo, url):
+    return ler_catalogo_vtex(conteudo, WEBCONTINENTAL, "Webcontinental", lambda vendedor: "Webcontinental · " + vendedor)
+
+
+def loja_oficial(marca):
+    """Na loja oficial, a própria fabricante vende; outro vendedor, se houver, fica identificado."""
+    return lambda vendedor: marca if normalizar(vendedor).startswith(normalizar(marca)) else f"{marca} · {vendedor}"
+
+
+def ler_motorola(conteudo, url):
+    return ler_catalogo_vtex(conteudo, MOTOROLA, "Motorola", loja_oficial("Motorola"), titulo_do_produto=True)
+
+
+def ler_samsung(conteudo, url):
+    return ler_catalogo_vtex(conteudo, SAMSUNG, "Samsung", loja_oficial("Samsung"), refazer_link=True, titulo_do_produto=True)
 
 
 def ler_rotas_trocafy(conteudo, url):
@@ -926,8 +949,12 @@ FONTES = {
     "Novo Mundo": (lambda busca: f"{NOVOMUNDO}/busca?busca={quote(busca)}", ler_novomundo),
     "Magazine Luiza": (lambda busca: f"{MAGALU}/busca/{quote_plus(busca)}/", ler_magalu),
     "Webcontinental": (lambda busca: f"{WEBCONTINENTAL}/api/catalog_system/pub/products/search/?ft={quote(busca)}&_from=0&_to=29", ler_webcontinental),
+    "Motorola": (lambda busca: f"{MOTOROLA}/api/catalog_system/pub/products/search/?ft={quote(busca)}&_from=0&_to=29", ler_motorola),
+    "Samsung": (lambda busca: f"{SAMSUNG}/api/catalog_system/pub/products/search/?ft={quote(busca)}&_from=0&_to=29", ler_samsung),
     "Trocafy": (lambda busca: f"{TROCAFY}/#consulta={quote(busca)}", ler_trocafy),
 }
+# Lojas oficiais das fabricantes: só vendem aparelhos novos da própria marca.
+LOJAS_DA_MARCA = {"Motorola": "motorola", "Samsung": "samsung"}
 CABECALHOS = {"User-Agent": USER_AGENT, "Accept": "text/html,application/xhtml+xml", "Accept-Language": "pt-BR,pt;q=0.9"}
 # O Compare Livre às vezes devolve só capinhas e películas para o nome do modelo (ex.: "moto g06").
 # Por isso, nele a busca também é feita com "smartphone" na frente, e os resultados são somados.
@@ -1171,6 +1198,12 @@ def coletar(nome, busca, mem, prazo=None, usar_cache=True):
         return coletar_trocafy(busca, mem, prazo, usar_cache)
     montar_url, ler = FONTES[nome]
     url = montar_url(busca)
+    if nome in LOJAS_DA_MARCA:
+        nao_se_aplica = ("loja oficial: não se aplica a outra marca" if marca_em(busca) != LOJAS_DA_MARCA[nome]
+                         else "loja oficial de aparelhos novos: não se aplica à condição pedida"
+                         if condicao_em(busca) in ("usado", "recondicionado") else None)
+        if nao_se_aplica:
+            return {"fonte": nome, "url": url, "ofertas": [], "momento": time.time(), "cache": False, "status": nao_se_aplica}
     guardado = mem["paginas"].get(url)
     if usar_cache and guardado and time.time() - guardado["momento"] < CACHE_SEGUNDOS:
         return dict(guardado, cache=True, segundos=time.monotonic() - inicio)
