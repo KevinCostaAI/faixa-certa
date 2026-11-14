@@ -39,6 +39,8 @@ KABUM = os.environ.get("KABUM_URL", "https://www.kabum.com.br").rstrip("/")
 GAZIN = os.environ.get("GAZIN_URL", "https://www.gazin.com.br").rstrip("/")
 NOVOMUNDO = os.environ.get("NOVOMUNDO_URL", "https://www.novomundo.com.br").rstrip("/")
 MAGALU = os.environ.get("MAGALU_URL", "https://www.magazineluiza.com.br").rstrip("/")
+WEBCONTINENTAL = os.environ.get("WEBCONTINENTAL_URL", "https://www.webcontinental.com.br").rstrip("/")
+TROCAFY = os.environ.get("TROCAFY_URL", "https://www.trocafy.com.br").rstrip("/")
 
 
 def configuracao(nome, padrao=None):
@@ -628,7 +630,7 @@ LOJAS_CONHECIDAS = {
     "mercadolivre": "Mercado Livre", "shopee": "Shopee", "amazon": "Amazon", "magazineluiza": "Magazine Luiza",
     "casasbahia": "Casas Bahia", "americanas": "Americanas", "kabum": "KaBuM!", "carrefour": "Carrefour",
     "fastshop": "Fast Shop", "pontofrio": "Ponto", "extra": "Extra", "aliexpress": "AliExpress",
-    "gazin": "Gazin", "novomundo": "Novo Mundo",
+    "gazin": "Gazin", "novomundo": "Novo Mundo", "webcontinental": "Webcontinental",
 }
 
 
@@ -779,6 +781,106 @@ def ler_novomundo(conteudo, url):
     return ofertas
 
 
+def rede_dos_atributos(produto):
+    redes = []
+    for nome in ("Rede Móvel", "Rede móvel", "Rede", "Redes", "Tecnologia de Rede", "Conexões", "Conectividade"):
+        valores = produto.get(nome) or []
+        for valor in valores if isinstance(valores, list) else [valores]:
+            texto = normalizar(valor)
+            rede = re.search(r"\bredes? moveis?\s*:?\s*([45]\s*g\b(?:[\s/,;-]+[2345]\s*g\b)*)", texto)
+            if not rede:
+                rede = re.match(r"\s*([2345]\s*g\b(?:[\s/,;-]+[2345]\s*g\b)*)", texto)
+            if rede and rede_em(rede[1]):
+                redes.append((rede_em(rede[1]), f"{nome}: {valor}"))
+    if len({rede for rede, _ in redes}) == 1:
+        return {"rede_confirmada": redes[0][0], "evidencia_rede": redes[0][1]}
+    return {}
+
+
+def ler_webcontinental(conteudo, url):
+    """Catálogo público da própria loja. Lê o total de uma parcela no Pix, sem usar o preço genérico parcelado."""
+    produtos = json.loads(conteudo)
+    ofertas = []
+    for produto in produtos if isinstance(produtos, list) else []:
+        link = produto.get("link") or urljoin(WEBCONTINENTAL, (produto.get("linkText") or "") + "/p")
+        if urlparse(link).netloc != urlparse(WEBCONTINENTAL).netloc:
+            continue
+        # O primeiro SKU disponível e o vendedor padrão são os que a página pública abre.
+        for item in produto.get("items") or []:
+            vendedores = item.get("sellers") or []
+            vendedor = next((v for v in vendedores if v.get("sellerDefault")), vendedores[0] if len(vendedores) == 1 else None)
+            if not vendedor:
+                continue
+            oferta = vendedor.get("commertialOffer") or {}
+            if oferta.get("IsAvailable") is False or (numero(oferta.get("AvailableQuantity")) or 0) <= 0:
+                continue
+            opcoes = []
+            for parcela in oferta.get("Installments") or []:
+                forma = normalizar(parcela.get("PaymentSystemName", ""))
+                nome = normalizar(parcela.get("Name", ""))
+                total = numero(parcela.get("TotalValuePlusInterestRate"))
+                if (numero(parcela.get("NumberOfInstallments")) != 1 or numero(parcela.get("InterestRate")) != 0
+                        or not preco_valido(total) or re.search(r"cupom|clube|assinante|aplicativo|mensal", nome)):
+                    continue
+                if forma == "pix" and "a vista" in nome:
+                    opcoes.append((0, total, "Pix"))
+                elif forma in ("boleto", "boleto bancario") and "a vista" in nome:
+                    opcoes.append((1, total, "à vista"))
+            _, preco, pagamento = min(opcoes) if opcoes else (2, numero(oferta.get("Price")), "não informada")
+            if not preco_valido(preco):
+                continue
+            titulo = (item.get("name") or produto.get("productName") or "").strip()
+            if titulo and not modelo_do_titulo(titulo)[1] and produto.get("productName"):
+                titulo = produto["productName"].strip() + (" · " + titulo if titulo != produto["productName"].strip() else "")
+            if not titulo:
+                continue
+            rede = rede_dos_atributos(produto)
+            if rede:
+                rede.update(pagina_rede=link, rede_conferida_em=datetime.now(FUSO).isoformat(timespec="seconds"))
+            ofertas.append({"titulo": titulo, "preco": preco, "loja": "Webcontinental · " + vendedor.get("sellerName", "não informado"),
+                            "fonte": "Webcontinental", "link": link, "pagina": link, "pagamento": pagamento, **rede})
+            break
+    return ofertas
+
+
+def ler_rotas_trocafy(conteudo, url):
+    arvore = html.fromstring(conteudo)  # o site declara ISO-8859-1, não UTF-8
+    rotas = []
+    for ancora in arvore.xpath('//a[@href]'):
+        destino = urljoin(url, ancora.get("href"))
+        if urlparse(destino).netloc == urlparse(TROCAFY).netloc and urlparse(destino).path.startswith("/smartphone/"):
+            rotas.append({"modelo": " ".join(ancora.text_content().split()), "url": destino})
+    return rotas
+
+
+def ler_trocafy(conteudo, url):
+    arvore = html.fromstring(conteudo)
+    ofertas = []
+    for cartao in arvore.xpath('//div[@data-id][contains(concat(" ",normalize-space(@class)," ")," product-card ")]'):
+        titulo = " ".join(cartao.xpath('string(.//*[contains(@class,"product-card-title")])').split())
+        links = cartao.xpath('.//a[contains(@class,"product-link-data")]/@href')
+        parcelas = cartao.xpath('.//*[contains(concat(" ",normalize-space(@class)," ")," price-vista ")]')
+        texto = " ".join(cartao.text_content().split())
+        if not titulo or not links or not parcelas or re.search(r"indisponivel|esgotado|avise.me", normalizar(texto)):
+            continue
+        pagamento_texto = " ".join(parcelas[0].text_content().split())
+        preco = preco_brl(pagamento_texto)
+        if not preco_valido(preco):
+            continue
+        restrito = re.search(r"cupom|clube|assinante|aplicativo", normalizar(pagamento_texto))
+        pagamento = "Pix" if not restrito and "pix" in normalizar(pagamento_texto) else "não informada"
+        link = urljoin(url, links[0])
+        if urlparse(link).netloc != urlparse(TROCAFY).netloc:
+            continue
+        condicao = condicao_em(titulo)
+        if re.search(r"sou como novo|tenho minhas marcas de uso|fui mais usado", normalizar(titulo)):
+            condicao = "usado"
+        confirmada = {"condicao_confirmada": condicao, "evidencia_condicao": titulo} if condicao != "novo" else {}
+        ofertas.append({"titulo": titulo, "preco": preco, "fonte": "Trocafy", "loja": "Trocafy",
+                        "link": link, "pagina": link, "pagamento": pagamento, **confirmada})
+    return ofertas
+
+
 def ler_magalu(conteudo, url):
     """Lê os mesmos produtos e as condições de pagamento que a lista pública mostra, sem usar APIs privadas."""
     produtos = campo(dados_next(conteudo), "props", "pageProps", "data", "search", "items") or []
@@ -823,6 +925,8 @@ FONTES = {
     "Gazin": (lambda busca: f"{GAZIN}/busca/{quote('-'.join(busca.split()))}", ler_gazin),
     "Novo Mundo": (lambda busca: f"{NOVOMUNDO}/busca?busca={quote(busca)}", ler_novomundo),
     "Magazine Luiza": (lambda busca: f"{MAGALU}/busca/{quote_plus(busca)}/", ler_magalu),
+    "Webcontinental": (lambda busca: f"{WEBCONTINENTAL}/api/catalog_system/pub/products/search/?ft={quote(busca)}&_from=0&_to=29", ler_webcontinental),
+    "Trocafy": (lambda busca: f"{TROCAFY}/#consulta={quote(busca)}", ler_trocafy),
 }
 CABECALHOS = {"User-Agent": USER_AGENT, "Accept": "text/html,application/xhtml+xml", "Accept-Language": "pt-BR,pt;q=0.9"}
 # O Compare Livre às vezes devolve só capinhas e películas para o nome do modelo (ex.: "moto g06").
@@ -1002,7 +1106,8 @@ def confirmar_redes(busca, ofertas, mem, prazo, sessao):
     for k, (oferta, item) in enumerate(zip(ofertas, itens)):
         if consultas >= 3 or prazo - time.monotonic() < 1.5:
             break
-        if (oferta["fonte"] not in {"KaBuM!", "Magazine Luiza"} or rede_em(oferta["titulo"])
+        item = dict(item, condicao=oferta.get("condicao_confirmada") or item["condicao"])
+        if (oferta["fonte"] not in {"KaBuM!", "Magazine Luiza", "Gazin", "Trocafy"} or rede_em(oferta["titulo"])
                 or oferta.get("pagamento") not in PAGAMENTOS_DA_FAIXA
                 or defeito_anunciado(oferta["titulo"]) or motivo_descarte(dict(alvo, rede=None), item, sem_rede=True)):
             continue
@@ -1022,9 +1127,48 @@ def confirmar_redes(busca, ofertas, mem, prazo, sessao):
     return verificadas
 
 
+def coletar_trocafy(busca, mem, prazo, usar_cache):
+    inicio = time.monotonic()
+    chave = FONTES["Trocafy"][0](busca)
+    resultado = {"fonte": "Trocafy", "url": TROCAFY + "/", "ofertas": [], "momento": time.time(), "cache": False}
+    if condicao_em(busca) != "usado":
+        return dict(resultado, status="fonte de aparelhos usados: não se aplica à condição pedida")
+    guardado = mem["paginas"].get(chave)
+    if usar_cache and guardado and time.time() - guardado["momento"] < CACHE_SEGUNDOS:
+        return dict(guardado, cache=True)
+    with requests.Session() as sessao:
+        catalogo = mem.get("rotas_trocafy")
+        if not catalogo or time.time() - catalogo[0] > 24 * 3600:
+            rotas, erro = baixar(TROCAFY + "/", ler_rotas_trocafy, mem, prazo, sessao)
+            if erro:
+                return dict(resultado, status=erro)
+            catalogo = (time.time(), rotas)
+            mem["rotas_trocafy"] = catalogo
+        alvo, _ = classificar_por_regras(busca, [])
+        rota = next((r["url"] for r in catalogo[1]
+                     if chave_modelo(r["modelo"], sem_rede=True) == chave_modelo(alvo["modelo"], sem_rede=True)), None)
+        if not rota:
+            return dict(resultado, status="modelo não consta nas categorias públicas da loja")
+        ofertas, erro = baixar(rota, ler_trocafy, mem, prazo, sessao)
+        if erro:
+            return dict(resultado, url=rota, status=erro)
+        alvo, itens = classificar_por_regras(busca, [oferta["titulo"] for oferta in ofertas])
+        ordenadas = sorted(zip(ofertas, itens), key=lambda par: motivo_descarte(
+            alvo, dict(par[1], condicao=par[0].get("condicao_confirmada") or par[1]["condicao"]), sem_rede=True) is not None)
+        ofertas = [oferta for oferta, _ in ordenadas]
+        ofertas = confirmar_redes(busca, ofertas[:MAXIMO_POR_LOJA], mem, prazo, sessao)
+        resultado.update(url=rota, ofertas=ofertas, status=f"{len(ofertas)} ofertas",
+                         coletado=datetime.now(FUSO).strftime("%H:%M"), segundos=time.monotonic() - inicio)
+        with mem["trava"]:
+            mem["paginas"][chave] = resultado
+        return resultado
+
+
 def coletar(nome, busca, mem, prazo=None, usar_cache=True):
     inicio = time.monotonic()
     prazo = prazo if prazo is not None else inicio + TEMPO_TOTAL_COLETA
+    if nome == "Trocafy":
+        return coletar_trocafy(busca, mem, prazo, usar_cache)
     montar_url, ler = FONTES[nome]
     url = montar_url(busca)
     guardado = mem["paginas"].get(url)
@@ -1243,7 +1387,7 @@ def marcar_fora_do_padrao(linhas):
             linhas.loc[fora, "motivo"] = "preço fora do padrão (menos da metade ou mais do dobro da mediana)"
 
 
-def motivos_da_busca(busca, alvo, itens, titulos, redes_confirmadas=None):
+def motivos_da_busca(busca, alvo, itens, titulos, redes_confirmadas=None, condicoes_confirmadas=None):
     """Motivo de cada título ficar de fora da busca (None quando é oferta equivalente), antes dos filtros de preço.
     Marca e rede valem pelo que está escrito, com o LLM e com as regras: na busca e em cada título.
     A versão escolhida na tela (5G) vale no lugar da escrita na busca. O defeito vale pelas regras e, com o LLM,
@@ -1254,10 +1398,12 @@ def motivos_da_busca(busca, alvo, itens, titulos, redes_confirmadas=None):
     if unica:
         alvo["rede"] = None
     redes_confirmadas = redes_confirmadas or [None] * len(titulos)
+    condicoes_confirmadas = condicoes_confirmadas or [None] * len(titulos)
     itens = [dict(item, marca=marca_no_titulo(titulo, alvo["marca"]),
                   rede=rede_em(titulo) or (rede if rede in ("4g", "5g") else None),
+                  condicao=condicao if condicao in CONDICOES else item["condicao"],
                   defeito=defeito_anunciado(titulo) or bool(item.get("defeito_llm")))
-             for item, titulo, rede in zip(itens, titulos, redes_confirmadas)]
+             for item, titulo, rede, condicao in zip(itens, titulos, redes_confirmadas, condicoes_confirmadas)]
     motivos = [motivo_descarte(alvo, item, sem_rede=unica) for item in itens]
     if all(motivos) and not unica and not alvo["rede"] and chave_modelo(alvo["modelo"]) == chave_modelo(alvo["modelo"], sem_rede=True):
         # Nenhuma oferta com o mesmo nome e a busca não falou em 4G/5G: aceita a versão 4G ou 5G do modelo
@@ -1269,7 +1415,8 @@ def motivos_da_busca(busca, alvo, itens, titulos, redes_confirmadas=None):
 def separar_ofertas(busca, ofertas, alvo, itens):
     """Decide, oferta por oferta, se ela entra na faixa ou por que fica de fora (coluna "motivo")."""
     alvo, itens, motivos = motivos_da_busca(busca, alvo, itens, [oferta["titulo"] for oferta in ofertas],
-                                         [oferta.get("rede_confirmada") for oferta in ofertas])
+                                         [oferta.get("rede_confirmada") for oferta in ofertas],
+                                         [oferta.get("condicao_confirmada") for oferta in ofertas])
     linhas = pd.DataFrame(ofertas)
     linhas["motivo"] = motivos
     linhas["armazenamento_gb"] = [item["armazenamento_gb"] for item in itens]
@@ -1356,6 +1503,9 @@ def mostrar_resultados(busca, coletas, mem):
     sem_pagamento = equivalentes[~pagamento_confirmado(equivalentes)].sort_values("preco")
     descartadas = linhas[linhas["motivo"].notna()].sort_values("preco")
     st.subheader(f"Faixa de preço: {descrever(alvo)}")
+    if "condicao_confirmada" in linhas and linhas["condicao_confirmada"].eq("usado").any():
+        st.caption("Na Trocafy, os estados 'Sou como novo', 'Tenho minhas marcas de uso' e 'Fui mais usado' "
+                   "são condições de aparelhos usados, conforme informado pela loja.")
     if alvo["armazenamento_gb"] or iguais.empty:
         mostrar_faixa(iguais)
         na_faixa = iguais if len(iguais) >= MINIMO_OFERTAS else iguais.iloc[0:0]
@@ -1772,6 +1922,9 @@ def mostrar_validacao_tecnica():
     st.caption(f"{registro['inicio']} a {registro['fim']} · código {registro['codigo_sha256'][:12]} · {registro['origem']}")
     st.info("Resultados automáticos: a revisão humana dos rótulos e das ofertas "
             "e os testes com os participantes continuam pendentes.")
+    if not os.path.exists(os.path.join(os.path.dirname(os.path.abspath(__file__)), ARQUIVO_NAVEGADOR)):
+        st.warning("A cobertura abaixo foi medida no ambiente de desenvolvimento. A verificação das fontes no app "
+                   "publicado ainda está em andamento; a Magazine Luiza retornou HTTP 403 nesse servidor.")
     resumo = registro["resumo"]
     extracao = registro["extracao_regras"]
     tabela_fixa([
@@ -1823,11 +1976,22 @@ def mostrar_validacao_navegador():
     st.header("Tempo no app publicado, com coleta nova")
     st.caption(f"{registro['inicio']} a {registro['fim']} · código {registro['codigo_sha256'][:12]} · navegador Edge")
     st.write(registro["metodo"])
-    st.write(f"{registro['ate_15s']} de {len(registro['buscas'])} buscas em até 15 segundos. Meta: 18 de 20.")
+    total = len(registro["buscas"])
+    st.write(f"Tempo: {registro['ate_15s']} de {total} buscas em até 15 segundos. "
+             f"Meta: 18 de 20 — {'atingida' if total == 20 and registro['ate_15s'] >= 18 else 'não atingida'}.")
+    if "duas_lojas" in registro:
+        st.write(f"Cobertura automática no app publicado: {registro['duas_lojas']} de {total} buscas em duas lojas. "
+                 f"Meta: 18 de 20 — {'atingida na contagem automática' if total == 20 and registro['duas_lojas'] >= 18 else 'não atingida'}. "
+                 "A conferência humana dos produtos e preços ainda está pendente.")
     st.dataframe(pd.DataFrame([{
         "Nº": busca["n"], "Entrada": busca["entrada"], "Tempo no navegador (s)": busca["segundos"],
         "Conclusão exibida pelo app": busca["conclusao"],
     } for busca in registro["buscas"]]), hide_index=True)
+    ofertas = [dict(oferta, Busca=busca["entrada"], Coletado=busca["quando"])
+               for busca in registro["buscas"] for oferta in busca.get("ofertas", [])]
+    if ofertas:
+        with st.expander("Ofertas exibidas no app publicado, para revisão humana"):
+            st.dataframe(pd.DataFrame(ofertas), hide_index=True, column_config={"link": st.column_config.LinkColumn("URL")})
     st.caption("Execução automatizada no navegador; não é um teste com usuários. A conferência humana das ofertas permanece pendente.")
     st.divider()
 
@@ -1964,6 +2128,7 @@ def mostrar_diagnostico_fontes():
         "Trocafone": "https://www.trocafone.com.br/",
         "Casas Bahia": "https://www.casasbahia.com.br/galaxy-a17-128gb/b",
         "Efácil": "https://www.efacil.com.br/loja/departamento/Smartphones",
+        "Trocafy": TROCAFY + "/",
     }
     def diagnosticar(item):
         nome, url = item

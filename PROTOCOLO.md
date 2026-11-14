@@ -364,6 +364,10 @@ Kevin autorizou a implementação e os testes no repositório existente `KevinCo
 
 **Segunda rodada técnica, depois da correção do leitor:** 18 de 20 buscas com ofertas com pagamento confirmado em pelo menos duas lojas, 20 de 20 em até 15 segundos no servidor, 18 faixas geradas e 210 ofertas separadas para conferência humana. Os casos sem cobertura suficiente foram Galaxy A14 128 GB usado (uma loja) e iPhone 14 128 GB recondicionado (nenhuma oferta equivalente). Os preços foram coletados novamente em todas as buscas. A primeira rodada continua arquivada e identificada na página.
 
+**Diferença encontrada no servidor publicado:** na primeira conferência pelo navegador, a Magazine Luiza retornou HTTP 403. Portanto, a cobertura de 18 de 20 do ambiente de desenvolvimento não comprova a cobertura no Streamlit. As páginas públicas da Webcontinental responderam nesse servidor. Foi acrescentado o catálogo público da própria Webcontinental, com estoque, total no Pix em uma parcela, vendedor padrão e atributos de rede explícitos. Preço genérico parcelado não é promovido a Pix. A Gazin também passou a poder confirmar a rede na ficha do próprio anúncio. A nova verificação no navegador será registrada à parte; não há substituição dos resultados anteriores nem respostas de participantes simuladas.
+
+**Fonte de usados:** a Trocafy foi acrescentada para buscas cuja condição pedida é usado. O endereço da categoria vem dos links públicos do menu, sem utilizar a busca por palavras que o robots.txt restringe. Os cartões confirmam o preço no Pix. Estados declarados pela loja, como “Sou como novo”, “Tenho minhas marcas de uso” e “Fui mais usado”, comprovam a condição usado, mantida em campo próprio; o título original não é reescrito. A avaliação dos 50 títulos não recebe esses dados complementares e continua com os mesmos resultados de extração e decisão.
+
 ### Aplicação dos testes com pessoas
 
 O roteiro e as metas da seção “Correção de digitação e testes com usuários” permanecem os mesmos. Kevin aplica as sessões com os participantes reais, usando códigos L1 a L5 e C1 a C5, sem publicar nomes.

@@ -60,7 +60,7 @@ def medir_busca(entrada, mem):
             registro = {chave: linha[chave] for chave in ["titulo", "preco", "fonte", "loja", "pagamento", "link", "pagina"]}
             registro["motivo"] = None if pd.isna(linha["motivo"]) else linha["motivo"]
             registro["na_faixa"] = registro["motivo"] is None and registro["pagamento"] in app.PAGAMENTOS_DA_FAIXA
-            for chave in ("rede_confirmada", "evidencia_rede", "pagina_rede", "rede_conferida_em"):
+            for chave in ("rede_confirmada", "evidencia_rede", "pagina_rede", "rede_conferida_em", "condicao_confirmada", "evidencia_condicao"):
                 valor = linha.get(chave)
                 if isinstance(valor, str) and valor:
                     registro[chave] = valor
