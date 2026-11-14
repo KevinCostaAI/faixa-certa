@@ -48,3 +48,21 @@ def test_trocar_rede_atualiza_todos_os_precos_e_o_destaque(monkeypatch):
     assert "5G" in destaque
     at.radio[0].set_value("4g").run()
     assert at.metric[0].value == app.reais(1200)
+
+
+def test_modo_de_validacao_forca_coleta_nova(monkeypatch):
+    chamadas = []
+
+    def coletar(busca, mem, forcar_coleta=False):
+        chamadas.append(forcar_coleta)
+        return [{"fonte": "KaBuM!", "ofertas": [], "status": "nenhuma oferta", "cache": False}]
+
+    monkeypatch.setattr(app, "coletar_todas", coletar)
+    at = AppTest.from_string("import app\napp.main()", default_timeout=10)
+    at.query_params["coleta_nova"] = "1"
+    at.run()
+    at.text_input[0].set_value("iphone 16 128gb")
+    at.button[0].click().run()
+    assert not at.exception
+    assert chamadas == [True]
+    assert any("Consulta concluída:" in caption.value and "Coleta nova." in caption.value for caption in at.caption)

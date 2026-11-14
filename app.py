@@ -1759,6 +1759,7 @@ def mostrar_titulos(tabela):
 ARQUIVO_RESULTADOS = "resultados_registrados.json"  # resultados já obtidos, publicados ao lado do app.py
 ARQUIVO_PROTOCOLO = "PROTOCOLO.md"  # protocolo de validação, publicado ao lado do app.py
 ARQUIVO_VALIDACAO = "validacao_tecnica.json"
+ARQUIVO_NAVEGADOR = "validacao_navegador.json"
 
 
 def mostrar_validacao_tecnica():
@@ -1769,7 +1770,7 @@ def mostrar_validacao_tecnica():
         registro = json.load(arquivo)
     st.header("Reconferência técnica com a coleta atualizada")
     st.caption(f"{registro['inicio']} a {registro['fim']} · código {registro['codigo_sha256'][:12]} · {registro['origem']}")
-    st.info("Resultados automáticos: a revisão humana dos rótulos e das ofertas, a medição no navegador "
+    st.info("Resultados automáticos: a revisão humana dos rótulos e das ofertas "
             "e os testes com os participantes continuam pendentes.")
     resumo = registro["resumo"]
     extracao = registro["extracao_regras"]
@@ -1810,6 +1811,24 @@ def mostrar_validacao_tecnica():
                          f"{resumo_anterior['duas_lojas']} de {resumo_anterior['buscas']} buscas em duas lojas; "
                          f"{resumo_anterior['ate_15s_servidor']} em até 15 s no servidor.")
                 st.markdown(f"[Registro completo](https://github.com/KevinCostaAI/faixa-certa/blob/main/{anterior['arquivo']})")
+    st.divider()
+
+
+def mostrar_validacao_navegador():
+    caminho = os.path.join(os.path.dirname(os.path.abspath(__file__)), ARQUIVO_NAVEGADOR)
+    if not os.path.exists(caminho):
+        return
+    with open(caminho, encoding="utf-8") as arquivo:
+        registro = json.load(arquivo)
+    st.header("Tempo no app publicado, com coleta nova")
+    st.caption(f"{registro['inicio']} a {registro['fim']} · código {registro['codigo_sha256'][:12]} · navegador Edge")
+    st.write(registro["metodo"])
+    st.write(f"{registro['ate_15s']} de {len(registro['buscas'])} buscas em até 15 segundos. Meta: 18 de 20.")
+    st.dataframe(pd.DataFrame([{
+        "Nº": busca["n"], "Entrada": busca["entrada"], "Tempo no navegador (s)": busca["segundos"],
+        "Conclusão exibida pelo app": busca["conclusao"],
+    } for busca in registro["buscas"]]), hide_index=True)
+    st.caption("Execução automatizada no navegador; não é um teste com usuários. A conferência humana das ofertas permanece pendente.")
     st.divider()
 
 
@@ -1887,6 +1906,7 @@ def mostrar_avaliacao():
                f"chamada. Regras: filtro de acessórios, marca e modelo como na tela de escolha, armazenamento, condição, "
                "rede e defeito lidos no título. Cada resultado registrado traz a versão em que foi obtido.")
     mostrar_validacao_tecnica()
+    mostrar_validacao_navegador()
     mostrar_resultados_registrados()
     arquivo = os.path.join(os.path.dirname(os.path.abspath(__file__)), ARQUIVO_AVALIACAO)
     if not os.path.exists(arquivo):
@@ -1952,6 +1972,9 @@ def main():
                "reaproveita o resultado.")
     st.caption(f"Extrator principal: {'LLM' if LLM_CHAVE and METODO_PRINCIPAL == 'LLM' else 'regras' if LLM_CHAVE else 'regras (sem chave de IA configurada)'}. "
                f"Fontes: {', '.join(FONTES)}.")
+    forcar_coleta = st.query_params.get("coleta_nova") == "1"
+    if forcar_coleta:
+        st.caption("Validação técnica: buscas por modelo com coleta nova de preços, sem reaproveitar o cache.")
 
     nova_busca = st.session_state.pop("nova_busca", False)
     with st.form("busca"):
@@ -1977,6 +2000,8 @@ def main():
     with area:
         digitado = (st.session_state.get("digitado") or "").strip()
         if digitado:
+            inicio_busca = time.perf_counter()
+            descricao_coleta = ""
             if st.session_state.get("sem_correcao"):
                 busca, mudou = limpar(digitado), False
             else:
@@ -1990,14 +2015,19 @@ def main():
                 with st.spinner(f"Buscando “{exibir(busca)}” nas lojas..."):
                     guardada = st.session_state.get("coleta_atual")
                     if not nova_busca and guardada and guardada[0] == busca:
-                        coletas = guardada[1]  # troca de memória ou versão: as mesmas ofertas, sem buscar de novo
+                        coletas = [dict(coleta, cache=True) for coleta in guardada[1]]
                     else:
-                        coletas = coletar_todas(busca, mem)
+                        coletas = coletar_todas(busca, mem, forcar_coleta=forcar_coleta)
                         st.session_state.coleta_atual = (busca, coletas)
+                    caches = [bool(coleta.get("cache")) for coleta in coletas]
+                    descricao_coleta = ("Coleta reaproveitada." if caches and all(caches) else
+                                        "Coleta parcialmente reaproveitada." if any(caches) else "Coleta nova.")
                     # Sem modelo reconhecido na busca ("quero um celular bom"), a pessoa escolhe entre os celulares das lojas.
                     falta = not mostrar_resultados(busca, coletas, mem)
             if falta:
                 mostrar_opcoes(busca)
+            st.caption(f"Consulta concluída: {exibir(busca)}. {descricao_coleta} "
+                       f"Processamento: {time.perf_counter() - inicio_busca:.1f} s.")
 
 
 if __name__ == "__main__":

@@ -362,6 +362,8 @@ Kevin autorizou a implementação e os testes no repositório existente `KevinCo
 - `validar_mvp.py --coletar` executa uma vez cada uma das mesmas 20 buscas, com coleta nova de preços. O arquivo `validacao_tecnica.json` aparece na página pública de avaliação, separado dos resultados históricos. Não se trata de uma amostra independente.
 - O tempo no servidor de desenvolvimento não substitui a medida do clique ao resultado completo no navegador publicado. Cobertura automática não substitui a conferência humana da equivalência e dos preços. Os testes com os dez participantes continuam pendentes; nenhum participante nem resposta foi simulado.
 
+**Segunda rodada técnica, depois da correção do leitor:** 18 de 20 buscas com ofertas com pagamento confirmado em pelo menos duas lojas, 20 de 20 em até 15 segundos no servidor, 18 faixas geradas e 210 ofertas separadas para conferência humana. Os casos sem cobertura suficiente foram Galaxy A14 128 GB usado (uma loja) e iPhone 14 128 GB recondicionado (nenhuma oferta equivalente). Os preços foram coletados novamente em todas as buscas. A primeira rodada continua arquivada e identificada na página.
+
 ### Aplicação dos testes com pessoas
 
 O roteiro e as metas da seção “Correção de digitação e testes com usuários” permanecem os mesmos. Kevin aplica as sessões com os participantes reais, usando códigos L1 a L5 e C1 a C5, sem publicar nomes.
