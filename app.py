@@ -318,7 +318,8 @@ VERSOES_CONHECIDAS = {
     ("motorola", "g06"): {"4g"}, ("motorola", "g17"): {"4g"}, ("motorola", "e15"): {"4g"},
     ("motorola", "g35"): {"5g"}, ("motorola", "g47"): {"5g"},
     ("xiaomi", "redmi15c"): {"4g", "5g"}, ("xiaomi", "redmi15"): {"4g", "5g"}, ("xiaomi", "pococ85"): {"4g", "5g"},
-    ("xiaomi", "redminote15"): {"4g", "5g"}, ("oppo", "a6x"): {"4g", "5g"},
+    ("xiaomi", "redminote15"): {"4g", "5g"},
+    ("oppo", "a6x"): {128: {"4g"}, None: {"4g", "5g"}},  # no Brasil, o A6x 5G só tem 256 GB
 }
 
 
@@ -326,7 +327,10 @@ def versoes_conhecidas(alvo):
     marca, chave = chave_marca(alvo.get("marca")), chave_modelo(alvo.get("modelo"), sem_rede=True)
     if marca == "apple" and re.match(r"iphone(?:1[2-9]|[2-9]\d)", chave):
         return {"5g"}
-    return VERSOES_CONHECIDAS.get((marca, chave))
+    versoes = VERSOES_CONHECIDAS.get((marca, chave))
+    if isinstance(versoes, dict):
+        versoes = versoes.get(alvo.get("armazenamento_gb"), versoes[None])
+    return versoes
 
 
 def do_mesmo_modelo(alvo, itens):
@@ -338,8 +342,9 @@ def do_mesmo_modelo(alvo, itens):
 
 def versao_da_tela(busca, alvo, titulos_do_modelo):
     """Como a rede entra na tela de resultado:
-    "opcao": o modelo tem versões 4G e 5G, os anúncios têm 5G e a busca não diz a rede; a pessoa escolhe, e a tela
-    começa na versão 4G. Anúncio sem rede no título fica fora da versão escolhida.
+    "opcao": o modelo tem versões 4G e 5G (conferidas no fabricante ou, fora da lista, as duas escritas nos títulos)
+    e a busca não diz a rede; a pessoa escolhe, e a tela começa na versão 4G. Anúncio sem rede no título não é
+    evidência de 4G nem de 5G e fica fora da versão escolhida, com o motivo.
     "unica": o modelo só tem uma versão (conferida no fabricante ou, fora da lista, a única escrita nos títulos);
     a rede não separa os anúncios do modelo, e anúncio sem rede no título é o mesmo aparelho.
     None: vale a rede escrita na busca, se houver."""
@@ -348,7 +353,7 @@ def versao_da_tela(busca, alvo, titulos_do_modelo):
     versoes = versoes_conhecidas(alvo) or citadas
     if len(versoes) == 1 and rede_da_busca in (None, *versoes):
         return "unica"
-    if not rede_da_busca and versoes == {"4g", "5g"} and "5g" in citadas:
+    if not rede_da_busca and versoes == {"4g", "5g"}:
         return "opcao"
     return None
 
@@ -1083,7 +1088,7 @@ def escolher_opcoes(busca, alvo, itens, ofertas):
                                   f"{int(gb)} GB" if gb < 1000 else f"{int(gb) // 1000} TB")
     escolhido = dict(alvo, armazenamento_gb=gb)
     # A versão só vira opção quando o modelo tem versões 4G e 5G; anúncio sem rede no título não conta como 4G.
-    modo = versao_da_tela(busca, alvo, [oferta["titulo"] for _, oferta in do_modelo])
+    modo = versao_da_tela(busca, escolhido, [oferta["titulo"] for _, oferta in do_modelo])
     if modo == "unica":
         escolhido["versao_unica"] = True
     elif modo == "opcao":
