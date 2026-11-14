@@ -2156,7 +2156,8 @@ def mostrar_validacao_navegador(arquivo=ARQUIVO_NAVEGADOR):
     with open(caminho, encoding="utf-8") as arquivo:
         registro = json.load(arquivo)
     st.header(registro.get("titulo", "Tempo no app publicado, com coleta nova"))
-    st.caption(f"{registro['inicio']} a {registro['fim']} · código {registro['codigo_sha256'][:12]} · navegador Edge")
+    st.caption(f"{registro['inicio']} a {registro['fim']} · código {registro['codigo_sha256'][:12]} · "
+               f"{registro.get('origem', 'Medição no navegador')}")
     st.write(registro["metodo"])
     total = len(registro["buscas"])
     st.write(f"Tempo: {registro['ate_15s']} de {total} buscas em até 15 segundos. "
