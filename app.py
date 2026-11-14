@@ -309,6 +309,50 @@ def rede_em(texto):
     return "5g" if "5g" in palavras else "4g" if "4g" in palavras else None
 
 
+# Versões de rede conferidas nas páginas dos fabricantes (protocolo de validação, passo 5), por marca e modelo.
+# Todo iPhone a partir do 12 só existe em 5G. Fora desta lista, valem as redes escritas nos títulos: anúncio sem rede
+# no título não é evidência de uma versão 4G.
+VERSOES_CONHECIDAS = {
+    ("samsung", "a07"): {"4g", "5g"}, ("samsung", "a14"): {"4g", "5g"}, ("samsung", "a16"): {"4g", "5g"},
+    ("samsung", "a17"): {"4g", "5g"}, ("samsung", "a36"): {"5g"},
+    ("motorola", "g06"): {"4g"}, ("motorola", "g17"): {"4g"}, ("motorola", "e15"): {"4g"},
+    ("motorola", "g35"): {"5g"}, ("motorola", "g47"): {"5g"},
+    ("xiaomi", "redmi15c"): {"4g", "5g"}, ("xiaomi", "redmi15"): {"4g", "5g"}, ("xiaomi", "pococ85"): {"4g", "5g"},
+    ("xiaomi", "redminote15"): {"4g", "5g"}, ("oppo", "a6x"): {"4g", "5g"},
+}
+
+
+def versoes_conhecidas(alvo):
+    marca, chave = chave_marca(alvo.get("marca")), chave_modelo(alvo.get("modelo"), sem_rede=True)
+    if marca == "apple" and re.match(r"iphone(?:1[2-9]|[2-9]\d)", chave):
+        return {"5g"}
+    return VERSOES_CONHECIDAS.get((marca, chave))
+
+
+def do_mesmo_modelo(alvo, itens):
+    """Posições dos anúncios do modelo buscado (qualquer versão de rede), na condição pedida."""
+    base = chave_modelo(alvo["modelo"], sem_rede=True)
+    return [k for k, item in enumerate(itens) if item["celular"] and item["modelo"] and item["condicao"] == alvo["condicao"]
+            and chave_modelo(item["modelo"], sem_rede=True) == base]
+
+
+def versao_da_tela(busca, alvo, titulos_do_modelo):
+    """Como a rede entra na tela de resultado:
+    "opcao": o modelo tem versões 4G e 5G, os anúncios têm 5G e a busca não diz a rede; a pessoa escolhe, e a tela
+    começa na versão 4G. Anúncio sem rede no título fica fora da versão escolhida.
+    "unica": o modelo só tem uma versão (conferida no fabricante ou, fora da lista, a única escrita nos títulos);
+    a rede não separa os anúncios do modelo, e anúncio sem rede no título é o mesmo aparelho.
+    None: vale a rede escrita na busca, se houver."""
+    rede_da_busca = rede_em(busca) or ("5g" if "5g" in limpar(alvo.get("modelo") or "").split() else None)
+    citadas = {rede_em(titulo) for titulo in titulos_do_modelo} - {None}
+    versoes = versoes_conhecidas(alvo) or citadas
+    if len(versoes) == 1 and rede_da_busca in (None, *versoes):
+        return "unica"
+    if not rede_da_busca and versoes == {"4g", "5g"} and "5g" in citadas:
+        return "opcao"
+    return None
+
+
 def marca_no_titulo(titulo, marca_pedida):
     """Marca escrita no título, pelo nome ou pela linha ("Galaxy" = Samsung). Sem ela escrita, None:
     a marca deduzida pelo LLM não confirma o anúncio."""
@@ -332,7 +376,9 @@ def classificar_por_regras(busca, titulos):
     }
     if not base:
         return alvo, [dict(alvo, modelo=None, marca=marca_em(titulo)) for titulo in titulos]
-    partes = [r"\s*".join(re.escape(pedaco) for pedaco in re.findall(r"[a-z]+|\d+", p)) for p in base]
+    # "Galaxy" e "Moto" podem faltar na busca ou no título: "Samsung A14" é o Galaxy A14, e "Motorola G35" é o Moto G35.
+    exigidas = [p for p in base if p not in LINHAS_IMPLICITAS] or base
+    partes = [r"\s*".join(re.escape(pedaco) for pedaco in re.findall(r"[a-z]+|\d+", p)) for p in exigidas]
     proibidas = sorted(VARIANTES - set(base))
     padrao = re.compile(r"\b" + r"[\s-]*".join(partes) + r"\b(?![\s-]*(?:" + "|".join(proibidas) + r")\b)")
     itens = []
@@ -998,11 +1044,15 @@ def motivos_da_busca(busca, alvo, itens, titulos):
     A versão escolhida na tela (5G) vale no lugar da escrita na busca. O defeito vale pelas regras e, com o LLM,
     também pelo que ele leu."""
     alvo = dict(alvo, marca=marca_em(busca) or alvo["marca"], rede=alvo.get("rede") or rede_em(busca))
+    # Modelo de uma versão só: a rede (inclusive a escrita na busca) não separa os anúncios do modelo.
+    unica = bool(alvo.get("versao_unica"))
+    if unica:
+        alvo["rede"] = None
     itens = [dict(item, marca=marca_no_titulo(titulo, alvo["marca"]), rede=rede_em(titulo),
                   defeito=defeito_anunciado(titulo) or bool(item.get("defeito_llm")))
              for item, titulo in zip(itens, titulos)]
-    motivos = [motivo_descarte(alvo, item) for item in itens]
-    if all(motivos) and not alvo["rede"] and chave_modelo(alvo["modelo"]) == chave_modelo(alvo["modelo"], sem_rede=True):
+    motivos = [motivo_descarte(alvo, item, sem_rede=unica) for item in itens]
+    if all(motivos) and not unica and not alvo["rede"] and chave_modelo(alvo["modelo"]) == chave_modelo(alvo["modelo"], sem_rede=True):
         # Nenhuma oferta com o mesmo nome e a busca não falou em 4G/5G: aceita a versão 4G ou 5G do modelo
         # (ex.: quem busca "samsung a56" encontra o Galaxy A56 5G, que só existe em 5G).
         motivos = [motivo_descarte(alvo, item, sem_rede=True) for item in itens]
@@ -1024,10 +1074,7 @@ def escolher_opcoes(busca, alvo, itens, ofertas):
     """Memória e versão (4G ou 5G) para trocar na tela. A faixa é refeita na hora, com as mesmas ofertas;
     sem mexer nas opções, vale o que a busca pediu. A condição é a da busca (novo, se ela não disser outra)."""
     chave = re.sub(r"\W+", "_", busca)
-    base = chave_modelo(alvo["modelo"], sem_rede=True)
-    do_modelo = [(item, oferta) for item, oferta in zip(itens, ofertas)
-                 if item["celular"] and item["modelo"] and item["condicao"] == alvo["condicao"]
-                 and chave_modelo(item["modelo"], sem_rede=True) == base]
+    do_modelo = [(itens[k], ofertas[k]) for k in do_mesmo_modelo(alvo, itens)]
     memorias = sorted({item["armazenamento_gb"] for item, _ in do_modelo if item["armazenamento_gb"] in ARMAZENAMENTOS_BUSCA}
                       | ({alvo["armazenamento_gb"]} if alvo["armazenamento_gb"] else set())) + [None]
     coluna_memoria, coluna_versao = st.columns([3, 2])
@@ -1035,9 +1082,11 @@ def escolher_opcoes(busca, alvo, itens, ofertas):
                                   key=f"faixa_gb_{chave}", format_func=lambda gb: "Todas as memórias" if gb is None else
                                   f"{int(gb)} GB" if gb < 1000 else f"{int(gb) // 1000} TB")
     escolhido = dict(alvo, armazenamento_gb=gb)
-    # A versão só vira opção quando a busca não falou em 4G ou 5G e as lojas têm as duas versões do modelo.
-    tem_5g = {rede_em(oferta["titulo"]) == "5g" for _, oferta in do_modelo}
-    if not rede_em(busca) and "5g" not in limpar(alvo["modelo"]).split() and tem_5g == {True, False}:
+    # A versão só vira opção quando o modelo tem versões 4G e 5G; anúncio sem rede no título não conta como 4G.
+    modo = versao_da_tela(busca, alvo, [oferta["titulo"] for _, oferta in do_modelo])
+    if modo == "unica":
+        escolhido["versao_unica"] = True
+    elif modo == "opcao":
         versao = coluna_versao.radio("Versão", ["4g", "5g"], horizontal=True, key=f"faixa_rede_{chave}",
                                      format_func=lambda r: "5G" if r == "5g" else "4G (comum)")
         escolhido["rede"] = versao
@@ -1361,6 +1410,12 @@ def decidir_grupo(busca, titulos, alvo, itens):
     if not alvo.get("modelo"):
         return ["busca sem modelo reconhecido"] * len(titulos)
     itens = [item if menciona_o_modelo(titulo, busca) else dict(vazio) for item, titulo in zip(itens, titulos)]
+    # A tela de resultado abre assim: modelo de versão única sem separar por rede, ou opção 4G/5G começando em 4G.
+    modo = versao_da_tela(busca, alvo, [titulos[k] for k in do_mesmo_modelo(alvo, itens)])
+    if modo == "unica":
+        alvo = dict(alvo, versao_unica=True)
+    elif modo == "opcao":
+        alvo = dict(alvo, rede="4g")
     return motivos_da_busca(busca, alvo, itens, titulos)[2]
 
 
@@ -1493,6 +1548,70 @@ def mostrar_titulos(tabela):
     st.dataframe(vista, hide_index=True, column_config=config, height=35 * (len(vista) + 1) + 3)
 
 
+ARQUIVO_RESULTADOS = "resultados_registrados.json"  # resultados já obtidos, publicados ao lado do app.py
+ARQUIVO_PROTOCOLO = "PROTOCOLO.md"  # protocolo de validação, publicado ao lado do app.py
+
+
+def tabela_fixa(linhas):
+    tabela = pd.DataFrame(linhas).astype(str)
+    st.table(tabela.set_index(tabela.columns[0]))
+
+
+def mostrar_registro(registro):
+    """Uma execução registrada: data, versão, tabelas e observações, como foram obtidas."""
+    st.subheader(registro["titulo"])
+    st.caption(" · ".join(registro[c] for c in ("quando", "versao", "modelos", "conferencia") if registro.get(c)))
+    for texto in registro.get("textos", []):
+        st.write(texto)
+    if registro.get("medidas"):
+        tabela_fixa(registro["medidas"])
+    if registro.get("resumo"):
+        tabela_fixa(registro["resumo"])
+    if registro.get("decisao"):
+        st.write(registro["decisao"])
+    if registro.get("erros"):
+        st.markdown(f"**Erros caso a caso ({len(registro['erros'])} títulos)**")
+        tabela_fixa(registro["erros"])
+    if registro.get("buscas"):
+        st.markdown(f"**Buscas ({len(registro['buscas'])})**")
+        tabela_fixa(registro["buscas"])
+    if registro.get("ofertas"):
+        with st.expander(f"Ofertas conferidas nas páginas das lojas ({len(registro['ofertas'])})"):
+            st.dataframe(pd.DataFrame(registro["ofertas"]).astype(str), hide_index=True, column_config={
+                "URL": st.column_config.LinkColumn("URL", display_text=r"https?://(?:www\.)?(.+)")})
+    for nome, chave in (("Falhas encontradas", "falhas"), ("Desvios do protocolo", "desvios"), ("Observações", "observacoes")):
+        if registro.get(chave):
+            st.markdown(f"**{nome}**")
+            st.markdown("\n".join(f"- {item}" for item in registro[chave]))
+
+
+def mostrar_resultados_registrados():
+    """Resultados já obtidos: aparecem ao abrir a página, sem rodar os métodos de novo. Uma execução nova nesta
+    página aparece à parte e não muda os registros; reconferências de versões corrigidas entram depois dos originais."""
+    caminho = os.path.join(os.path.dirname(os.path.abspath(__file__)), ARQUIVO_RESULTADOS)
+    if not os.path.exists(caminho):
+        return
+    with open(caminho, encoding="utf-8") as arquivo:
+        dados = json.load(arquivo)
+    st.header("Resultados registrados")
+    st.warning(dados["aviso_ia"])
+    mostrar_registro(dados["avaliacao"])
+    mostrar_registro(dados["bateria"])
+    for registro in dados.get("reconferencias", []):
+        mostrar_registro(registro)
+    st.divider()
+
+
+def mostrar_protocolo():
+    st.title("Faixa Certa: protocolo de validação")
+    caminho = os.path.join(os.path.dirname(os.path.abspath(__file__)), ARQUIVO_PROTOCOLO)
+    if not os.path.exists(caminho):
+        st.info("O protocolo ainda não foi publicado.")
+        return
+    with open(caminho, encoding="utf-8") as arquivo:
+        st.markdown(arquivo.read())
+
+
 def mostrar_avaliacao():
     st.title("Faixa Certa: avaliação dos métodos")
     # Tira o ícone de baixar da barra das tabelas; os resultados ficam só na página.
@@ -1502,10 +1621,11 @@ def mostrar_avaliacao():
              "Um título está correto quando tipo, modelo completo, armazenamento e condição batem com o rótulo; em "
              f"acessório, basta o tipo. Se o LLM não superar as regras em pelo menos {DIFERENCA_MINIMA} pontos "
              "percentuais, as regras passam a ser o método principal. Resultado das regras não conta como acerto do LLM.")
-    st.caption(f"Versão congelada: código {versao_do_codigo()} (SHA-256 do app.py, 12 primeiros caracteres), prompt "
+    st.caption(f"Versão desta página: código {versao_do_codigo()} (SHA-256 do app.py, 12 primeiros caracteres), prompt "
                f"{versao_do_prompt()}, LLM principal {LLM_MODELO}, reserva {LLM_MODELO_RESERVA}, {LOTE_LLM} títulos por "
                f"chamada. Regras: filtro de acessórios, marca e modelo como na tela de escolha, armazenamento, condição, "
-               "rede e defeito lidos no título.")
+               "rede e defeito lidos no título. Cada resultado registrado traz a versão em que foi obtido.")
+    mostrar_resultados_registrados()
     arquivo = os.path.join(os.path.dirname(os.path.abspath(__file__)), ARQUIVO_AVALIACAO)
     if not os.path.exists(arquivo):
         st.info("O arquivo com os 50 títulos novos e os rótulos ainda não foi publicado.")
@@ -1530,7 +1650,8 @@ def mostrar_avaliacao():
         return
     resultado, execucao = st.session_state.avaliacao
     r = resumo_da_avaliacao(resultado)
-    st.subheader("Resultado")
+    st.subheader("Nova execução nesta página")
+    st.caption(f"Feita com a versão {versao_do_codigo()}. Fica só nesta sessão e não substitui os resultados registrados acima.")
     st.write(f"Extração: LLM {r['llm']} de {r['total']} títulos corretos ({r['llm'] / r['total']:.0%}); regras "
              f"{r['regras']} de {r['total']} ({r['regras'] / r['total']:.0%}). Diferença: {r['diferenca']:+.0f} pontos. "
              f"Método principal pelo critério de {DIFERENCA_MINIMA} pontos: **{r['principal']}**.")
@@ -1553,7 +1674,11 @@ def buscar_como_digitado():
     st.session_state.update(sem_correcao=True, nova_busca=True)
 
 
-st.set_page_config(page_title="Faixa Certa", layout="wide" if st.query_params.get("avaliar") == "1" else "centered")
+st.set_page_config(page_title="Faixa Certa", layout="wide" if "1" in (st.query_params.get("avaliar"), st.query_params.get("protocolo"))
+                   else "centered")
+if st.query_params.get("protocolo") == "1":
+    mostrar_protocolo()  # protocolo de validação, aberto a qualquer pessoa pelo endereço ?protocolo=1
+    st.stop()
 if st.query_params.get("avaliar") == "1":
     mostrar_avaliacao()  # reprodução dos testes de extração; não aparece na tela de busca
     st.stop()
