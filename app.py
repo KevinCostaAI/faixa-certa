@@ -1495,6 +1495,9 @@ def mostrar_titulos(tabela):
 
 def mostrar_avaliacao():
     st.title("Faixa Certa: avaliação dos métodos")
+    # Tira o ícone de baixar da barra das tabelas; os resultados ficam só na página.
+    st.html('<style>[data-testid="stElementToolbarButton"]:has(button[aria-label^="Download"]), '
+            'button[aria-label^="Download"] {display: none !important;}</style>')
     st.write("Os 50 títulos novos passam pelos dois métodos, cada um com a busca de referência do título, como no app. "
              "Um título está correto quando tipo, modelo completo, armazenamento e condição batem com o rótulo; em "
              f"acessório, basta o tipo. Se o LLM não superar as regras em pelo menos {DIFERENCA_MINIMA} pontos "
