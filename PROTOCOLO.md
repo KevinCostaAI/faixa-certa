@@ -381,6 +381,67 @@ Kevin autorizou a implementação e os testes no repositório existente `KevinCo
 
 **Lojas oficiais da Motorola e da Samsung.** Entraram pelo catálogo público de cada loja, que o robots.txt permite. Vale o primeiro SKU com estoque do vendedor padrão, e só o total no Pix ou no boleto em uma parcela, sem juros, cupom ou assinatura, entra como pagamento confirmado. O link é a página do produto na própria loja. A rede vem do título ou de um campo de rede do catálogo; “USB-C” e Wi-Fi não contam como rede móvel. Cada loja só é consultada quando a busca é da própria marca e pede aparelho novo; nas outras buscas aparece como “não se aplica”. Com elas, o esperado no Streamlit é a busca 8 passar a ter duas lojas; a busca 4 depende de o A36 128 GB voltar ao estoque. A meta de 18 de 20 continua dependendo de lojas que hoje bloqueiam o servidor ou proíbem a coleta.
 
+**Validação final, 14/11/2026.** Versão congelada: commit d87558c, app.py com SHA-256 iniciado por ffb12bc7fbc7 e prompt 6953e9ae9a95, já com as lojas oficiais da Motorola e da Samsung. A avaliação dos 50 títulos e a bateria das 20 buscas rodaram de novo no app publicado. Os resultados anteriores continuam valendo para as versões em que foram obtidos. O commit seguinte só pôs esta rodada no alto da página de avaliação (app.py iniciado por 97976f423177), sem mudar busca, extração, decisão nem prompt.
+
+Avaliação dos 50 títulos às 11:11, em 147 s. Responderam gemini-3.1-flash-lite e gemini-3.5-flash-lite, sem falha da IA.
+
+| Medida | LLM | Regras |
+| --- | --- | --- |
+| Extração correta | 46 de 50 (92%) | 45 de 50 (90%) |
+| Decisão (aceitar ou excluir) | 42 acertos, 7 erros, 1 inconclusiva | 44 acertos, 5 erros, 1 inconclusiva |
+| Rede e defeito nos celulares | 40 de 40 cada | 40 de 40 cada |
+
+A diferença ficou em 2 pontos, e as regras continuam como método principal. Os títulos com erro são os mesmos da reconferência das 07:24: nºs 16, 22, 24, 25, 29, 35, 36, 39, 41, 45 e 48, listados um a um na página de avaliação. A medida ainda usa os rótulos feitos por IA e será recalculada depois da revisão humana.
+
+Bateria das 20 buscas, das 11:13 às 11:27, todas com coleta nova. O tempo vai do clique em “Buscar” até a mensagem de conclusão do app, que aparece depois das tabelas. O registro de cada busca, com as lojas consultadas, as mensagens do app, as ofertas exibidas e os descartes por motivo, está em `validacoes/validacao-final-20261114.json`.
+
+| # | Busca | Tempo | Lojas com preço confirmado | À parte | Faixa |
+| --- | --- | --- | --- | --- | --- |
+| 1 | galaxy a07 128gb | 12,6 s | 3 (KaBuM!, Samsung, Webcontinental) | 0 | Sim |
+| 2 | galaxi a17 128gb | 12,8 s | 3 (Gazin, KaBuM!, Webcontinental) | 0 | Sim |
+| 3 | galaxy a16 128gb | 5,8 s | 2 (KaBuM!, Webcontinental) | 1 (Novo Mundo) | Sim |
+| 4 | galaxy a36 5g 128gb | 11,5 s | 1 (KaBuM!) | 5 (Mercado Livre, Shopee) | Não |
+| 5 | galaxy a14 128gb usado | 5,7 s | 0 | 0 | Não |
+| 6 | motorolla g06 128gb | 11,4 s | 4 (Gazin, KaBuM!, Motorola, Webcontinental) | 15 (Mercado Livre, Shopee) | Sim |
+| 7 | moto g17 256gb | 11,8 s | 4 (Gazin, KaBuM!, Motorola, Webcontinental) | 8 (Mercado Livre, Novo Mundo, Shopee) | Sim |
+| 8 | moto g35 256gb | 2,9 s | 2 (KaBuM!, Motorola) | 6 (Mercado Livre, Shopee) | Sim |
+| 9 | moto g47 128gb | 11,3 s | 3 (Gazin, KaBuM!, Motorola) | 9 (Mercado Livre, Novo Mundo, Shopee) | Sim |
+| 10 | moto e15 64gb | 4,1 s | 1 (KaBuM!) | 0 | Não |
+| 11 | xiaome redmi 15c 256gb | 11,2 s | 2 (KaBuM!, Webcontinental) | 3 (Mercado Livre, Shopee) | Sim |
+| 12 | redmi 15 256gb | 11,1 s | 1 (KaBuM!) | 0 | Não |
+| 13 | poco c85 128gb | 7,9 s | 2 (KaBuM!, Webcontinental) | 0 | Sim |
+| 14 | redmi note 15 256gb | 11,7 s | 1 (KaBuM!) | 0 | Não |
+| 15 | oppo a6x 128gb | 6,5 s | 2 (Gazin, KaBuM!) | 4 (Mercado Livre, Novo Mundo, Shopee) | Sim |
+| 16 | iphone 16e 128gb | 11,7 s | 2 (Gazin, KaBuM!) | 0 | Sim |
+| 17 | epone 16 128gb | 12,5 s | 1 (KaBuM!) | 0 | Sim |
+| 18 | iphone 17 pro max 256gb | 11,7 s | 2 (KaBuM!, Webcontinental) | 0 | Sim |
+| 19 | iphone 13 128gb usado | 12,1 s | 2 (KaBuM!, Trocafy) | 0 | Sim |
+| 20 | iphone 14 128gb recondicionado | 11,9 s | 0 | 0 | Não |
+
+| Medida | Resultado | Meta |
+| --- | --- | --- |
+| Cobertura com preço confirmado | 13 de 20 (1, 2, 3, 6, 7, 8, 9, 11, 13, 15, 16, 18 e 19) | 18 de 20: não atingida |
+| Cobertura contando as ofertas à parte | 14 de 20 (acrescenta a busca 4), antes da conferência | 18 de 20: não atingida |
+| Tempo de resposta | 20 de 20 em até 15 s; mediana 11,4 s; máximo 12,8 s | 18 de 20: atingida |
+| Faixa gerada | 14 de 20 | Informada |
+| Equivalência | 144 ofertas exibidas (93 na faixa e 51 à parte) aguardam conferência humana | Pelo menos 95%: pendente |
+
+O cálculo de cobertura do protocolo conta as ofertas exibidas e conferidas como equivalentes, com o Compare Livre pela loja de destino. As rodadas anteriores contaram só as ofertas com preço confirmado. As duas contagens ficam registradas, e a cobertura final sai depois da conferência humana.
+
+Falhas encontradas:
+
+- A Magazine Luiza respondeu HTTP 403 ao servidor do Streamlit nas 20 buscas.
+- O Compare Livre estourou o prazo nas buscas 1, 2 e 17 e não respondeu nas buscas 16, 18, 19 e 20.
+- As buscas 4, 10, 12, 14 e 17 ficaram com preço confirmado só na KaBuM!, como previa o diagnóstico acima. As buscas 5 e 20 não tiveram oferta equivalente.
+
+Desvios do protocolo:
+
+- Busca 2: a primeira tentativa, às 11:14, perdeu a medição de tempo, porque o script de medição tomou como conclusão o texto da extração anterior, que ele mesmo tinha posto na página. A coleta terminou no servidor, com processamento de 12,1 s, e gerou faixa com 4 ofertas de 3 lojas. Pela regra fixada antes de ver o resultado, a busca foi repetida às 11:15, com coleta nova, e vale a repetição.
+- A medição usou o endereço do app sem a moldura do Streamlit Cloud (faixa-certa.streamlit.app/~/+/). É o mesmo servidor e o mesmo código.
+- A conferência das ofertas e a revisão dos 50 rótulos são feitas pelo Kevin, numa página própria, com data e hora de cada item. Nenhuma conferência foi preenchida por IA nesta rodada.
+
+Observação: na busca 2, a Gazin apareceu com o Galaxy A17 128 GB por R$ 929,90 (cor azul) na primeira tentativa e por R$ 1.868,28 (cor preta) na repetição, um minuto depois. O preço vem da cor que a loja mostra primeiro; a conferência humana vai checar a página.
+
 ### Aplicação dos testes com pessoas
 
 O roteiro e as metas da seção “Correção de digitação e testes com usuários” permanecem os mesmos. Kevin aplica as sessões com os participantes reais, usando códigos L1 a L5 e C1 a C5, sem publicar nomes.

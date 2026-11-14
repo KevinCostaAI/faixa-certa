@@ -1706,5 +1706,2021 @@
     "O Compare Livre não respondeu em 4 das 9 coletas novas (16, 5, 14 e 4)."
    ]
   }
- ]
+ ],
+ "validacao_final": {
+  "titulo": "Validação final",
+  "texto": "Versão congelada: commit d87558c, app.py com SHA-256 iniciado por ffb12bc7fbc7, prompt 6953e9ae9a95. A avaliação dos 50 títulos e a bateria das 20 buscas rodaram de novo no app publicado, sem substituir os resultados anteriores, que continuam abaixo. A revisão humana dos rótulos e das ofertas e os testes com os dez participantes ainda estão pendentes.",
+  "registros": [
+   {
+    "titulo": "Avaliação dos 50 títulos · validação final",
+    "quando": "14/11/2026, 11:11 (147 s)",
+    "versao": "código ffb12bc7fbc7 (commit d87558c), prompt 6953e9ae9a95",
+    "modelos": "gemini-3.1-flash-lite e gemini-3.5-flash-lite responderam; nenhuma falha da IA",
+    "textos": [
+     "Mesmos 50 títulos, rótulos e critérios do protocolo. Os rótulos ainda são os feitos por IA: depois da revisão humana, os números são recalculados e publicados à parte."
+    ],
+    "resumo": [
+     {
+      "Medida": "Extração correta (modelo, armazenamento e condição; tipo nos acessórios)",
+      "LLM": "46 de 50 (92%)",
+      "Regras": "45 de 50 (90%)"
+     },
+     {
+      "Medida": "Rede nos celulares",
+      "LLM": "40 de 40",
+      "Regras": "40 de 40"
+     },
+     {
+      "Medida": "Defeito nos celulares",
+      "LLM": "40 de 40",
+      "Regras": "40 de 40"
+     },
+     {
+      "Medida": "Decisão de aceitar ou excluir",
+      "LLM": "42 acertos, 7 erros, 1 inconclusiva",
+      "Regras": "44 acertos, 5 erros, 1 inconclusiva"
+     },
+     {
+      "Medida": "Falhas da IA",
+      "LLM": "0",
+      "Regras": "não se aplica"
+     }
+    ],
+    "decisao": "O LLM ficou 2 pontos à frente na extração, abaixo dos 10 pontos exigidos. As regras continuam como método principal.",
+    "erros": [
+     {
+      "Nº": 16,
+      "Título": "Smartphone Xiaomi Redmi Note 14 8+8GB + 256gb, Verde",
+      "Busca de referência": "redmi note 14 256gb",
+      "Rótulo": "Redmi Note 14 · 256 GB · novo · rede: não informado: excluir (atributo exigido não informado no título)",
+      "LLM": "Aceitou; o rótulo exclui (rede não informada): erro",
+      "Regras": "Igual: erro"
+     },
+     {
+      "Nº": 22,
+      "Título": "Celular Smartphone Infinix HOT 60i Dual Chip 4G Tela 6,7 pol. 4GB + 4GB RAM 256 GB",
+      "Busca de referência": "infinix hot 60i 256gb",
+      "Rótulo": "Hot 60i · 256 GB · novo · rede: 4G: aceitar",
+      "LLM": "Aceitou; página da Shopee não verificada: inconclusiva",
+      "Regras": "Igual: inconclusiva"
+     },
+     {
+      "Nº": 24,
+      "Título": "Infinix Hot 60i, Hot 50i 256GB e 4GB RAM, Câmera 48MP, Processador MediaTek Helio G81, Bateria 5000Mah, Versão",
+      "Busca de referência": "infinix hot 60i 256gb",
+      "Rótulo": "não informado · 256 GB · novo · rede: não informado: excluir (atributo exigido não informado no título)",
+      "LLM": "Extraiu Hot 60i (rótulo: modelo inconclusivo) e aceitou: erro",
+      "Regras": "Igual: erro"
+     },
+     {
+      "Nº": 25,
+      "Título": "Smartphone Realme C75 5G NFC 256 IP69 à Prova d’Água Bateria 5828mAh Câmera 50MP Robusto",
+      "Busca de referência": "realme c75 256gb",
+      "Rótulo": "Realme C75 · não informado · novo · rede: 5G: excluir (outra rede)",
+      "LLM": "Extraiu 256 GB (rótulo: não informado) e aceitou: erro",
+      "Regras": "Armazenamento não informado: acerto"
+     },
+     {
+      "Nº": 29,
+      "Título": "Celular Samsung Galaxy Z Fold5 1TB 12gb Ram Recondicionado",
+      "Busca de referência": "galaxy s23 ultra recondicionado",
+      "Rótulo": "Galaxy Z Fold5 · 1 TB · recondicionado · rede: não informado: excluir (outro modelo ou variante)",
+      "LLM": "Acerto",
+      "Regras": "Não extraiu o modelo; decisão certa"
+     },
+     {
+      "Nº": 35,
+      "Título": "Apple Iphone 16e A3212 Esim 128GB 8GB Ram 6.1 - Black",
+      "Busca de referência": "iphone 16 plus 128gb",
+      "Rótulo": "iPhone 16e · 128 GB · novo · rede: não informado: excluir (outro modelo ou variante)",
+      "LLM": "Acerto",
+      "Regras": "Extraiu “iphone 16e a3212” como modelo; decisão certa"
+     },
+     {
+      "Nº": 36,
+      "Título": "S25 Ultra (256gb) - Titânio Azul + Buds3 Fe - Preto",
+      "Busca de referência": "galaxy s25 ultra 256gb",
+      "Rótulo": "Galaxy S25 Ultra · 256 GB · novo · rede: não informado: aceitar",
+      "LLM": "Extração certa; excluiu por marca não informada: erro",
+      "Regras": "Não extraiu o modelo; excluiu por marca não informada: erro"
+     },
+     {
+      "Nº": 39,
+      "Título": "Realme C75 8 256 Gold",
+      "Busca de referência": "realme c75 256gb",
+      "Rótulo": "Realme C75 · não informado · novo · rede: não informado: excluir (atributo exigido não informado no título)",
+      "LLM": "Extraiu 256 GB (rótulo: não informado) e aceitou: erro",
+      "Regras": "Acerto"
+     },
+     {
+      "Nº": 41,
+      "Título": "Celular Xiaomi Redmi Note 13 6gb/128gb Verde Menta",
+      "Busca de referência": "redmi note 13 128gb",
+      "Rótulo": "Redmi Note 13 · 128 GB · novo · rede: não informado: excluir (atributo exigido não informado no título)",
+      "LLM": "Aceitou; o rótulo exclui (rede não informada): erro",
+      "Regras": "Igual: erro"
+     },
+     {
+      "Nº": 45,
+      "Título": "Usado -  Samsung S20 Fe 128 Gb Rosa - Regular",
+      "Busca de referência": "galaxy s20 fe 128gb usado",
+      "Rótulo": "Galaxy S20 FE · 128 GB · usado · rede: não informado: excluir (atributo exigido não informado no título)",
+      "LLM": "Aceitou; o rótulo exclui (rede não informada): erro",
+      "Regras": "Igual: erro"
+     },
+     {
+      "Nº": 48,
+      "Título": "S25+ (512gb) - Prata + Watch7 Bt 40mm - Creme",
+      "Busca de referência": "galaxy s25 fe 256gb",
+      "Rótulo": "Galaxy S25+ · 512 GB · novo · rede: não informado: excluir (outro modelo ou variante)",
+      "LLM": "Extraiu “S25+” sem “Galaxy”; tratou como acessório ou outro produto; decisão certa",
+      "Regras": "Não extraiu o modelo; “outro modelo”; decisão certa"
+     }
+    ]
+   },
+   {
+    "titulo": "Bateria de 20 buscas · validação final",
+    "quando": "14/11/2026, das 11:13 às 11:27, todas com coleta nova",
+    "versao": "código ffb12bc7fbc7 (commit d87558c), regras como método principal",
+    "conferencia": "Conferência humana das ofertas: pendente",
+    "textos": [
+     "Tempo medido no navegador, no app publicado, do clique em “Buscar” até a mensagem de conclusão do app (“Consulta concluída… Coleta nova”), que aparece depois das tabelas. A contagem de lojas é automática; a cobertura e a equivalência valem depois da conferência humana de cada oferta exibida."
+    ],
+    "medidas": [
+     {
+      "Medida": "Cobertura com preço confirmado (Pix ou à vista) em 2 lojas ou mais",
+      "Resultado": "13 de 20 buscas",
+      "Meta": "18 de 20",
+      "Situação": "Meta não atingida"
+     },
+     {
+      "Medida": "Cobertura contando as ofertas à parte (Compare Livre pela loja de destino)",
+      "Resultado": "14 de 20 buscas, antes da conferência",
+      "Meta": "18 de 20",
+      "Situação": "Meta não atingida"
+     },
+     {
+      "Medida": "Tempo de resposta (do clique ao resultado completo)",
+      "Resultado": "20 de 20 em até 15 s; mediana 11,4 s; máximo 12,8 s",
+      "Meta": "18 de 20 em até 15 s",
+      "Situação": "Meta atingida"
+     },
+     {
+      "Medida": "Faixa gerada",
+      "Resultado": "14 de 20 buscas",
+      "Meta": "Informada",
+      "Situação": "Informada"
+     },
+     {
+      "Medida": "Equivalência das ofertas exibidas",
+      "Resultado": "144 ofertas (93 na faixa, 51 à parte) aguardam conferência humana",
+      "Meta": "Pelo menos 95%",
+      "Situação": "Pendente"
+     }
+    ],
+    "buscas": [
+     {
+      "#": 1,
+      "Busca": "galaxy a07 128gb",
+      "Tempo": "12,6 s",
+      "Lojas com preço confirmado": "3 (KaBuM!, Samsung, Webcontinental)",
+      "À parte": "0",
+      "Faixa": "Sim",
+      "Menor": "R$ 718,20",
+      "Mediana": "R$ 911,90",
+      "Maior": "R$ 1.359,91",
+      "Observação": "Samsung oficial entrou com o A07 128 GB no Pix"
+     },
+     {
+      "#": 2,
+      "Busca": "galaxi a17 128gb",
+      "Tempo": "12,8 s",
+      "Lojas com preço confirmado": "3 (Gazin, KaBuM!, Webcontinental)",
+      "À parte": "0",
+      "Faixa": "Sim",
+      "Menor": "R$ 978,55",
+      "Mediana": "R$ 1.403,91",
+      "Maior": "R$ 1.868,28",
+      "Observação": "Grafia corrigida; medição repetida (ver desvios)"
+     },
+     {
+      "#": 3,
+      "Busca": "galaxy a16 128gb",
+      "Tempo": "5,8 s",
+      "Lojas com preço confirmado": "2 (KaBuM!, Webcontinental)",
+      "À parte": "1 (Novo Mundo)",
+      "Faixa": "Sim",
+      "Menor": "R$ 1.102,96",
+      "Mediana": "R$ 1.299,00",
+      "Maior": "R$ 1.310,40",
+      "Observação": "1 à parte (Novo Mundo)"
+     },
+     {
+      "#": 4,
+      "Busca": "galaxy a36 5g 128gb",
+      "Tempo": "11,5 s",
+      "Lojas com preço confirmado": "1 (KaBuM!)",
+      "À parte": "5 (Mercado Livre, Shopee)",
+      "Faixa": "Não",
+      "Menor": "—",
+      "Mediana": "—",
+      "Maior": "—",
+      "Observação": "Samsung oficial: A36 128 GB esgotado; 5 à parte pelo Compare Livre (Mercado Livre e Shopee)"
+     },
+     {
+      "#": 5,
+      "Busca": "galaxy a14 128gb usado",
+      "Tempo": "5,7 s",
+      "Lojas com preço confirmado": "0",
+      "À parte": "0",
+      "Faixa": "Não",
+      "Menor": "—",
+      "Mediana": "—",
+      "Maior": "—",
+      "Observação": "Abre em 4G; nenhum usado com rede no título"
+     },
+     {
+      "#": 6,
+      "Busca": "motorolla g06 128gb",
+      "Tempo": "11,4 s",
+      "Lojas com preço confirmado": "4 (Gazin, KaBuM!, Motorola, Webcontinental)",
+      "À parte": "15 (Mercado Livre, Shopee)",
+      "Faixa": "Sim",
+      "Menor": "R$ 759,90",
+      "Mediana": "R$ 798,65",
+      "Maior": "R$ 1.439,90",
+      "Observação": "Grafia corrigida; 4 lojas com preço confirmado, incluindo a Motorola oficial"
+     },
+     {
+      "#": 7,
+      "Busca": "moto g17 256gb",
+      "Tempo": "11,8 s",
+      "Lojas com preço confirmado": "4 (Gazin, KaBuM!, Motorola, Webcontinental)",
+      "À parte": "8 (Mercado Livre, Novo Mundo, Shopee)",
+      "Faixa": "Sim",
+      "Menor": "R$ 1.061,91",
+      "Mediana": "R$ 1.199,00",
+      "Maior": "R$ 2.191,92",
+      "Observação": "4 lojas com preço confirmado"
+     },
+     {
+      "#": 8,
+      "Busca": "moto g35 256gb",
+      "Tempo": "2,9 s",
+      "Lojas com preço confirmado": "2 (KaBuM!, Motorola)",
+      "À parte": "6 (Mercado Livre, Shopee)",
+      "Faixa": "Sim",
+      "Menor": "R$ 1.199,00",
+      "Mediana": "R$ 1.259,10",
+      "Maior": "R$ 1.769,00",
+      "Observação": "Motorola oficial deu a segunda loja"
+     },
+     {
+      "#": 9,
+      "Busca": "moto g47 128gb",
+      "Tempo": "11,3 s",
+      "Lojas com preço confirmado": "3 (Gazin, KaBuM!, Motorola)",
+      "À parte": "9 (Mercado Livre, Novo Mundo, Shopee)",
+      "Faixa": "Sim",
+      "Menor": "R$ 1.131,30",
+      "Mediana": "R$ 1.165,15",
+      "Maior": "R$ 1.471,55",
+      "Observação": "3 lojas com preço confirmado"
+     },
+     {
+      "#": 10,
+      "Busca": "moto e15 64gb",
+      "Tempo": "4,1 s",
+      "Lojas com preço confirmado": "1 (KaBuM!)",
+      "À parte": "0",
+      "Faixa": "Não",
+      "Menor": "—",
+      "Mediana": "—",
+      "Maior": "—",
+      "Observação": "Só a KaBuM! vende o E15 entre as fontes que respondem"
+     },
+     {
+      "#": 11,
+      "Busca": "xiaome redmi 15c 256gb",
+      "Tempo": "11,2 s",
+      "Lojas com preço confirmado": "2 (KaBuM!, Webcontinental)",
+      "À parte": "3 (Mercado Livre, Shopee)",
+      "Faixa": "Sim",
+      "Menor": "R$ 1.379,89",
+      "Mediana": "R$ 1.671,99",
+      "Maior": "R$ 1.899,99",
+      "Observação": "Grafia corrigida"
+     },
+     {
+      "#": 12,
+      "Busca": "redmi 15 256gb",
+      "Tempo": "11,1 s",
+      "Lojas com preço confirmado": "1 (KaBuM!)",
+      "À parte": "0",
+      "Faixa": "Não",
+      "Menor": "—",
+      "Mediana": "—",
+      "Maior": "—",
+      "Observação": "Abre em 4G; só 1 anúncio com 4G no título"
+     },
+     {
+      "#": 13,
+      "Busca": "poco c85 128gb",
+      "Tempo": "7,9 s",
+      "Lojas com preço confirmado": "2 (KaBuM!, Webcontinental)",
+      "À parte": "0",
+      "Faixa": "Sim",
+      "Menor": "R$ 1.495,99",
+      "Mediana": "R$ 1.495,99",
+      "Maior": "R$ 1.699,99",
+      "Observação": "Webcontinental e KaBuM!, rede confirmada na ficha"
+     },
+     {
+      "#": 14,
+      "Busca": "redmi note 15 256gb",
+      "Tempo": "11,7 s",
+      "Lojas com preço confirmado": "1 (KaBuM!)",
+      "À parte": "0",
+      "Faixa": "Não",
+      "Menor": "—",
+      "Mediana": "—",
+      "Maior": "—",
+      "Observação": "Abre em 4G; só 1 anúncio confirma 4G"
+     },
+     {
+      "#": 15,
+      "Busca": "oppo a6x 128gb",
+      "Tempo": "6,5 s",
+      "Lojas com preço confirmado": "2 (Gazin, KaBuM!)",
+      "À parte": "4 (Mercado Livre, Novo Mundo, Shopee)",
+      "Faixa": "Sim",
+      "Menor": "R$ 1.169,10",
+      "Mediana": "R$ 1.284,05",
+      "Maior": "R$ 1.509,30",
+      "Observação": "4 à parte"
+     },
+     {
+      "#": 16,
+      "Busca": "iphone 16e 128gb",
+      "Tempo": "11,7 s",
+      "Lojas com preço confirmado": "2 (Gazin, KaBuM!)",
+      "À parte": "0",
+      "Faixa": "Sim",
+      "Menor": "R$ 3.299,00",
+      "Mediana": "R$ 3.899,45",
+      "Maior": "R$ 5.179,90",
+      "Observação": "KaBuM! e Gazin"
+     },
+     {
+      "#": 17,
+      "Busca": "epone 16 128gb",
+      "Tempo": "12,5 s",
+      "Lojas com preço confirmado": "1 (KaBuM!)",
+      "À parte": "0",
+      "Faixa": "Sim",
+      "Menor": "R$ 4.799,00",
+      "Mediana": "R$ 4.799,00",
+      "Maior": "R$ 5.799,00",
+      "Observação": "Grafia corrigida; só a KaBuM! entre as fontes que respondem"
+     },
+     {
+      "#": 18,
+      "Busca": "iphone 17 pro max 256gb",
+      "Tempo": "11,7 s",
+      "Lojas com preço confirmado": "2 (KaBuM!, Webcontinental)",
+      "À parte": "0",
+      "Faixa": "Sim",
+      "Menor": "R$ 9.099,00",
+      "Mediana": "R$ 11.334,05",
+      "Maior": "R$ 14.586,60",
+      "Observação": "KaBuM! e Webcontinental"
+     },
+     {
+      "#": 19,
+      "Busca": "iphone 13 128gb usado",
+      "Tempo": "12,1 s",
+      "Lojas com preço confirmado": "2 (KaBuM!, Trocafy)",
+      "À parte": "0",
+      "Faixa": "Sim",
+      "Menor": "R$ 1.713,51",
+      "Mediana": "R$ 2.258,05",
+      "Maior": "R$ 2.899,00",
+      "Observação": "Trocafy e KaBuM!"
+     },
+     {
+      "#": 20,
+      "Busca": "iphone 14 128gb recondicionado",
+      "Tempo": "11,9 s",
+      "Lojas com preço confirmado": "0",
+      "À parte": "0",
+      "Faixa": "Não",
+      "Menor": "—",
+      "Mediana": "—",
+      "Maior": "—",
+      "Observação": "Sem oferta esperada; não misturou usados nem novos"
+     }
+    ],
+    "falhas": [
+     "A Magazine Luiza respondeu HTTP 403 ao servidor do Streamlit nas 20 buscas.",
+     "O Compare Livre estourou o prazo nas buscas 1, 2 e 17 e não respondeu nas buscas 16, 18, 19 e 20.",
+     "As buscas 4, 10, 12, 14 e 17 ficaram com preço confirmado só na KaBuM!: entre as fontes que respondem ao servidor, nenhuma outra vendia o modelo na versão esperada (diagnóstico registrado no protocolo). As buscas 5 e 20 não tiveram oferta equivalente."
+    ],
+    "desvios": [
+     "Busca 2: a primeira tentativa, às 11:14, perdeu a medição de tempo, porque o script de medição tomou como conclusão o texto da extração anterior, que ele mesmo tinha posto na página. A coleta terminou no servidor (processamento de 12,1 s) e gerou faixa com 4 ofertas de 3 lojas. Pela regra fixada antes de ver o resultado, a busca foi repetida às 11:15, com coleta nova; vale a repetição.",
+     "A medição usou o endereço do app sem a moldura do Streamlit Cloud (faixa-certa.streamlit.app/~/+/): é o mesmo servidor e o mesmo código.",
+     "A conferência das ofertas e a revisão dos 50 rótulos são feitas pelo Kevin, numa página própria; nenhuma conferência foi preenchida por IA nesta rodada."
+    ],
+    "observacoes": [
+     "Busca 2: a Gazin apareceu com o Galaxy A17 128 GB por R$ 929,90 (cor azul) na primeira tentativa e por R$ 1.868,28 (cor preta) na repetição, um minuto depois. O preço vem da cor que a loja mostra primeiro; a conferência humana vai checar a página.",
+     "Antes da validação, uma busca de teste fora da bateria (“moto g06 64gb”, 11:08) confirmou que a loja oficial da Motorola responde ao servidor."
+    ]
+   }
+  ],
+  "ofertas": [
+   {
+    "Busca": 1,
+    "Tabela": "faixa",
+    "Loja": "Magalu",
+    "Fonte": "KaBuM!",
+    "Título exibido": "Celular Galaxy A07 128GB 4g Samsung",
+    "Preço exibido": "R$ 718,20",
+    "Pagamento": "Pix",
+    "Rede": "4G",
+    "URL": "https://www.kabum.com.br/produto/921237"
+   },
+   {
+    "Busca": 1,
+    "Tabela": "faixa",
+    "Loja": "Magalu",
+    "Fonte": "KaBuM!",
+    "Título exibido": "Smartphone Samsung A07 4g 128GB 4gb 50mp 8mp 6.7” Preto",
+    "Preço exibido": "R$ 718,20",
+    "Pagamento": "Pix",
+    "Rede": "4G",
+    "URL": "https://www.kabum.com.br/produto/921218"
+   },
+   {
+    "Busca": 1,
+    "Tabela": "faixa",
+    "Loja": "OFFCOMP",
+    "Fonte": "KaBuM!",
+    "Título exibido": "Smartphone Samsung Galaxy A07 128GB, 4GB, Câmera 50mp, Tela 6.7”, Proteção Ip54, Processador 6nm, Preto",
+    "Preço exibido": "R$ 784,69",
+    "Pagamento": "Pix",
+    "Rede": "4G (ficha)",
+    "URL": "https://www.kabum.com.br/produto/924196"
+   },
+   {
+    "Busca": 1,
+    "Tabela": "faixa",
+    "Loja": "Webcontinental · Lojas Edmil",
+    "Fonte": "Webcontinental",
+    "Título exibido": "Smartphone Samsung A07 4GB RAM 128GB 50MP Violeta",
+    "Preço exibido": "R$ 843,90",
+    "Pagamento": "Pix",
+    "Rede": "4G (ficha)",
+    "URL": "https://www.webcontinental.com.br/smartphone-samsung-a07-4gb-ram-128gb-50mp-violeta-003958001053/p"
+   },
+   {
+    "Busca": 1,
+    "Tabela": "faixa",
+    "Loja": "LetsGo Informática",
+    "Fonte": "KaBuM!",
+    "Título exibido": "Smartphone Samsung Galaxy A07 Sm-a075mzkrzto 6,7\" Hd/4g/4gb Ram+4gb Ram Plus/128GB/android 15/ Preto",
+    "Preço exibido": "R$ 979,90",
+    "Pagamento": "Pix",
+    "Rede": "4G",
+    "URL": "https://www.kabum.com.br/produto/997796"
+   },
+   {
+    "Busca": 1,
+    "Tabela": "faixa",
+    "Loja": "Samsung",
+    "Fonte": "Samsung",
+    "Título exibido": "Celular Samsung Galaxy A07 128GB, 4GB, Câmera 50MP, Tela 6.7\", Proteção IP54, Processador 6nm · Verde",
+    "Preço exibido": "R$ 1.044,05",
+    "Pagamento": "Pix",
+    "Rede": "4G (ficha)",
+    "URL": "https://shop.samsung.com/br/galaxy-a07/p"
+   },
+   {
+    "Busca": 1,
+    "Tabela": "faixa",
+    "Loja": "ECOM ELETRO",
+    "Fonte": "KaBuM!",
+    "Título exibido": "Smartphone Samsung Galaxy A07 128GB - Violeta, 4g, Ram 4gb, Câmera 50mp + Selfie 8mp, Tela 6,7\"",
+    "Preço exibido": "R$ 1.220,49",
+    "Pagamento": "Pix",
+    "Rede": "4G",
+    "URL": "https://www.kabum.com.br/produto/921128"
+   },
+   {
+    "Busca": 1,
+    "Tabela": "faixa",
+    "Loja": "Webcontinental · Tá Barato Tô Levando",
+    "Fonte": "Webcontinental",
+    "Título exibido": "Smartphone Samsung Galaxy A07 A075 8GB 128GB 50MP 4G Android Preto",
+    "Preço exibido": "R$ 1.359,91",
+    "Pagamento": "Pix",
+    "Rede": "4G",
+    "URL": "https://www.webcontinental.com.br/smartphone-samsung-galaxy-a07-a075-8gb-128gb-50mp-4g-android-preto-002648007476/p"
+   },
+   {
+    "Busca": 2,
+    "Tabela": "faixa",
+    "Loja": "CONCORDIA INFORMATICA",
+    "Fonte": "KaBuM!",
+    "Título exibido": "Celular Samsung Galaxy A17 4g 128GB 4gb Câmera 50mp Tela 6.7'' Preto",
+    "Preço exibido": "R$ 978,55",
+    "Pagamento": "Pix",
+    "Rede": "4G",
+    "URL": "https://www.kabum.com.br/produto/1077420"
+   },
+   {
+    "Busca": 2,
+    "Tabela": "faixa",
+    "Loja": "Webcontinental · Lojas Colombo SA",
+    "Fonte": "Webcontinental",
+    "Título exibido": "Smartphone Samsung Galaxy A17 4GB 128GB Câmera Tripla 50MP Preto",
+    "Preço exibido": "R$ 1.390,82",
+    "Pagamento": "Pix",
+    "Rede": "4G (ficha)",
+    "URL": "https://www.webcontinental.com.br/smartphone-samsung-galaxy-a17-4gb-128gb-camera-tripla-50mp-preto-003082004384/p"
+   },
+   {
+    "Busca": 2,
+    "Tabela": "faixa",
+    "Loja": "MAGAZINEMETA",
+    "Fonte": "KaBuM!",
+    "Título exibido": "Smartphone Samsung Galaxy A17 Com Ia, 128GB, 4GB RAM, Câm De 50mp, Tela De 6.7”, Nfc, Ip54 Preto",
+    "Preço exibido": "R$ 1.417,00",
+    "Pagamento": "Pix",
+    "Rede": "4G (ficha)",
+    "URL": "https://www.kabum.com.br/produto/924199"
+   },
+   {
+    "Busca": 2,
+    "Tabela": "faixa",
+    "Loja": "Gazin",
+    "Fonte": "Gazin",
+    "Título exibido": "Smartphone Samsung Galaxy A17 4G 6.7\" 128GB 4GB Câmera Tripla",
+    "Preço exibido": "R$ 1.868,28",
+    "Pagamento": "Pix",
+    "Rede": "4G",
+    "URL": "https://www.gazin.com.br/produto/smartphone-samsung-galaxy-a17-4g-67-128gb-4gb-camera-tripla/9984/preto/quadriband"
+   },
+   {
+    "Busca": 3,
+    "Tabela": "faixa",
+    "Loja": "Webcontinental · WORLDTRONICS",
+    "Fonte": "Webcontinental",
+    "Título exibido": "Celular Smartphone Samsung A16 128gb De Memória 4gb Ram 4g Preto",
+    "Preço exibido": "R$ 1.102,96",
+    "Pagamento": "Pix",
+    "Rede": "4G",
+    "URL": "https://www.webcontinental.com.br/celular-smartphone-samsung-a16-128gb-de-memoria-4gb-ram-4g-preto-006488000010/p"
+   },
+   {
+    "Busca": 3,
+    "Tabela": "faixa",
+    "Loja": "MAGAZINE JABUR",
+    "Fonte": "KaBuM!",
+    "Título exibido": "Smartphone Samsung Galaxy A16 4G, 128GB, 4GB Ram, Câmera Tripla 50MP, Tela 6.7\", Preto",
+    "Preço exibido": "R$ 1.299,00",
+    "Pagamento": "Pix",
+    "Rede": "4G",
+    "URL": "https://www.kabum.com.br/produto/677921"
+   },
+   {
+    "Busca": 3,
+    "Tabela": "faixa",
+    "Loja": "Webcontinental · Luana Eletronicos",
+    "Fonte": "Webcontinental",
+    "Título exibido": "Smartphone Samsung Galaxy A16 4GB RAM 128GB Câmera 50MP",
+    "Preço exibido": "R$ 1.310,40",
+    "Pagamento": "Pix",
+    "Rede": "4G (ficha)",
+    "URL": "https://www.webcontinental.com.br/smartphone-samsung-galaxy-a16-4gb-ram-128gb-camera-50mp-006586000042/p"
+   },
+   {
+    "Busca": 3,
+    "Tabela": "à parte",
+    "Loja": "Novo Mundo",
+    "Fonte": "Novo Mundo",
+    "Título exibido": "Smartphone Samsung Galaxy A16 4G 6.7'' 128GB 4GB Câmera Tripla - Cinza",
+    "Preço exibido": "R$ 999,00",
+    "Pagamento": "não informada",
+    "Rede": "",
+    "URL": "https://www.novomundo.com.br/produto/smartphone-samsung-galaxy-a16-4g-6-7-128gb-4gb-camera-tripla-cinza-150339"
+   },
+   {
+    "Busca": 4,
+    "Tabela": "faixa",
+    "Loja": "ECOM ELETRO",
+    "Fonte": "KaBuM!",
+    "Título exibido": "Smartphone Samsung Galaxy A36 128GB 5g - Verde, Câmera Tripla 50mp, Ram 6gb, Tela 6.7\"",
+    "Preço exibido": "R$ 2.229,44",
+    "Pagamento": "Pix",
+    "Rede": "",
+    "URL": "https://www.kabum.com.br/produto/734582"
+   },
+   {
+    "Busca": 4,
+    "Tabela": "faixa",
+    "Loja": "TUDOSMART",
+    "Fonte": "KaBuM!",
+    "Título exibido": "Smartphone Samsung Galaxy A36 128GB 5g - Preto, Câmera Tripla 50mp, Ram 6gb, Tela 6.7\"",
+    "Preço exibido": "R$ 2.389,00",
+    "Pagamento": "Pix",
+    "Rede": "",
+    "URL": "https://www.kabum.com.br/produto/734633"
+   },
+   {
+    "Busca": 4,
+    "Tabela": "à parte",
+    "Loja": "Mercado Livre",
+    "Fonte": "Compare Livre",
+    "Título exibido": "Smartphone Samsung Galaxy A36 5g 128gb 6gb Ram Câmera Tripla De Até 50mp Selfie De 12mp Ip67 Super Amoled 6.7'' Nfc Recursos Ai Android E Segurança Snapdragon - Preto",
+    "Preço exibido": "R$ 1.414,00",
+    "Pagamento": "não informada",
+    "Rede": "",
+    "URL": "https://www.mercadolivre.com.br/p/MLB65952157?pdp_filters=item_id%3AMLB6756182602&matt_tool=47220072&matt_word=comparelivre"
+   },
+   {
+    "Busca": 4,
+    "Tabela": "à parte",
+    "Loja": "Shopee",
+    "Fonte": "Compare Livre",
+    "Título exibido": "Smartphone Samsung Galaxy A36 5G 128GB 6GB 6,7\"",
+    "Preço exibido": "R$ 1.639,00",
+    "Pagamento": "não informada",
+    "Rede": "",
+    "URL": "https://shopee.com.br/product/564780452/43161776816"
+   },
+   {
+    "Busca": 4,
+    "Tabela": "à parte",
+    "Loja": "Shopee",
+    "Fonte": "Compare Livre",
+    "Título exibido": "Smartphone Samsung Galaxy A36 5G 128GB, 6GB RAM, Câmera 50MP, IP67, Super AMOLED 6.7\", Recursos AI",
+    "Preço exibido": "R$ 1.659,00",
+    "Pagamento": "não informada",
+    "Rede": "",
+    "URL": "https://shopee.com.br/product/564780452/46919643585"
+   },
+   {
+    "Busca": 4,
+    "Tabela": "à parte",
+    "Loja": "Mercado Livre",
+    "Fonte": "Compare Livre",
+    "Título exibido": "Smartphone Samsung Galaxy A36 5g 128gb 6gb Ram Branco",
+    "Preço exibido": "R$ 1.699,00",
+    "Pagamento": "não informada",
+    "Rede": "",
+    "URL": "https://www.mercadolivre.com.br/p/MLB61641045?pdp_filters=item_id%3AMLB7613856900&matt_tool=47220072&matt_word=comparelivre"
+   },
+   {
+    "Busca": 4,
+    "Tabela": "à parte",
+    "Loja": "Shopee",
+    "Fonte": "Compare Livre",
+    "Título exibido": "Smartphone Samsung Galaxy A36 5G 128GB 6GB RAM Tela Super AMOLED 6.7",
+    "Preço exibido": "R$ 2.110,00",
+    "Pagamento": "não informada",
+    "Rede": "",
+    "URL": "https://shopee.com.br/product/1083800536/23799372807"
+   },
+   {
+    "Busca": 6,
+    "Tabela": "faixa",
+    "Loja": "Gazin",
+    "Fonte": "Gazin",
+    "Título exibido": "Smartphone Motorola Moto G06 4G 6.9\" 128GB 4GB Câmera 50MP",
+    "Preço exibido": "R$ 759,90",
+    "Pagamento": "Pix",
+    "Rede": "",
+    "URL": "https://www.gazin.com.br/produto/smartphone-motorola-moto-g06-4g-69-128gb-4gb-camera-50mp/10037/azul/quadriband"
+   },
+   {
+    "Busca": 6,
+    "Tabela": "faixa",
+    "Loja": "MIRANDA",
+    "Fonte": "KaBuM!",
+    "Título exibido": "Smartphone Motorola G06 4g 128GB 8GB 6.9” 50mp Azul Marinho",
+    "Preço exibido": "R$ 798,30",
+    "Pagamento": "Pix",
+    "Rede": "",
+    "URL": "https://www.kabum.com.br/produto/951782"
+   },
+   {
+    "Busca": 6,
+    "Tabela": "faixa",
+    "Loja": "MIRANDA",
+    "Fonte": "KaBuM!",
+    "Título exibido": "Smartphone Motorola Moto G06 128GB - Laranja, 12gb (4gb Ram +8GB Ram Boost), Câmera 50mp E Tela 6,9”",
+    "Preço exibido": "R$ 798,30",
+    "Pagamento": "Pix",
+    "Rede": "",
+    "URL": "https://www.kabum.com.br/produto/951780"
+   },
+   {
+    "Busca": 6,
+    "Tabela": "faixa",
+    "Loja": "Motorola",
+    "Fonte": "Motorola",
+    "Título exibido": "Smartphone Motorola Moto g06 128GB · 4GB RAM + 8GB Ram Boost, Camera 50MP com AI Bateria de 5200 mAh Tela 6.9\" - Azul Marinho",
+    "Preço exibido": "R$ 799,00",
+    "Pagamento": "Pix",
+    "Rede": "",
+    "URL": "https://www.motorola.com.br/smartphone-moto-g06-128-gb/p"
+   },
+   {
+    "Busca": 6,
+    "Tabela": "faixa",
+    "Loja": "Webcontinental · Lojas Edmil",
+    "Fonte": "Webcontinental",
+    "Título exibido": "Smartphone Motorola Moto G06 4GB RAM 128GB 50MP Azul Marinho",
+    "Preço exibido": "R$ 898,90",
+    "Pagamento": "Pix",
+    "Rede": "",
+    "URL": "https://www.webcontinental.com.br/smartphone-motorola-moto-g06-4gb-ram-128gb-50mp-azul-marinho-003958001019/p"
+   },
+   {
+    "Busca": 6,
+    "Tabela": "faixa",
+    "Loja": "HJ MAGAZINE",
+    "Fonte": "KaBuM!",
+    "Título exibido": "Smartphone Moto G06, 128GB, Câmera Traseira 50mp, Bege, Motorola",
+    "Preço exibido": "R$ 1.439,90",
+    "Pagamento": "Pix",
+    "Rede": "",
+    "URL": "https://www.kabum.com.br/produto/1015942"
+   },
+   {
+    "Busca": 6,
+    "Tabela": "à parte",
+    "Loja": "Mercado Livre",
+    "Fonte": "Compare Livre",
+    "Título exibido": "Smartphone Motorola Moto G06 - 128gb 12gb 5200 Mah Bege",
+    "Preço exibido": "R$ 797,00",
+    "Pagamento": "não informada",
+    "Rede": "",
+    "URL": "https://www.mercadolivre.com.br/p/MLB81041920?pdp_filters=item_id%3AMLB5974045478&matt_tool=47220072&matt_word=comparelivre"
+   },
+   {
+    "Busca": 6,
+    "Tabela": "à parte",
+    "Loja": "Shopee",
+    "Fonte": "Compare Livre",
+    "Título exibido": "Smartphone Motorola Moto G06 4G 6.9Pol 128GB 4GB Câmera 50MP",
+    "Preço exibido": "R$ 809,00",
+    "Pagamento": "não informada",
+    "Rede": "",
+    "URL": "https://shopee.com.br/product/1082747237/58263424690"
+   },
+   {
+    "Busca": 6,
+    "Tabela": "à parte",
+    "Loja": "Shopee",
+    "Fonte": "Compare Livre",
+    "Título exibido": "Smartphone Moto G06 128GB 12GB RAM Câmera Traseira 50MP Motorola",
+    "Preço exibido": "R$ 869,90",
+    "Pagamento": "não informada",
+    "Rede": "",
+    "URL": "https://shopee.com.br/product/730226632/58251125569"
+   },
+   {
+    "Busca": 6,
+    "Tabela": "à parte",
+    "Loja": "Mercado Livre",
+    "Fonte": "Compare Livre",
+    "Título exibido": "Smartphone Motorola Moto G06 128gb Azul-marinho",
+    "Preço exibido": "R$ 887,00",
+    "Pagamento": "não informada",
+    "Rede": "",
+    "URL": "https://www.mercadolivre.com.br/p/MLB81041922?pdp_filters=item_id%3AMLB4228627923&matt_tool=47220072&matt_word=comparelivre"
+   },
+   {
+    "Busca": 6,
+    "Tabela": "à parte",
+    "Loja": "Mercado Livre",
+    "Fonte": "Compare Livre",
+    "Título exibido": "Smartphone Motorola Moto G06 - 128gb 4gb Ram + 8gb Ram Boost E Camera 50mp Com Ai Bateria De 5200 Mah Tela 6.9",
+    "Preço exibido": "R$ 887,78",
+    "Pagamento": "não informada",
+    "Rede": "",
+    "URL": "https://www.mercadolivre.com.br/p/MLB61424002?pdp_filters=item_id%3AMLB4288400901&matt_tool=47220072&matt_word=comparelivre"
+   },
+   {
+    "Busca": 6,
+    "Tabela": "à parte",
+    "Loja": "Mercado Livre",
+    "Fonte": "Compare Livre",
+    "Título exibido": "Smartphone Motorola Moto G06 - 128gb 4gb Ram + 8gb Ram Boost, e Camera 50mp Com Ai Bateria De 5.2 Ah Tela 6.9",
+    "Preço exibido": "R$ 887,78",
+    "Pagamento": "não informada",
+    "Rede": "",
+    "URL": "https://www.mercadolivre.com.br/p/MLB61381499?pdp_filters=item_id%3AMLB4288419121&matt_tool=47220072&matt_word=comparelivre"
+   },
+   {
+    "Busca": 6,
+    "Tabela": "à parte",
+    "Loja": "Shopee",
+    "Fonte": "Compare Livre",
+    "Título exibido": "Smartphone Motorola Moto g06 4G Tela 6,9 128GB Câmera 50MP",
+    "Preço exibido": "R$ 887,78",
+    "Pagamento": "não informada",
+    "Rede": "",
+    "URL": "https://shopee.com.br/product/1083800536/58221237024"
+   },
+   {
+    "Busca": 6,
+    "Tabela": "à parte",
+    "Loja": "Mercado Livre",
+    "Fonte": "Compare Livre",
+    "Título exibido": "Smartphone Motorola Moto G06 4g 6.9pol 128gb 4gb Câmera 50mp Azul",
+    "Preço exibido": "R$ 889,99",
+    "Pagamento": "não informada",
+    "Rede": "",
+    "URL": "https://www.mercadolivre.com.br/p/MLB62405543?pdp_filters=item_id%3AMLB6989371150&matt_tool=47220072&matt_word=comparelivre"
+   },
+   {
+    "Busca": 6,
+    "Tabela": "à parte",
+    "Loja": "Mercado Livre",
+    "Fonte": "Compare Livre",
+    "Título exibido": "Smartphone Motorola Moto G06 - 128gb 4gb Ram E Camera 50mp Verde Musgo",
+    "Preço exibido": "R$ 891,90",
+    "Pagamento": "não informada",
+    "Rede": "",
+    "URL": "https://www.mercadolivre.com.br/p/MLB81930108?pdp_filters=item_id%3AMLB5546110653&matt_tool=47220072&matt_word=comparelivre"
+   },
+   {
+    "Busca": 6,
+    "Tabela": "à parte",
+    "Loja": "Shopee",
+    "Fonte": "Compare Livre",
+    "Título exibido": "Smartphone Motorola Moto G06 128GB Dual Chip 4G Câmera 50MP Laranja",
+    "Preço exibido": "R$ 899,90",
+    "Pagamento": "não informada",
+    "Rede": "",
+    "URL": "https://shopee.com.br/product/412968566/58260613715"
+   },
+   {
+    "Busca": 6,
+    "Tabela": "à parte",
+    "Loja": "Shopee",
+    "Fonte": "Compare Livre",
+    "Título exibido": "Smartphone Motorola Moto G06 128GB 12GB (4GB RAM + 8GB Ram Boost)",
+    "Preço exibido": "R$ 905,50",
+    "Pagamento": "não informada",
+    "Rede": "",
+    "URL": "https://shopee.com.br/product/443109642/22499197247"
+   },
+   {
+    "Busca": 6,
+    "Tabela": "à parte",
+    "Loja": "Shopee",
+    "Fonte": "Compare Livre",
+    "Título exibido": "Smartphone Motorola Moto G06 128GB 4GB RAM + 8GB RAM Boost Virtual Tela 6.9\"",
+    "Preço exibido": "R$ 937,35",
+    "Pagamento": "não informada",
+    "Rede": "",
+    "URL": "https://shopee.com.br/product/1494297971/55457432448"
+   },
+   {
+    "Busca": 6,
+    "Tabela": "à parte",
+    "Loja": "Mercado Livre",
+    "Fonte": "Compare Livre",
+    "Título exibido": "Smartphone Motorola Moto G06 128gb 4gb Ram + 8gb Ram Boost Tela 6.9 Polegadas - Laranja",
+    "Preço exibido": "R$ 999,00",
+    "Pagamento": "não informada",
+    "Rede": "",
+    "URL": "https://www.mercadolivre.com.br/p/MLB64293460?pdp_filters=item_id%3AMLB4449876159&matt_tool=47220072&matt_word=comparelivre"
+   },
+   {
+    "Busca": 6,
+    "Tabela": "à parte",
+    "Loja": "Shopee",
+    "Fonte": "Compare Livre",
+    "Título exibido": "Smartphone Celular Motorola Moto G06 4G XT2535-1 128Gb 4+8Gb RAM Boost 6.9\" Câm 50MP 5200mAh Android",
+    "Preço exibido": "R$ 1.049,00",
+    "Pagamento": "não informada",
+    "Rede": "",
+    "URL": "https://shopee.com.br/product/1579318301/58267432756"
+   },
+   {
+    "Busca": 6,
+    "Tabela": "à parte",
+    "Loja": "Shopee",
+    "Fonte": "Compare Livre",
+    "Título exibido": "Smartphone Motorola Moto G06 128GB, 4G LTE, 12GB RAM Boost*, Câmera 50MP, Tela 6.9\" - Azul Marinho",
+    "Preço exibido": "R$ 1.199,90",
+    "Pagamento": "não informada",
+    "Rede": "",
+    "URL": "https://shopee.com.br/product/829012010/49617570216"
+   },
+   {
+    "Busca": 7,
+    "Tabela": "faixa",
+    "Loja": "Webcontinental · Lojas Edmil",
+    "Fonte": "Webcontinental",
+    "Título exibido": "Smartphone Motorola Moto G17 XT2623 12GB 256GB 4G NFC Roxo",
+    "Preço exibido": "R$ 1.061,91",
+    "Pagamento": "Pix",
+    "Rede": "4G",
+    "URL": "https://www.webcontinental.com.br/smartphone-motorola-moto-g17-xt2623-12gb-256gb-4g-nfc-roxo-003958001143/p"
+   },
+   {
+    "Busca": 7,
+    "Tabela": "faixa",
+    "Loja": "LOGIN INFORMATICA",
+    "Fonte": "KaBuM!",
+    "Título exibido": "Smartphone Motorola Moto G17 256gb - Rosa, 12gb (4gb Ram + 8GB Ram Boost), Câmera 50mp E Tela 6,7\"",
+    "Preço exibido": "R$ 1.099,00",
+    "Pagamento": "Pix",
+    "Rede": "NÃO INFORMADA",
+    "URL": "https://www.kabum.com.br/produto/1007606"
+   },
+   {
+    "Busca": 7,
+    "Tabela": "faixa",
+    "Loja": "Motorola",
+    "Fonte": "Motorola",
+    "Título exibido": "Smartphone Motorola Moto g17 256GB · 4GB RAM + 8GB RAM Boost, camera 50MP Sony Lytia 600, tela FHD+ 60hz, bateria 5200 mAh - Roxa",
+    "Preço exibido": "R$ 1.199,00",
+    "Pagamento": "Pix",
+    "Rede": "NÃO INFORMADA",
+    "URL": "https://www.motorola.com.br/smartphone-motorola-moto-g17-256gb/p"
+   },
+   {
+    "Busca": 7,
+    "Tabela": "faixa",
+    "Loja": "Magalu",
+    "Fonte": "KaBuM!",
+    "Título exibido": "Smartphone Motorola Moto G17 256gb - Roxo, 12gb (4gb Ram + 8GB Ram Boost), Câmera 50mp E Tela 6,7\"",
+    "Preço exibido": "R$ 1.199,00",
+    "Pagamento": "Pix",
+    "Rede": "NÃO INFORMADA",
+    "URL": "https://www.kabum.com.br/produto/1007601"
+   },
+   {
+    "Busca": 7,
+    "Tabela": "faixa",
+    "Loja": "Webcontinental · Lojas Colombo SA",
+    "Fonte": "Webcontinental",
+    "Título exibido": "Smartphone Motorola XT2623-1 Moto G17 4GB 256GB Câmera 50MP Azul",
+    "Preço exibido": "R$ 1.254,77",
+    "Pagamento": "Pix",
+    "Rede": "4G (ficha)",
+    "URL": "https://www.webcontinental.com.br/smartphone-motorola-xt2623-1-moto-g17-4gb-256gb-camera-50mp-azul-003082004524/p"
+   },
+   {
+    "Busca": 7,
+    "Tabela": "faixa",
+    "Loja": "MASTERCELL",
+    "Fonte": "KaBuM!",
+    "Título exibido": "Smartphone Motorola Moto G17 256gb - Azul Claro, 12gb (4gb Ram + 8GB Ram Boost), Câmera 50mp E Tela 6,7\"",
+    "Preço exibido": "R$ 1.357,55",
+    "Pagamento": "Pix",
+    "Rede": "NÃO INFORMADA",
+    "URL": "https://www.kabum.com.br/produto/1007602"
+   },
+   {
+    "Busca": 7,
+    "Tabela": "faixa",
+    "Loja": "Gazin",
+    "Fonte": "Gazin",
+    "Título exibido": "Smartphone Motorola Moto G17 6.7\" Octa Core 256GB 4GB Câmera Tripla",
+    "Preço exibido": "R$ 2.191,92",
+    "Pagamento": "Pix",
+    "Rede": "NÃO INFORMADA",
+    "URL": "https://www.gazin.com.br/produto/smartphone-motorola-moto-g17-67-octa-core-256gb-4gb-camera-tripla/10286/rosa/quadriband"
+   },
+   {
+    "Busca": 7,
+    "Tabela": "à parte",
+    "Loja": "Shopee",
+    "Fonte": "Compare Livre",
+    "Título exibido": "Smartphone G17 Tela 6,7 Polegadas 256GB 4G Câmera 50MP Motorola",
+    "Preço exibido": "R$ 1.238,96",
+    "Pagamento": "não informada",
+    "Rede": "",
+    "URL": "https://shopee.com.br/product/1083800536/58206298672"
+   },
+   {
+    "Busca": 7,
+    "Tabela": "à parte",
+    "Loja": "Mercado Livre",
+    "Fonte": "Compare Livre",
+    "Título exibido": "Smartphone Motorola Moto G17 4g - 256gb 4gb Ram 8gb Ram Boost Camera 50mp Sony Lytia 600 60hz",
+    "Preço exibido": "R$ 1.259,00",
+    "Pagamento": "não informada",
+    "Rede": "",
+    "URL": "https://www.mercadolivre.com.br/p/MLB80247617?pdp_filters=item_id%3AMLB7946131538&matt_tool=47220072&matt_word=comparelivre"
+   },
+   {
+    "Busca": 7,
+    "Tabela": "à parte",
+    "Loja": "Shopee",
+    "Fonte": "Compare Livre",
+    "Título exibido": "Smartphone Motorola Moto G17 256GB, 4G, 12GB RAM Boost*, Tela 6.7 FHD+, Câm. 50MP - Rosa",
+    "Preço exibido": "R$ 1.299,99",
+    "Pagamento": "não informada",
+    "Rede": "",
+    "URL": "https://shopee.com.br/product/829012010/46317565265"
+   },
+   {
+    "Busca": 7,
+    "Tabela": "à parte",
+    "Loja": "Shopee",
+    "Fonte": "Compare Livre",
+    "Título exibido": "Smartphone Motorola Moto G17 4G 256GB 12GB (4GB RAM + 8GB RAM Boost) Tela 6,7 Câmera 50MP Sony Lytia 600 Roxo",
+    "Preço exibido": "R$ 1.332,22",
+    "Pagamento": "não informada",
+    "Rede": "",
+    "URL": "https://shopee.com.br/product/1927845474/58268290936"
+   },
+   {
+    "Busca": 7,
+    "Tabela": "à parte",
+    "Loja": "Mercado Livre",
+    "Fonte": "Compare Livre",
+    "Título exibido": "Smartphone Motorola Moto G17 4g - 256gb 4gb Ram + 8gb Ram Boost, Camera 50mp Sony Lytia 600, Tela Fhd+ 60hz, Bateria 5200 Mah - Azul",
+    "Preço exibido": "R$ 1.332,22",
+    "Pagamento": "não informada",
+    "Rede": "",
+    "URL": "https://www.mercadolivre.com.br/p/MLB65041663?pdp_filters=item_id%3AMLB6420523862&matt_tool=47220072&matt_word=comparelivre"
+   },
+   {
+    "Busca": 7,
+    "Tabela": "à parte",
+    "Loja": "Shopee",
+    "Fonte": "Compare Livre",
+    "Título exibido": "Smartphone Motorola Moto G17 4G - 256GB 4GB RAM + 8GB RAM Boost, camera 50MP Sony Lytia 600",
+    "Preço exibido": "R$ 1.332,22",
+    "Pagamento": "não informada",
+    "Rede": "",
+    "URL": "https://shopee.com.br/product/1627665738/58255534008"
+   },
+   {
+    "Busca": 7,
+    "Tabela": "à parte",
+    "Loja": "Novo Mundo",
+    "Fonte": "Novo Mundo",
+    "Título exibido": "Smartphone Motorola Moto G17, XT2623, 256GB, 4GB - Roxo",
+    "Preço exibido": "R$ 1.399,00",
+    "Pagamento": "não informada",
+    "Rede": "",
+    "URL": "https://www.novomundo.com.br/produto/smartphone-motorola-moto-g17-xt2623-256gb-4gb-roxo-150485"
+   },
+   {
+    "Busca": 7,
+    "Tabela": "à parte",
+    "Loja": "Shopee",
+    "Fonte": "Compare Livre",
+    "Título exibido": "Smartphone Moto G17 6.7 Octa Core 256GB 4GB Câmera Tripla Motorola",
+    "Preço exibido": "R$ 2.522,90",
+    "Pagamento": "não informada",
+    "Rede": "",
+    "URL": "https://shopee.com.br/product/1082747237/22194955848"
+   },
+   {
+    "Busca": 8,
+    "Tabela": "faixa",
+    "Loja": "Motorola",
+    "Fonte": "Motorola",
+    "Título exibido": "Smartphone Motorola Moto g35 5G 256GB · 4GB RAM + 8GB RAM Boost, Camera 50MP com AI NFC Tela 6.7\" com Superbrilho - Coral",
+    "Preço exibido": "R$ 1.199,00",
+    "Pagamento": "Pix",
+    "Rede": "",
+    "URL": "https://www.motorola.com.br/smartphone-moto-g35-5g-256gb/p"
+   },
+   {
+    "Busca": 8,
+    "Tabela": "faixa",
+    "Loja": "Magalu",
+    "Fonte": "KaBuM!",
+    "Título exibido": "Smartphone Motorola G35 5g 256gb 4GB Ram 6.72” 50mp Coral",
+    "Preço exibido": "R$ 1.259,10",
+    "Pagamento": "Pix",
+    "Rede": "",
+    "URL": "https://www.kabum.com.br/produto/662346"
+   },
+   {
+    "Busca": 8,
+    "Tabela": "faixa",
+    "Loja": "UPDEFRUTA",
+    "Fonte": "KaBuM!",
+    "Título exibido": "Smartphone Motorola G35 5g 256gb 8GB Ram 6.72” 50mp Cinza",
+    "Preço exibido": "R$ 1.769,00",
+    "Pagamento": "Pix",
+    "Rede": "",
+    "URL": "https://www.kabum.com.br/produto/643126"
+   },
+   {
+    "Busca": 8,
+    "Tabela": "à parte",
+    "Loja": "Mercado Livre",
+    "Fonte": "Compare Livre",
+    "Título exibido": "Smartphone Motorola Moto G35 5g - 256gb 4gb Ram+8gb Ram Boost e Camera 50mp Com Ai Nfc Tela 6.7 Com Superbrilho - Coral - Vegan Leather",
+    "Preço exibido": "R$ 1.199,00",
+    "Pagamento": "não informada",
+    "Rede": "",
+    "URL": "https://www.mercadolivre.com.br/p/MLB41540860?pdp_filters=item_id%3AMLB4463783349&matt_tool=47220072&matt_word=comparelivre"
+   },
+   {
+    "Busca": 8,
+    "Tabela": "à parte",
+    "Loja": "Mercado Livre",
+    "Fonte": "Compare Livre",
+    "Título exibido": "Moto G35 5g 256 Gb Cor Preto",
+    "Preço exibido": "R$ 1.269,90",
+    "Pagamento": "não informada",
+    "Rede": "",
+    "URL": "https://www.mercadolivre.com.br/p/MLB62084709?pdp_filters=item_id%3AMLB7867773576&matt_tool=47220072&matt_word=comparelivre"
+   },
+   {
+    "Busca": 8,
+    "Tabela": "à parte",
+    "Loja": "Shopee",
+    "Fonte": "Compare Livre",
+    "Título exibido": "Smartphone Motorola Moto G35 256GB, 5G, 12GB RAM Boost*, Câmera 50MP AI NFC, Tela 6.7\" - Coral",
+    "Preço exibido": "R$ 1.399,00",
+    "Pagamento": "não informada",
+    "Rede": "",
+    "URL": "https://shopee.com.br/product/829012010/58215627472"
+   },
+   {
+    "Busca": 8,
+    "Tabela": "à parte",
+    "Loja": "Shopee",
+    "Fonte": "Compare Livre",
+    "Título exibido": "Smartphone Motorola Moto G35 256GB 5G 4GB RAM+8GB Ram Boost 5G 6, 7\" Câm. Dupla + Selfie 16MP",
+    "Preço exibido": "R$ 1.426,98",
+    "Pagamento": "não informada",
+    "Rede": "",
+    "URL": "https://shopee.com.br/product/1929663743/58269431930"
+   },
+   {
+    "Busca": 8,
+    "Tabela": "à parte",
+    "Loja": "Mercado Livre",
+    "Fonte": "Compare Livre",
+    "Título exibido": "Smartphone Motorola Moto g35 5G - 256GB 4GB RAM+8GB Ram Boost, e Camera 50MP com AI NFC Tela 6.7\" com Superbrilho - Cinza",
+    "Preço exibido": "R$ 1.499,00",
+    "Pagamento": "não informada",
+    "Rede": "",
+    "URL": "https://www.mercadolivre.com.br/p/MLB41998152?pdp_filters=item_id%3AMLB6733098430&matt_tool=47220072&matt_word=comparelivre"
+   },
+   {
+    "Busca": 8,
+    "Tabela": "à parte",
+    "Loja": "Shopee",
+    "Fonte": "Compare Livre",
+    "Título exibido": "Smartphone Motorola Moto g35 5G - 256GB, 4GB RAM+8GB Ram Boost e Camera 50MP com AI NFC",
+    "Preço exibido": "R$ 1.554,44",
+    "Pagamento": "não informada",
+    "Rede": "",
+    "URL": "https://shopee.com.br/product/1627665738/23194444431"
+   },
+   {
+    "Busca": 9,
+    "Tabela": "faixa",
+    "Loja": "Magalu",
+    "Fonte": "KaBuM!",
+    "Título exibido": "Smartphone Motorola Moto G47 5G, 128GB, 12GB (4GB RAM + 8GB RAM Boost), Câmera 50 MP, Tela 6.7”, Rosa",
+    "Preço exibido": "R$ 1.131,30",
+    "Pagamento": "Pix",
+    "Rede": "",
+    "URL": "https://www.kabum.com.br/produto/1038264"
+   },
+   {
+    "Busca": 9,
+    "Tabela": "faixa",
+    "Loja": "Magalu",
+    "Fonte": "KaBuM!",
+    "Título exibido": "Smartphone Motorola Moto G47, 5g, Grafite, Tela De 6,7”, 128GB, 4gb Ram E Câmera De 50 Mp Sony Lytia?? 600 - Bivolt",
+    "Preço exibido": "R$ 1.131,30",
+    "Pagamento": "Pix",
+    "Rede": "",
+    "URL": "https://www.kabum.com.br/produto/1038262"
+   },
+   {
+    "Busca": 9,
+    "Tabela": "faixa",
+    "Loja": "Magalu",
+    "Fonte": "KaBuM!",
+    "Título exibido": "Smartphone Motorola Moto G47 5G, 128GB, 12GB (4GB RAM + 8GB RAM Boost), Câmera 50 Mp, Tela 6.7”, Azul Náutico",
+    "Preço exibido": "R$ 1.131,30",
+    "Pagamento": "Pix",
+    "Rede": "",
+    "URL": "https://www.kabum.com.br/produto/1038261"
+   },
+   {
+    "Busca": 9,
+    "Tabela": "faixa",
+    "Loja": "Motorola",
+    "Fonte": "Motorola",
+    "Título exibido": "Smartphone Motorola Moto g47 5G 128GB · 4GB RAM + 8GB RAM Boost, câmera 50 MP Sony LYTIA 600, Tela 6.7\" FHD+ 120hz, NFC, IP64 - Grafite",
+    "Preço exibido": "R$ 1.199,00",
+    "Pagamento": "Pix",
+    "Rede": "",
+    "URL": "https://www.motorola.com.br/smartphone-motorola-moto-g47-5g-128gb/p"
+   },
+   {
+    "Busca": 9,
+    "Tabela": "faixa",
+    "Loja": "Gazin",
+    "Fonte": "Gazin",
+    "Título exibido": "Smartphone Motorola Moto G47 5G 6.7\" Octa-Core 128GB 4GB Câmera Dupla",
+    "Preço exibido": "R$ 1.238,76",
+    "Pagamento": "Pix",
+    "Rede": "",
+    "URL": "https://www.gazin.com.br/produto/smartphone-motorola-moto-g47-5g-67-octa-core-128gb-4gb-camera-dupla/11119/azul/quadriband"
+   },
+   {
+    "Busca": 9,
+    "Tabela": "faixa",
+    "Loja": "MASTERCELL",
+    "Fonte": "KaBuM!",
+    "Título exibido": "Smartphone Motorola Moto G47 5g 128GB - Azul Turquesa, 12gb (4gb Ram + 8GB Ram Boost), Câmera 50 Mp E Tela 6,7\"",
+    "Preço exibido": "R$ 1.471,55",
+    "Pagamento": "Pix",
+    "Rede": "",
+    "URL": "https://www.kabum.com.br/produto/1050739"
+   },
+   {
+    "Busca": 9,
+    "Tabela": "à parte",
+    "Loja": "Mercado Livre",
+    "Fonte": "Compare Livre",
+    "Título exibido": "Smartphone Motorola Moto g47 5G 128GB, 4GB RAM câmera 50 MP Sony LYTIA 600, Tela 6.7 FHD+ 120hz, NFC, IP64",
+    "Preço exibido": "R$ 1.199,00",
+    "Pagamento": "não informada",
+    "Rede": "",
+    "URL": "https://www.mercadolivre.com.br/p/MLB68698257?pdp_filters=item_id%3AMLB4731410265&matt_tool=47220072&matt_word=comparelivre"
+   },
+   {
+    "Busca": 9,
+    "Tabela": "à parte",
+    "Loja": "Mercado Livre",
+    "Fonte": "Compare Livre",
+    "Título exibido": "Smartphone Motorola Moto g47 5G 128GB, 4GB RAM câmera 50 MP Sony LYTIA 600, Tela 6.7 FHD+ 120hz, NFC, IP64",
+    "Preço exibido": "R$ 1.253,90",
+    "Pagamento": "não informada",
+    "Rede": "",
+    "URL": "https://www.mercadolivre.com.br/p/MLB68698394?pdp_filters=item_id%3AMLB4731410267&matt_tool=47220072&matt_word=comparelivre"
+   },
+   {
+    "Busca": 9,
+    "Tabela": "à parte",
+    "Loja": "Mercado Livre",
+    "Fonte": "Compare Livre",
+    "Título exibido": "Smartphone Motorola Moto G47 5G 128GB 6.7 120Hz Câmera 50MP Bateria 5200mAh",
+    "Preço exibido": "R$ 1.257,00",
+    "Pagamento": "não informada",
+    "Rede": "",
+    "URL": "https://www.mercadolivre.com.br/p/MLB68698318?pdp_filters=item_id%3AMLB4731410263&matt_tool=47220072&matt_word=comparelivre"
+   },
+   {
+    "Busca": 9,
+    "Tabela": "à parte",
+    "Loja": "Shopee",
+    "Fonte": "Compare Livre",
+    "Título exibido": "Smartphones Motorola Moto G47 5G - 128GB 4GB RAM+8GB RAM Boost, câmera 50 MP Sony LYTIA 600, Tela 6.7\" FHD+ 120hz",
+    "Preço exibido": "R$ 1.332,00",
+    "Pagamento": "não informada",
+    "Rede": "",
+    "URL": "https://shopee.com.br/product/1627665738/58259827535"
+   },
+   {
+    "Busca": 9,
+    "Tabela": "à parte",
+    "Loja": "Novo Mundo",
+    "Fonte": "Novo Mundo",
+    "Título exibido": "Smartphone Motorola Moto G47 5G 128GB 4GB RAM Tela 6,7'' - Grafite",
+    "Preço exibido": "R$ 1.389,00",
+    "Pagamento": "não informada",
+    "Rede": "",
+    "URL": "https://www.novomundo.com.br/produto/smartphone-motorola-moto-g47-5g-128gb-4gb-ram-tela-6-7-grafite-150486"
+   },
+   {
+    "Busca": 9,
+    "Tabela": "à parte",
+    "Loja": "Shopee",
+    "Fonte": "Compare Livre",
+    "Título exibido": "Smartphone Motorola Moto G47 5G 128GB 12GB RAM Câmera 50MP Tela 6.7 Android 16",
+    "Preço exibido": "R$ 1.399,00",
+    "Pagamento": "não informada",
+    "Rede": "",
+    "URL": "https://shopee.com.br/product/1857297995/22295190957"
+   },
+   {
+    "Busca": 9,
+    "Tabela": "à parte",
+    "Loja": "Shopee",
+    "Fonte": "Compare Livre",
+    "Título exibido": "Smartphone Motorola Moto g47 128GB 5G (4GB RAM + 8GB RAM Boost) 6, 7\" Câm. Dupla Selfie 32MP",
+    "Preço exibido": "R$ 1.399,00",
+    "Pagamento": "não informada",
+    "Rede": "",
+    "URL": "https://shopee.com.br/product/1929663743/58269431935"
+   },
+   {
+    "Busca": 9,
+    "Tabela": "à parte",
+    "Loja": "Shopee",
+    "Fonte": "Compare Livre",
+    "Título exibido": "Smartphone Moto G47 5G 128GB Motorola",
+    "Preço exibido": "R$ 1.443,33",
+    "Pagamento": "não informada",
+    "Rede": "",
+    "URL": "https://shopee.com.br/product/1083800536/58213656074"
+   },
+   {
+    "Busca": 9,
+    "Tabela": "à parte",
+    "Loja": "Shopee",
+    "Fonte": "Compare Livre",
+    "Título exibido": "Smartphone Motorola Moto G47 5G 128GB 6.7 120Hz Câmera 50MP Bateria 5200mAh",
+    "Preço exibido": "R$ 1.474,19",
+    "Pagamento": "não informada",
+    "Rede": "",
+    "URL": "https://shopee.com.br/product/1083800536/58264921153"
+   },
+   {
+    "Busca": 10,
+    "Tabela": "faixa",
+    "Loja": "MUSIC POWER",
+    "Fonte": "KaBuM!",
+    "Título exibido": "Smartphone Motorola Moto E15 64gb 2gb Azul",
+    "Preço exibido": "R$ 916,65",
+    "Pagamento": "Pix",
+    "Rede": "",
+    "URL": "https://www.kabum.com.br/produto/1020404"
+   },
+   {
+    "Busca": 10,
+    "Tabela": "faixa",
+    "Loja": "EURO PARTTS BRASIL",
+    "Fonte": "KaBuM!",
+    "Título exibido": "Motorola Moto E15 Xt2523-6 64gb 2gb Ram Roxo Morado.",
+    "Preço exibido": "R$ 939,00",
+    "Pagamento": "Pix",
+    "Rede": "",
+    "URL": "https://www.kabum.com.br/produto/887591"
+   },
+   {
+    "Busca": 11,
+    "Tabela": "faixa",
+    "Loja": "VTX COMERCIO DE VARIEDADES",
+    "Fonte": "KaBuM!",
+    "Título exibido": "Smartphone Xiaomi Redmi 15c 4g 8GB Ram 256gb Verde Tela 6,9\" Câmera 50mp Bateria 6000mah",
+    "Preço exibido": "R$ 1.379,89",
+    "Pagamento": "Pix",
+    "Rede": "4G",
+    "URL": "https://www.kabum.com.br/produto/1077713"
+   },
+   {
+    "Busca": 11,
+    "Tabela": "faixa",
+    "Loja": "VTX COMERCIO DE VARIEDADES",
+    "Fonte": "KaBuM!",
+    "Título exibido": "Smartphone Xiaomi Redmi 15c 4g 256gb 4gb Ram Tela 6,9\" 120hz Câmera 50mp Bateria 6000mah",
+    "Preço exibido": "R$ 1.469,90",
+    "Pagamento": "Pix",
+    "Rede": "4G",
+    "URL": "https://www.kabum.com.br/produto/1077711"
+   },
+   {
+    "Busca": 11,
+    "Tabela": "faixa",
+    "Loja": "Webcontinental · Xiaomi",
+    "Fonte": "Webcontinental",
+    "Título exibido": "Smartphone Xiaomi Redmi 15C 4G 4GB Ram 256GB Câmera 50MP Bateria 6000mAh Verde",
+    "Preço exibido": "R$ 1.671,99",
+    "Pagamento": "Pix",
+    "Rede": "4G (ficha)",
+    "URL": "https://www.webcontinental.com.br/smartphone-xiaomi-redmi-15c-4g-br-4-4gb-ram-virtual-256gb-verde-006293000478/p"
+   },
+   {
+    "Busca": 11,
+    "Tabela": "faixa",
+    "Loja": "Webcontinental · Xiaomi",
+    "Fonte": "Webcontinental",
+    "Título exibido": "Smartphone Xiaomi Redmi 15C 4G 4GB Ram 256GB Câmera 50MP Preto",
+    "Preço exibido": "R$ 1.671,99",
+    "Pagamento": "Pix",
+    "Rede": "4G (ficha)",
+    "URL": "https://www.webcontinental.com.br/smartphone-xiaomi-redmi-15c-4g-br-4-4gb-ram-virtual-256gb-preto-006293000477/p"
+   },
+   {
+    "Busca": 11,
+    "Tabela": "faixa",
+    "Loja": "Xiaomi Oficial",
+    "Fonte": "KaBuM!",
+    "Título exibido": "Smartphone Xiaomi Redmi 15c 4g Br 4+4gb Ramvirtual + 256gb",
+    "Preço exibido": "R$ 1.899,99",
+    "Pagamento": "Pix",
+    "Rede": "4G",
+    "URL": "https://www.kabum.com.br/produto/947939"
+   },
+   {
+    "Busca": 11,
+    "Tabela": "faixa",
+    "Loja": "Xiaomi Oficial",
+    "Fonte": "KaBuM!",
+    "Título exibido": "Smartphone Xiaomi Redmi 15c 4g Br 4+4gb Ram Virtual + 256gb",
+    "Preço exibido": "R$ 1.899,99",
+    "Pagamento": "Pix",
+    "Rede": "4G",
+    "URL": "https://www.kabum.com.br/produto/947526"
+   },
+   {
+    "Busca": 11,
+    "Tabela": "à parte",
+    "Loja": "Shopee",
+    "Fonte": "Compare Livre",
+    "Título exibido": "Smartphone Xiaomi Redmi 15C 256GB 4GB RAM Verde Global Dual SIM 4G",
+    "Preço exibido": "R$ 1.188,00",
+    "Pagamento": "não informada",
+    "Rede": "",
+    "URL": "https://shopee.com.br/product/1530354725/58271106382"
+   },
+   {
+    "Busca": 11,
+    "Tabela": "à parte",
+    "Loja": "Mercado Livre",
+    "Fonte": "Compare Livre",
+    "Título exibido": "Smartphone Xiaomi Redmi 15c 4g Br 4+4gb Ram Virtual + 256gb, Verde",
+    "Preço exibido": "R$ 1.249,99",
+    "Pagamento": "não informada",
+    "Rede": "",
+    "URL": "https://www.mercadolivre.com.br/p/MLB79376890?pdp_filters=item_id%3AMLB7614788558&matt_tool=47220072&matt_word=comparelivre"
+   },
+   {
+    "Busca": 11,
+    "Tabela": "à parte",
+    "Loja": "Shopee",
+    "Fonte": "Compare Livre",
+    "Título exibido": "Smartphone Xiaomi Redmi 15C 256GB 8GB RAM Azul Global Dual SIM 4G",
+    "Preço exibido": "R$ 1.489,90",
+    "Pagamento": "não informada",
+    "Rede": "",
+    "URL": "https://shopee.com.br/product/337570318/20498314233"
+   },
+   {
+    "Busca": 12,
+    "Tabela": "faixa",
+    "Loja": "MAGA'ABUR",
+    "Fonte": "KaBuM!",
+    "Título exibido": "Celular Xiaomi Redmi 15 256gb 8GB Preto 4g Selfie Com Gravação 1080p 30fps",
+    "Preço exibido": "R$ 1.619,10",
+    "Pagamento": "Pix",
+    "Rede": "",
+    "URL": "https://www.kabum.com.br/produto/984772"
+   },
+   {
+    "Busca": 13,
+    "Tabela": "faixa",
+    "Loja": "Webcontinental · Xiaomi",
+    "Fonte": "Webcontinental",
+    "Título exibido": "Smartphone Xiaomi Poco C85 6GB 128GB Câmera 50MP Tela 6,9 Polegadas Preto",
+    "Preço exibido": "R$ 1.495,99",
+    "Pagamento": "Pix",
+    "Rede": "4G (ficha)",
+    "URL": "https://www.webcontinental.com.br/smartphone-poco-c85-6-6gb-128gb-preto-006293000067/p"
+   },
+   {
+    "Busca": 13,
+    "Tabela": "faixa",
+    "Loja": "Webcontinental · Xiaomi",
+    "Fonte": "Webcontinental",
+    "Título exibido": "Smartphone Xiaomi Poco C85 6GB Ram 128GB Câmera 50MP Bateria 6000mAh Roxo",
+    "Preço exibido": "R$ 1.495,99",
+    "Pagamento": "Pix",
+    "Rede": "4G (ficha)",
+    "URL": "https://www.webcontinental.com.br/smartphone-poco-c85-6-6gb-ram-128gb---roxo-006293000068/p"
+   },
+   {
+    "Busca": 13,
+    "Tabela": "faixa",
+    "Loja": "Xiaomi Oficial",
+    "Fonte": "KaBuM!",
+    "Título exibido": "Smartphone Poco C85 6+6gb + 128GB, Preto",
+    "Preço exibido": "R$ 1.699,99",
+    "Pagamento": "Pix",
+    "Rede": "4G (ficha)",
+    "URL": "https://www.kabum.com.br/produto/931262"
+   },
+   {
+    "Busca": 14,
+    "Tabela": "faixa",
+    "Loja": "Xiaomi Oficial",
+    "Fonte": "KaBuM!",
+    "Título exibido": "Redmi Note 15 256gb",
+    "Preço exibido": "R$ 2.799,99",
+    "Pagamento": "Pix",
+    "Rede": "4G (ficha)",
+    "URL": "https://www.kabum.com.br/produto/997652"
+   },
+   {
+    "Busca": 15,
+    "Tabela": "faixa",
+    "Loja": "Magalu",
+    "Fonte": "KaBuM!",
+    "Título exibido": "Celular Oppo A6x 4 128GB Cph 2819 - Cph 2819 Azul Quadriband",
+    "Preço exibido": "R$ 1.169,10",
+    "Pagamento": "Pix",
+    "Rede": "",
+    "URL": "https://www.kabum.com.br/produto/1000527"
+   },
+   {
+    "Busca": 15,
+    "Tabela": "faixa",
+    "Loja": "Magalu",
+    "Fonte": "KaBuM!",
+    "Título exibido": "Smartphone OPPO A6x, 128GB, 4GB + 8GB RAM, 6,75'', Câmera Traseira de 13MP - Púrpura",
+    "Preço exibido": "R$ 1.169,10",
+    "Pagamento": "Pix",
+    "Rede": "",
+    "URL": "https://www.kabum.com.br/produto/1000528"
+   },
+   {
+    "Busca": 15,
+    "Tabela": "faixa",
+    "Loja": "MUSIC POWER",
+    "Fonte": "KaBuM!",
+    "Título exibido": "Smartphone Oppo A6x 128GB 4gb Ram Púrpura Tela 6.75\" 120hz Bateria 6500mah Nfc Snapdragon 4g",
+    "Preço exibido": "R$ 1.399,00",
+    "Pagamento": "Pix",
+    "Rede": "",
+    "URL": "https://www.kabum.com.br/produto/1061032"
+   },
+   {
+    "Busca": 15,
+    "Tabela": "faixa",
+    "Loja": "Gazin",
+    "Fonte": "Gazin",
+    "Título exibido": "Smartphone OPPO A6x 6.75\" 128GB 4GB Câmera Dupla",
+    "Preço exibido": "R$ 1.509,30",
+    "Pagamento": "Pix",
+    "Rede": "",
+    "URL": "https://www.gazin.com.br/produto/smartphone-oppo-a6x-675-128gb-4gb-camera-dupla/10245/purpura/quadriband"
+   },
+   {
+    "Busca": 15,
+    "Tabela": "à parte",
+    "Loja": "Mercado Livre",
+    "Fonte": "Compare Livre",
+    "Título exibido": "Smartphone OPPO A6x 128gb 4gb RAM Azul",
+    "Preço exibido": "R$ 1.165,50",
+    "Pagamento": "não informada",
+    "Rede": "",
+    "URL": "https://www.mercadolivre.com.br/p/MLB66141962?pdp_filters=item_id%3AMLB7069282238&matt_tool=47220072&matt_word=comparelivre"
+   },
+   {
+    "Busca": 15,
+    "Tabela": "à parte",
+    "Loja": "Novo Mundo",
+    "Fonte": "Novo Mundo",
+    "Título exibido": "Smartphone Oppo A6x 4G 128Gb Azul",
+    "Preço exibido": "R$ 1.169,00",
+    "Pagamento": "não informada",
+    "Rede": "",
+    "URL": "https://www.novomundo.com.br/produto/smartphone-oppo-a6x-4g-128gb-azul-164743"
+   },
+   {
+    "Busca": 15,
+    "Tabela": "à parte",
+    "Loja": "Novo Mundo",
+    "Fonte": "Novo Mundo",
+    "Título exibido": "Smartphone Oppo A6x 4G 128Gb purpura",
+    "Preço exibido": "R$ 1.169,00",
+    "Pagamento": "não informada",
+    "Rede": "",
+    "URL": "https://www.novomundo.com.br/produto/smartphone-oppo-a6x-4g-128gb-purpura-164741"
+   },
+   {
+    "Busca": 15,
+    "Tabela": "à parte",
+    "Loja": "Shopee",
+    "Fonte": "Compare Livre",
+    "Título exibido": "Smartphone A6X 4G Tela 6.75 Polegadas 128GB Câmera 13MP Oppo",
+    "Preço exibido": "R$ 1.198,98",
+    "Pagamento": "não informada",
+    "Rede": "",
+    "URL": "https://shopee.com.br/product/1083800536/58206303846"
+   },
+   {
+    "Busca": 16,
+    "Tabela": "faixa",
+    "Loja": "Magalu",
+    "Fonte": "KaBuM!",
+    "Título exibido": "Apple Iphone 16e A3212 Esim 128GB 8GB Ram 6.1 - Black",
+    "Preço exibido": "R$ 3.299,00",
+    "Pagamento": "Pix",
+    "Rede": "",
+    "URL": "https://www.kabum.com.br/produto/723885"
+   },
+   {
+    "Busca": 16,
+    "Tabela": "faixa",
+    "Loja": "Magalu",
+    "Fonte": "KaBuM!",
+    "Título exibido": "Iphone 16e 128GB Apple",
+    "Preço exibido": "R$ 3.299,00",
+    "Pagamento": "Pix",
+    "Rede": "",
+    "URL": "https://www.kabum.com.br/produto/724768"
+   },
+   {
+    "Busca": 16,
+    "Tabela": "faixa",
+    "Loja": "KaBuM!",
+    "Fonte": "KaBuM!",
+    "Título exibido": "iPhone 16e Apple 128GB, Câmera 48MP, Tela Super Retina XDR 6,1\", Branco",
+    "Preço exibido": "R$ 4.499,90",
+    "Pagamento": "Pix",
+    "Rede": "",
+    "URL": "https://www.kabum.com.br/produto/717163"
+   },
+   {
+    "Busca": 16,
+    "Tabela": "faixa",
+    "Loja": "Gazin",
+    "Fonte": "Gazin",
+    "Título exibido": "iPhone 16e Apple 5G 6,1\" IOS 18 128GB 8GB Câmera 48MP",
+    "Preço exibido": "R$ 5.179,90",
+    "Pagamento": "Pix",
+    "Rede": "",
+    "URL": "https://www.gazin.com.br/produto/iphone-16e-apple-5g-61-ios-18-128gb-8gb-camera-48mp/9522/preto/quadriband"
+   },
+   {
+    "Busca": 17,
+    "Tabela": "faixa",
+    "Loja": "Magalu",
+    "Fonte": "KaBuM!",
+    "Título exibido": "Apple Iphone 16 128GB Rosa",
+    "Preço exibido": "R$ 4.799,00",
+    "Pagamento": "Pix",
+    "Rede": "",
+    "URL": "https://www.kabum.com.br/produto/643113"
+   },
+   {
+    "Busca": 17,
+    "Tabela": "faixa",
+    "Loja": "Magalu",
+    "Fonte": "KaBuM!",
+    "Título exibido": "Iphone 16 128GB 5g Branco Tela 6,1 Câmera 48mp Apple",
+    "Preço exibido": "R$ 4.799,00",
+    "Pagamento": "Pix",
+    "Rede": "",
+    "URL": "https://www.kabum.com.br/produto/643121"
+   },
+   {
+    "Busca": 17,
+    "Tabela": "faixa",
+    "Loja": "Magalu",
+    "Fonte": "KaBuM!",
+    "Título exibido": "Apple Iphone 16 128GB 8GB Ram A3287 Nano + Esim Tela 6.1 48+12mp Verde Acinzentado",
+    "Preço exibido": "R$ 4.799,00",
+    "Pagamento": "Pix",
+    "Rede": "",
+    "URL": "https://www.kabum.com.br/produto/643118"
+   },
+   {
+    "Busca": 17,
+    "Tabela": "faixa",
+    "Loja": "Magalu",
+    "Fonte": "KaBuM!",
+    "Título exibido": "Smartphone Apple Iphone 16 5g 128GB 48mp 6.1” Preto",
+    "Preço exibido": "R$ 4.799,00",
+    "Pagamento": "Pix",
+    "Rede": "",
+    "URL": "https://www.kabum.com.br/produto/643120"
+   },
+   {
+    "Busca": 17,
+    "Tabela": "faixa",
+    "Loja": "KaBuM!",
+    "Fonte": "KaBuM!",
+    "Título exibido": "iPhone 16 Apple 128GB, Câmera Dupla de 48MP, Tela 6.1\", Branco",
+    "Preço exibido": "R$ 5.799,00",
+    "Pagamento": "Pix",
+    "Rede": "",
+    "URL": "https://www.kabum.com.br/produto/640913"
+   },
+   {
+    "Busca": 18,
+    "Tabela": "faixa",
+    "Loja": "NegociuN",
+    "Fonte": "KaBuM!",
+    "Título exibido": "Apple Iphone 17 Pro Max 256gb Laranja-cósmico",
+    "Preço exibido": "R$ 9.099,00",
+    "Pagamento": "Pix",
+    "Rede": "",
+    "URL": "https://www.kabum.com.br/produto/928991"
+   },
+   {
+    "Busca": 18,
+    "Tabela": "faixa",
+    "Loja": "JANONI TECNOLOGIA",
+    "Fonte": "KaBuM!",
+    "Título exibido": "Iphone 17 Pro Max 256gb Apple Blue",
+    "Preço exibido": "R$ 9.490,00",
+    "Pagamento": "Pix",
+    "Rede": "",
+    "URL": "https://www.kabum.com.br/produto/928901"
+   },
+   {
+    "Busca": 18,
+    "Tabela": "faixa",
+    "Loja": "Magalu",
+    "Fonte": "KaBuM!",
+    "Título exibido": "Apple Iphone 17 Pro Max 256gb Prateado",
+    "Preço exibido": "R$ 10.169,10",
+    "Pagamento": "Pix",
+    "Rede": "",
+    "URL": "https://www.kabum.com.br/produto/928979"
+   },
+   {
+    "Busca": 18,
+    "Tabela": "faixa",
+    "Loja": "KaBuM!",
+    "Fonte": "KaBuM!",
+    "Título exibido": "iPhone 17 Pro Max Apple 256GB, Câmera Tripla Fusion de 48MP, Tela 6.9\" Super Retina XDR, Azul-intenso",
+    "Preço exibido": "R$ 12.499,00",
+    "Pagamento": "Pix",
+    "Rede": "",
+    "URL": "https://www.kabum.com.br/produto/925357"
+   },
+   {
+    "Busca": 18,
+    "Tabela": "faixa",
+    "Loja": "KaBuM!",
+    "Fonte": "KaBuM!",
+    "Título exibido": "iPhone 17 Pro Max Apple 256GB, Câmera Tripla Fusion de 48MP, Tela 6.9\" Super Retina XDR, Prateado",
+    "Preço exibido": "R$ 13.499,00",
+    "Pagamento": "Pix",
+    "Rede": "",
+    "URL": "https://www.kabum.com.br/produto/925355"
+   },
+   {
+    "Busca": 18,
+    "Tabela": "faixa",
+    "Loja": "Webcontinental · UP 2 TECH DO BRASIL",
+    "Fonte": "Webcontinental",
+    "Título exibido": "iPhone 17 Pro Max 12GB 256GB Laranja-cósmico",
+    "Preço exibido": "R$ 14.586,60",
+    "Pagamento": "Pix",
+    "Rede": "",
+    "URL": "https://www.webcontinental.com.br/iphone-17-pro-max-12gb-256gb-laranja-cosmico-006611000250/p"
+   },
+   {
+    "Busca": 19,
+    "Tabela": "faixa",
+    "Loja": "Trocafy",
+    "Fonte": "Trocafy",
+    "Título exibido": "Apple - iPhone 13 128GB (PRODUCT)RED - Fui Mais Usado - Bateria 70%",
+    "Preço exibido": "R$ 1.713,51",
+    "Pagamento": "Pix",
+    "Rede": "",
+    "URL": "https://www.trocafy.com.br/iphone-13-128gb-product-red-fui-mais-usado-bateria-70-p2603"
+   },
+   {
+    "Busca": 19,
+    "Tabela": "faixa",
+    "Loja": "Trocafy",
+    "Fonte": "Trocafy",
+    "Título exibido": "Apple - iPhone 13 128GB Azul - Fui Mais Usado - Bateria 70%",
+    "Preço exibido": "R$ 1.713,51",
+    "Pagamento": "Pix",
+    "Rede": "",
+    "URL": "https://www.trocafy.com.br/iphone-13-128gb-azul-fui-mais-usado-bateria-70-p2516"
+   },
+   {
+    "Busca": 19,
+    "Tabela": "faixa",
+    "Loja": "Trocafy",
+    "Fonte": "Trocafy",
+    "Título exibido": "Apple - iPhone 13 128GB - Branco - Tenho minhas marcas de uso",
+    "Preço exibido": "R$ 1.739,61",
+    "Pagamento": "Pix",
+    "Rede": "",
+    "URL": "https://www.trocafy.com.br/iphone-13-128gb-branco-tenho-minhas-marcas-de-uso-p1204"
+   },
+   {
+    "Busca": 19,
+    "Tabela": "faixa",
+    "Loja": "Trocafy",
+    "Fonte": "Trocafy",
+    "Título exibido": "Apple - iPhone 13 128GB Rosa - Fui Mais Usado",
+    "Preço exibido": "R$ 1.765,71",
+    "Pagamento": "Pix",
+    "Rede": "",
+    "URL": "https://www.trocafy.com.br/iphone-13-128gb-rosa-fui-mais-usado-p2063"
+   },
+   {
+    "Busca": 19,
+    "Tabela": "faixa",
+    "Loja": "Trocafy",
+    "Fonte": "Trocafy",
+    "Título exibido": "Apple - iPhone 13 128GB (PRODUCT)RED - Fui Mais Usado",
+    "Preço exibido": "R$ 1.765,71",
+    "Pagamento": "Pix",
+    "Rede": "",
+    "URL": "https://www.trocafy.com.br/iphone-13-128gb-product-red-fui-mais-usado-p2149"
+   },
+   {
+    "Busca": 19,
+    "Tabela": "faixa",
+    "Loja": "Trocafone",
+    "Fonte": "KaBuM!",
+    "Título exibido": "Usado - Iphone 13 128GB Estelar Muito Bom - Trocafone",
+    "Preço exibido": "R$ 2.087,13",
+    "Pagamento": "Pix",
+    "Rede": "",
+    "URL": "https://www.kabum.com.br/produto/577039"
+   },
+   {
+    "Busca": 19,
+    "Tabela": "faixa",
+    "Loja": "Trocafone",
+    "Fonte": "KaBuM!",
+    "Título exibido": "Usado: Iphone 13 128GB, Meia Noite - Muito Bom",
+    "Preço exibido": "R$ 2.159,10",
+    "Pagamento": "Pix",
+    "Rede": "",
+    "URL": "https://www.kabum.com.br/produto/574874"
+   },
+   {
+    "Busca": 19,
+    "Tabela": "faixa",
+    "Loja": "Trocafone",
+    "Fonte": "KaBuM!",
+    "Título exibido": "USADO: Iphone 13 128GB, Estelar - Excelente",
+    "Preço exibido": "R$ 2.191,53",
+    "Pagamento": "Pix",
+    "Rede": "",
+    "URL": "https://www.kabum.com.br/produto/506655"
+   },
+   {
+    "Busca": 19,
+    "Tabela": "faixa",
+    "Loja": "Trocafone",
+    "Fonte": "KaBuM!",
+    "Título exibido": "Usado: Iphone 13 128GB, Azul - Muito Bom",
+    "Preço exibido": "R$ 2.231,07",
+    "Pagamento": "Pix",
+    "Rede": "",
+    "URL": "https://www.kabum.com.br/produto/574871"
+   },
+   {
+    "Busca": 19,
+    "Tabela": "faixa",
+    "Loja": "Trocafone",
+    "Fonte": "KaBuM!",
+    "Título exibido": "Usado - Iphone 13 128GB, Red, Muito Bom - Trocafone",
+    "Preço exibido": "R$ 2.231,07",
+    "Pagamento": "Pix",
+    "Rede": "",
+    "URL": "https://www.kabum.com.br/produto/577848"
+   },
+   {
+    "Busca": 19,
+    "Tabela": "faixa",
+    "Loja": "Trocafone",
+    "Fonte": "KaBuM!",
+    "Título exibido": "Usado - Iphone 13 Red 128GB Bom - Trocafone",
+    "Preço exibido": "R$ 2.249,00",
+    "Pagamento": "Pix",
+    "Rede": "",
+    "URL": "https://www.kabum.com.br/produto/578307"
+   },
+   {
+    "Busca": 19,
+    "Tabela": "faixa",
+    "Loja": "Trocafone",
+    "Fonte": "KaBuM!",
+    "Título exibido": "Usado: Iphone 13, 128GB, Azul - Excelente",
+    "Preço exibido": "R$ 2.267,10",
+    "Pagamento": "Pix",
+    "Rede": "",
+    "URL": "https://www.kabum.com.br/produto/575416"
+   },
+   {
+    "Busca": 19,
+    "Tabela": "faixa",
+    "Loja": "CELLULAR STORE",
+    "Fonte": "KaBuM!",
+    "Título exibido": "Usado - Iphone 13 128 Gb Verde - Muito Bom",
+    "Preço exibido": "R$ 2.303,30",
+    "Pagamento": "Pix",
+    "Rede": "",
+    "URL": "https://www.kabum.com.br/produto/985693"
+   },
+   {
+    "Busca": 19,
+    "Tabela": "faixa",
+    "Loja": "Trocafone",
+    "Fonte": "KaBuM!",
+    "Título exibido": "Usado: Iphone 13, 128GB, Meia Noite - Excelente",
+    "Preço exibido": "R$ 2.342,67",
+    "Pagamento": "Pix",
+    "Rede": "",
+    "URL": "https://www.kabum.com.br/produto/574872"
+   },
+   {
+    "Busca": 19,
+    "Tabela": "faixa",
+    "Loja": "Trocafone",
+    "Fonte": "KaBuM!",
+    "Título exibido": "Usado - Iphone 13 128GB Verde Muito Bom - Trocafone",
+    "Preço exibido": "R$ 2.399,00",
+    "Pagamento": "Pix",
+    "Rede": "",
+    "URL": "https://www.kabum.com.br/produto/598720"
+   },
+   {
+    "Busca": 19,
+    "Tabela": "faixa",
+    "Loja": "CELLULAR STORE",
+    "Fonte": "KaBuM!",
+    "Título exibido": "Usado: Iphone 13 128 Gb Vermelho - Excelente",
+    "Preço exibido": "R$ 2.427,30",
+    "Pagamento": "Pix",
+    "Rede": "",
+    "URL": "https://www.kabum.com.br/produto/883548"
+   },
+   {
+    "Busca": 19,
+    "Tabela": "faixa",
+    "Loja": "CELLULAR STORE",
+    "Fonte": "KaBuM!",
+    "Título exibido": "Usado - Iphone 13 128 Gb Branco - Muito Bom",
+    "Preço exibido": "R$ 2.476,67",
+    "Pagamento": "Pix",
+    "Rede": "",
+    "URL": "https://www.kabum.com.br/produto/1015559"
+   },
+   {
+    "Busca": 19,
+    "Tabela": "faixa",
+    "Loja": "CELLULAR STORE",
+    "Fonte": "KaBuM!",
+    "Título exibido": "Usado: Iphone 13 128 Gb Preto - Bom",
+    "Preço exibido": "R$ 2.609,00",
+    "Pagamento": "Pix",
+    "Rede": "",
+    "URL": "https://www.kabum.com.br/produto/902520"
+   },
+   {
+    "Busca": 19,
+    "Tabela": "faixa",
+    "Loja": "CELLULAR STORE",
+    "Fonte": "KaBuM!",
+    "Título exibido": "Usado: Iphone 13 128 Gb Preto - Muito Bom",
+    "Preço exibido": "R$ 2.749,00",
+    "Pagamento": "Pix",
+    "Rede": "",
+    "URL": "https://www.kabum.com.br/produto/893656"
+   },
+   {
+    "Busca": 19,
+    "Tabela": "faixa",
+    "Loja": "REUSE FONE",
+    "Fonte": "KaBuM!",
+    "Título exibido": "Usado: Iphone 13 128GB Estelar - Muito Bom",
+    "Preço exibido": "R$ 2.849,00",
+    "Pagamento": "Pix",
+    "Rede": "",
+    "URL": "https://www.kabum.com.br/produto/1089208"
+   },
+   {
+    "Busca": 19,
+    "Tabela": "faixa",
+    "Loja": "CELLULAR STORE",
+    "Fonte": "KaBuM!",
+    "Título exibido": "Usado: Iphone 13 128 Gb Branco - Excelente",
+    "Preço exibido": "R$ 2.889,00",
+    "Pagamento": "Pix",
+    "Rede": "",
+    "URL": "https://www.kabum.com.br/produto/893660"
+   },
+   {
+    "Busca": 19,
+    "Tabela": "faixa",
+    "Loja": "NOVA ERA COMERCIO DE CELULARES LTDA",
+    "Fonte": "KaBuM!",
+    "Título exibido": "Usado - Iphone 13 128 Gb Preto Excelente",
+    "Preço exibido": "R$ 2.899,00",
+    "Pagamento": "Pix",
+    "Rede": "",
+    "URL": "https://www.kabum.com.br/produto/992523"
+   }
+  ]
+ }
 }
