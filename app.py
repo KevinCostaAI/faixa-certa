@@ -1867,16 +1867,28 @@ def mostrar_opcoes(busca):
     resumo = {}
     for g in lista:
         for o in g["ofertas"]:
-            linha = resumo.setdefault((g["nome"], o["gb"], o["condicao"]), {"menor": o["preco"], "anuncios": 0})
-            linha["menor"] = min(linha["menor"], o["preco"])
+            linha = resumo.setdefault((g["nome"], o["gb"], o["condicao"]),
+                                      {"menor": o["preco"], "anuncios": 0, "oferta": o})
+            if (o["preco"] < linha["menor"] or
+                    (o["preco"] == linha["menor"] and o.get("pagamento") in PAGAMENTOS_DA_FAIXA
+                     and linha["oferta"].get("pagamento") not in PAGAMENTOS_DA_FAIXA)):
+                linha.update(menor=o["preco"], oferta=o)
             linha["anuncios"] += 1
     linhas = sorted(resumo.items(), key=lambda item: item[1]["menor"])[:15]
-    st.table(pd.DataFrame([{
-        "Celular": nome,
-        "Memória": (f"{gb} GB" if gb < 1000 else f"{gb // 1000} TB") if gb else "não informada",
-        "A partir de": reais(dados["menor"]),
-        "Anúncios": dados["anuncios"],
-    } for (nome, gb, _), dados in linhas]), hide_index=True)
+    tabela = ["| Celular | Memória | A partir de | Pagamento | Loja | Anúncios | Compra |",
+              "| --- | --- | --- | --- | --- | --- | --- |"]
+    for (nome, gb, _), dados in linhas:
+        oferta = dados["oferta"]
+        loja = oferta["loja"]
+        if not normalizar(loja).startswith(normalizar(oferta["fonte"])):
+            loja = f"{oferta['fonte']} · {loja}"
+        memoria_texto = (f"{gb} GB" if gb < 1000 else f"{gb // 1000} TB") if gb else "não informada"
+        celulas = [escapar(nome), memoria_texto, escapar(reais(dados["menor"])),
+                   escapar(oferta.get("pagamento") or "não informada"), escapar(loja), str(dados["anuncios"]),
+                   f"[{'Ver no Compare Livre' if sem_destino(oferta) else 'Ir à loja'}](<{endereco(oferta['link'])}>)"]
+        tabela.append("| " + " | ".join(celulas) + " |")
+    st.markdown("\n".join(tabela))
+    st.caption("Cada link abre o anúncio do preço mostrado na mesma linha. A forma de pagamento está indicada por oferta.")
     st.caption(f"Lojas consultadas: {situacao}." + (f" Preços coletados às {horarios[-1]}." if horarios else "")
                + " Os modelos são lidos dos títulos por regras. A faixa de preço é calculada depois que você escolhe "
                "o celular, só com ofertas equivalentes.")

@@ -12,6 +12,36 @@ def test_interface_principal_abre_com_a_funcao_main():
     assert at.text_input[0].label == "Qual celular você procura?"
 
 
+def test_busca_generica_com_erro_mostra_compra_do_preco_e_memoria_da_linha(monkeypatch):
+    ofertas = []
+    for codigo, titulo, preco, pagamento in [
+        (1, "Apple iPhone 13 128GB Preto", 2999, "não informada"),
+        (2, "Apple iPhone 13 128GB Azul", 2999, "Pix"),
+        (3, "Apple iPhone 13 256GB Branco", 3999, "Pix"),
+        (4, "Apple iPhone 16e 128GB Branco", 4899, "não informada"),
+        (5, "Capa Apple iPhone 13 128GB", 20, "Pix"),
+        (6, "Apple iPhone 13 128GB Usado", 1999, "Pix")]:
+        url = f"https://www.kabum.com.br/produto/{codigo}/iphone"
+        ofertas.append({"titulo": titulo, "preco": preco, "pagamento": pagamento,
+                        "fonte": "KaBuM!", "loja": "Vendedor", "link": url, "pagina": url})
+    monkeypatch.setattr(app, "coletar_todas", lambda *args, **kwargs: [
+        {"fonte": "KaBuM!", "ofertas": ofertas, "status": "6 ofertas", "coletado": "12:00"}])
+    at = AppTest.from_string("import app\napp.main()", default_timeout=10).run()
+    at.text_input[0].set_value("ephone")
+    at.button[0].click().run()
+    assert not at.exception
+    assert any("Você quis dizer" in aviso.value and "iPhone" in aviso.value for aviso in at.info)
+    tabela = next(m.value for m in at.markdown if "| Celular | Memória |" in m.value).replace("\\$", "$")
+    linha128 = next(l for l in tabela.splitlines() if "Apple iPhone 13 | 128 GB" in l)
+    assert app.reais(2999) in linha128 and "| Pix |" in linha128
+    assert "https://www.kabum.com.br/produto/2/iphone" in linha128
+    linha256 = next(l for l in tabela.splitlines() if "Apple iPhone 13 | 256 GB" in l)
+    assert app.reais(3999) in linha256 and "https://www.kabum.com.br/produto/3/iphone" in linha256
+    assert "| não informada |" in tabela
+    assert "/produto/5/" not in tabela and "/produto/6/" not in tabela
+    assert any(b.label.startswith("Ver a faixa de preço de") for b in at.button)
+
+
 def test_protocolo_abre_pela_rota_publica():
     at = AppTest.from_file(str(Path(app.__file__)), default_timeout=10)
     at.query_params["protocolo"] = "1"
