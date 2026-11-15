@@ -1489,15 +1489,20 @@ def sem_destino(linha):
 
 
 def tabela_de_ofertas(linhas, com_motivo=False):
-    tem_rede = "rede_confirmada" in linhas and linhas["rede_confirmada"].isin(["4g", "5g"]).any()
-    colunas = ["Produto"] + (["Motivo"] if com_motivo else []) + ["Preço", "Pagamento"] + (["Rede"] if tem_rede else []) + ["Loja", "Fonte", "Compra"]
+    colunas = ["Produto"] + (["Motivo"] if com_motivo else []) + ["Preço", "Pagamento", "Rede", "Loja", "Fonte", "Compra"]
     tabela = ["| " + " | ".join(colunas) + " |", "|" + " --- |" * len(colunas)]
     for _, linha in linhas.iterrows():
         celulas = [escapar(linha["titulo"])] + ([escapar(linha["motivo"])] if com_motivo else [])
         celulas += [escapar(reais(linha["preco"]).replace(" ", "\u00a0")), escapar(linha.get("pagamento") or "não informada")]
-        if tem_rede:
-            rede = linha.get("rede_confirmada")
-            celulas += [f"{rede.upper()} (ficha)" if rede in ("4g", "5g") else (rede_em(linha["titulo"]) or "não informada").upper()]
+        rede = linha.get("rede_confirmada")
+        if linha.get("motivo") == "acessório ou outro produto":
+            rede_exibida = "Não se aplica"
+        elif rede in ("4g", "5g"):
+            rede_exibida = f"{rede.upper()} (ficha)"
+        else:
+            rede_do_titulo = rede_em(linha["titulo"])
+            rede_exibida = rede_do_titulo.upper() if rede_do_titulo else "Não informada"
+        celulas += [rede_exibida]
         celulas += [escapar(linha["loja"]),
                     f"[{escapar(linha['fonte'])}](<{endereco(linha['pagina'])}>)", f"[{'Ver no Compare Livre' if sem_destino(linha) else 'Ir à loja'}](<{endereco(linha['link'])}>)"]
         tabela.append("| " + " | ".join(celulas) + " |")
@@ -1683,6 +1688,9 @@ def mostrar_resultados(busca, coletas, mem):
     sem_pagamento = equivalentes[~pagamento_confirmado(equivalentes)].sort_values("preco")
     descartadas = linhas[linhas["motivo"].notna()].sort_values("preco")
     st.subheader(f"Faixa de preço: {descrever(alvo)}")
+    if equivalentes.empty and alvo.get("rede") in ("4g", "5g"):
+        st.info(f"Você selecionou {alvo['rede'].upper()}. Não encontrei ofertas equivalentes com essa rede confirmada "
+                "nesta busca. Aparelhos de outra rede e anúncios sem a rede confirmada ficam nas ofertas descartadas.")
     if "condicao_confirmada" in linhas and linhas["condicao_confirmada"].eq("usado").any():
         st.caption("Na Trocafy, os estados 'Sou como novo', 'Tenho minhas marcas de uso' e 'Fui mais usado' "
                    "são condições de aparelhos usados, conforme informado pela loja.")
@@ -1721,6 +1729,8 @@ def mostrar_resultados(busca, coletas, mem):
         if descartadas.empty:
             st.write("Nenhuma oferta foi descartada.")
         else:
+            st.caption("Na coluna Rede, 'Não se aplica' identifica acessórios ou outros produtos. "
+                       "'Não informada' significa que a rede do celular não foi confirmada no título ou na ficha.")
             tabela_de_ofertas(descartadas, com_motivo=True)
     return True
 
