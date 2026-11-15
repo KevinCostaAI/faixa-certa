@@ -2290,6 +2290,21 @@ def mostrar_revisao_ia():
     except FileNotFoundError:
         st.info("A revisão ainda não foi publicada.")
         return
+    caminho_adicional = os.path.join(base, "revisao_a07_20261115.json")
+    if os.path.exists(caminho_adicional):
+        with open(caminho_adicional, encoding="utf-8") as arquivo:
+            adicional = json.load(arquivo)
+        with st.expander(adicional["titulo"], expanded=True):
+            st.caption(f"{adicional['quando']} · {adicional['origem']}")
+            st.write(adicional["metodo"])
+            st.write(f"{adicional['total']} links visitados: {adicional['compativeis']} ofertas compatíveis e "
+                     f"{adicional['inconclusivas']} inconclusivas. Preço confirmado em {adicional['precos_confirmados']} páginas.")
+            st.dataframe(pd.DataFrame([{"Nº": o["n"], "Produto": o["titulo_mvp"], "Preço no MVP": o["preco_mvp"],
+                                        "Parecer": o["parecer"], "Observações": " ".join(o["observacoes"]),
+                                        "URL": o["url"]} for o in adicional["ofertas"]]), hide_index=True,
+                         column_config={"URL": st.column_config.LinkColumn("URL")})
+            for limite in adicional["limites"]:
+                st.caption(limite)
     anterior = None
     caminho_atual = os.path.join(base, "revisao_ia_diretas.json")
     if os.path.exists(caminho_atual):

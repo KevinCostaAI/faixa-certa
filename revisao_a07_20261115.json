@@ -1,0 +1,519 @@
+{
+  "titulo": "Conferência adicional do Galaxy A07 — 15/11/2026",
+  "origem": "ChatGPT / Codex no navegador Edge conectado do Kevin; páginas públicas e catálogos das lojas",
+  "conferencia_humana": false,
+  "consulta": "Samsung Galaxy A07 128GB, novo, 4G",
+  "total": 17,
+  "compativeis": 14,
+  "inconclusivas": 3,
+  "precos_confirmados": 16,
+  "quando": "2026-11-15T09:46:19-03:00",
+  "metodo": "Lista já aberta no MVP, sem refazer a pesquisa. Os 17 links foram abertos e lidos. Preços, pagamento e especificações foram comparados. Detalhes Pix e ficha da Webcontinental foram abertos; Samsung complementada pelo catálogo público. Não houve compra, carrinho, login ou mudança nos filtros.",
+  "limites": [
+    "Esta é uma revisão por IA da lista atual, não uma conferência humana nem uma nova bateria de 20 buscas.",
+    "A tela informava coleta parcialmente reaproveitada, às 08:33; 0,5 s de processamento não é uma medição nova de tempo.",
+    "A visita posterior não comprova retrospectivamente o preço no instante da coleta.",
+    "As três inconclusivas continuam na lista e no denominador desta revisão: 14/17 (82,4%). Resultados anteriores ficam preservados.",
+    "Dados do catálogo e página divergem no nome dos vendedores da Webcontinental. Produto e preço puderam ser confirmados."
+  ],
+  "ofertas": [
+    {
+      "n": 1,
+      "titulo_mvp": "Smartphone Samsung A07 4g 128GB 4gb 50mp 8mp 6.7” Preto",
+      "preco_mvp": "R$ 718,20",
+      "pagamento_mvp": "Pix",
+      "rede_mvp": "4G",
+      "vendedor_mvp": "Magalu",
+      "fonte": "KaBuM!",
+      "url": "https://www.kabum.com.br/produto/921218/smartphone-galaxy-a07-128gb-4g-samsung",
+      "url_visitada": "https://www.kabum.com.br/produto/921218/smartphone-galaxy-a07-128gb-4g-samsung",
+      "quando": "2026-11-15T12:38:08.068Z",
+      "parecer": "Compatível no título/ficha e preço",
+      "preco_confirmado": true,
+      "preco_pagina": "R$ 718,20",
+      "pagamento_confirmado": "Pix",
+      "armazenamento_confirmado": "128 GB",
+      "rede_confirmada": "4G",
+      "vendedor_pagina": "Magalu",
+      "observacoes": [
+        "A descrição também traz texto genérico sobre UMTS/HSDPA; rede 4G confirmada no título. RAM não é critério de equivalência."
+      ],
+      "conferencia_humana": false,
+      "sha256_captura_dom": "4223f16c0cab7bcbf778eb5bff036dddfcf808d33c28eb8ee9a4d5dd688e4f94"
+    },
+    {
+      "n": 2,
+      "titulo_mvp": "Celular Galaxy A07 128GB 4g Samsung",
+      "preco_mvp": "R$ 718,20",
+      "pagamento_mvp": "Pix",
+      "rede_mvp": "4G",
+      "vendedor_mvp": "Magalu",
+      "fonte": "KaBuM!",
+      "url": "https://www.kabum.com.br/produto/921237/smartphone-galaxy-a07-128gb-4g-samsung",
+      "url_visitada": "https://www.kabum.com.br/produto/921237/smartphone-galaxy-a07-128gb-4g-samsung",
+      "quando": "2026-11-15T12:38:10.020Z",
+      "parecer": "Inconclusiva",
+      "preco_confirmado": true,
+      "preco_pagina": "R$ 718,20",
+      "pagamento_confirmado": "Pix",
+      "armazenamento_confirmado": null,
+      "rede_confirmada": "4G",
+      "vendedor_pagina": "Magalu",
+      "observacoes": [
+        "Título e ficha indicam 128 GB, mas um trecho da descrição anuncia 256 GB. Informação contraditória na loja."
+      ],
+      "conferencia_humana": false,
+      "sha256_captura_dom": "6b3bec9526a1116e9eb5de767ea946292ec04594b03102000626cd98504c95c0"
+    },
+    {
+      "n": 3,
+      "titulo_mvp": "Smartphone Samsung Galaxy A07 128GB, 4GB, Câmera 50mp, Tela 6.7”, Proteção Ip54, Processador 6nm, Preto",
+      "preco_mvp": "R$ 784,69",
+      "pagamento_mvp": "Pix",
+      "rede_mvp": "4G (ficha)",
+      "vendedor_mvp": "OFFCOMP",
+      "fonte": "KaBuM!",
+      "url": "https://www.kabum.com.br/produto/924196/celular-samsung-galaxy-a07-128gb-4gb-camera-50mp-tela-6-7-protecao-ip54-processador-6nm-preto-128-gb",
+      "url_visitada": "https://www.kabum.com.br/produto/924196/celular-samsung-galaxy-a07-128gb-4gb-camera-50mp-tela-6-7-protecao-ip54-processador-6nm-preto-128-gb",
+      "quando": "2026-11-15T12:38:12.103Z",
+      "parecer": "Compatível no título/ficha e preço",
+      "preco_confirmado": true,
+      "preco_pagina": "R$ 784,69",
+      "pagamento_confirmado": "Pix",
+      "armazenamento_confirmado": "128 GB",
+      "rede_confirmada": "4G",
+      "vendedor_pagina": "OFFCOMP",
+      "observacoes": [],
+      "conferencia_humana": false,
+      "sha256_captura_dom": "b048b6b9b36c5da81e7d1019ade922de142b3021d61f58cd6b8ad454e80b9b2f"
+    },
+    {
+      "n": 4,
+      "titulo_mvp": "Smartphone Samsung A07 4GB RAM 128GB 50MP Violeta",
+      "preco_mvp": "R$ 843,90",
+      "pagamento_mvp": "Pix",
+      "rede_mvp": "4G (ficha)",
+      "vendedor_mvp": "Webcontinental · Lojas Edmil",
+      "fonte": "Webcontinental",
+      "url": "https://www.webcontinental.com.br/smartphone-samsung-a07-4gb-ram-128gb-50mp-violeta-003958001053/p",
+      "url_visitada": "https://www.webcontinental.com.br/smartphone-samsung-a07-4gb-ram-128gb-50mp-violeta-003958001053/p",
+      "quando": "2026-11-15T12:38:50.461Z",
+      "parecer": "Compatível no título/ficha e preço",
+      "preco_confirmado": true,
+      "preco_pagina": "R$ 843,90",
+      "pagamento_confirmado": "Pix",
+      "armazenamento_confirmado": "128 GB",
+      "rede_confirmada": "4G",
+      "vendedor_pagina": "Webcontinental Marketplace",
+      "observacoes": [
+        "O catálogo público confirma o vendedor mostrado no MVP, mas a página renderiza o nome genérico Webcontinental Marketplace. A divergência fica registrada; não muda a contagem de uma única loja Webcontinental."
+      ],
+      "conferencia_humana": false,
+      "sha256_captura_dom": "40a43453186795fef544c6c2b05d5219301c2db494ac7c478b1cd7bb2eb5111e"
+    },
+    {
+      "n": 5,
+      "titulo_mvp": "Smartphone Samsung Galaxy A07 128GB 4G 4GB RAM Verde Verde",
+      "preco_mvp": "R$ 845,91",
+      "pagamento_mvp": "Pix",
+      "rede_mvp": "4G",
+      "vendedor_mvp": "Fast Shop · TeleRio",
+      "fonte": "Fast Shop",
+      "url": "https://site.fastshop.com.br/smartphone-samsung-galaxy-a07-128gb-4g-4gb-ram-verde-verde-197998/p",
+      "url_visitada": "https://site.fastshop.com.br/smartphone-samsung-galaxy-a07-128gb-4g-4gb-ram-verde-verde-197998/p",
+      "quando": "2026-11-15T12:37:58.355Z",
+      "parecer": "Compatível no título/ficha e preço",
+      "preco_confirmado": true,
+      "preco_pagina": "R$ 845,91",
+      "pagamento_confirmado": "Pix",
+      "armazenamento_confirmado": "128 GB",
+      "rede_confirmada": "4G",
+      "vendedor_pagina": "TeleRio",
+      "observacoes": [],
+      "conferencia_humana": false,
+      "sha256_captura_dom": "d337233be35b418aabeb33507cd639e9568f347751016f354c5008b12753259f"
+    },
+    {
+      "n": 6,
+      "titulo_mvp": "Smartphone Samsung Galaxy A07 4G 128GB 4GB + 4GB RAM Plus Câmera 50MP Violeta Violeta",
+      "preco_mvp": "R$ 845,91",
+      "pagamento_mvp": "Pix",
+      "rede_mvp": "4G",
+      "vendedor_mvp": "Fast Shop · TeleRio",
+      "fonte": "Fast Shop",
+      "url": "https://site.fastshop.com.br/smartphone-samsung-galaxy-a07-4g-128gb-4gb---4gb-ram-plus-camera-50mp-violeta-198010/p",
+      "url_visitada": "https://site.fastshop.com.br/smartphone-samsung-galaxy-a07-4g-128gb-4gb---4gb-ram-plus-camera-50mp-violeta-198010/p",
+      "quando": "2026-11-15T12:38:52.561Z",
+      "parecer": "Compatível no título/ficha e preço",
+      "preco_confirmado": true,
+      "preco_pagina": "R$ 845,91",
+      "pagamento_confirmado": "Pix",
+      "armazenamento_confirmado": "128 GB",
+      "rede_confirmada": "4G",
+      "vendedor_pagina": "TeleRio",
+      "observacoes": [],
+      "conferencia_humana": false,
+      "sha256_captura_dom": "6a1e5c2ba7c35bffb6def9dd646a67395892b0780b075cea9acea0981ac6cfa0"
+    },
+    {
+      "n": 7,
+      "titulo_mvp": "Smartphone Samsung Galaxy A07 Sm-a075mzkrzto 6,7\" Hd/4g/4gb Ram+4gb Ram Plus/128GB/android 15/ Preto",
+      "preco_mvp": "R$ 979,90",
+      "pagamento_mvp": "Pix",
+      "rede_mvp": "4G",
+      "vendedor_mvp": "LetsGo Informática",
+      "fonte": "KaBuM!",
+      "url": "https://www.kabum.com.br/produto/997796/celular-samsung-galaxy-a07-128gb-tela-6-7-pol-pls-lcd-4gb-ram-ram-plus-ate-4gb-camera-traseira-50-2mp-frontal-8mp-preto-",
+      "url_visitada": "https://www.kabum.com.br/produto/997796/celular-samsung-galaxy-a07-128gb-tela-6-7-pol-pls-lcd-4gb-ram-ram-plus-ate-4gb-camera-traseira-50-2mp-frontal-8mp-preto-",
+      "quando": "2026-11-15T12:38:54.906Z",
+      "parecer": "Compatível no título/ficha e preço",
+      "preco_confirmado": true,
+      "preco_pagina": "R$ 979,90",
+      "pagamento_confirmado": "Pix",
+      "armazenamento_confirmado": "128 GB",
+      "rede_confirmada": "4G",
+      "vendedor_pagina": "LetsGo Informática",
+      "observacoes": [],
+      "conferencia_humana": false,
+      "sha256_captura_dom": "d18a3cbdf5371202a73f23c2918416df850d6d9e75b33ef705efa96a9316249a"
+    },
+    {
+      "n": 8,
+      "titulo_mvp": "Celular Samsung Galaxy A07 Tela 6.7\" 128GB 4G 90Hz Câmera Dupla 50MP Verde",
+      "preco_mvp": "R$ 985,90",
+      "pagamento_mvp": "Pix",
+      "rede_mvp": "4G",
+      "vendedor_mvp": "Fast Shop · Ponto",
+      "fonte": "Fast Shop",
+      "url": "https://site.fastshop.com.br/celular-samsung-galaxy-a07-tela-6-7--128gb-4g-90hz-camera-dupla-50mp-verde-139093/p",
+      "url_visitada": "https://site.fastshop.com.br/celular-samsung-galaxy-a07-tela-6-7--128gb-4g-90hz-camera-dupla-50mp-verde-139093/p",
+      "quando": "2026-11-15T12:39:21.162Z",
+      "parecer": "Compatível no título/ficha e preço",
+      "preco_confirmado": true,
+      "preco_pagina": "R$ 985,90",
+      "pagamento_confirmado": "Pix",
+      "armazenamento_confirmado": "128 GB",
+      "rede_confirmada": "4G",
+      "vendedor_pagina": "Ponto",
+      "observacoes": [],
+      "conferencia_humana": false,
+      "sha256_captura_dom": "7d07d7ad116d7bfc725bbb382c7ca97ebc51d8eb379180d3fafc9f85f4784228"
+    },
+    {
+      "n": 9,
+      "titulo_mvp": "Celular Samsung Galaxy A07 Tela 6.7\" 128GB 4G 90Hz Câmera Dupla 50MP Verde",
+      "preco_mvp": "R$ 985,90",
+      "pagamento_mvp": "Pix",
+      "rede_mvp": "4G",
+      "vendedor_mvp": "Fast Shop · Casas Bahia",
+      "fonte": "Fast Shop",
+      "url": "https://site.fastshop.com.br/celular-samsung-galaxy-a07-tela-6-7-128gb-4g-90hz-camera-dupla-50mp-verde-135405/p",
+      "url_visitada": "https://site.fastshop.com.br/celular-samsung-galaxy-a07-tela-6-7-128gb-4g-90hz-camera-dupla-50mp-verde-135405/p",
+      "quando": "2026-11-15T12:39:23.116Z",
+      "parecer": "Compatível no título/ficha e preço",
+      "preco_confirmado": true,
+      "preco_pagina": "R$ 985,90",
+      "pagamento_confirmado": "Pix",
+      "armazenamento_confirmado": "128 GB",
+      "rede_confirmada": "4G",
+      "vendedor_pagina": "Casas Bahia",
+      "observacoes": [],
+      "conferencia_humana": false,
+      "sha256_captura_dom": "1d858a9662d936f6b6027294a30e16467527a6ca97dc0d4c99fa24c84bce7b68"
+    },
+    {
+      "n": 10,
+      "titulo_mvp": "Celular Samsung Galaxy A07 128GB, 4GB, Câmera 50MP, Tela 6.7\", Proteção IP54, Processador 6nm · Verde",
+      "preco_mvp": "R$ 1.044,05",
+      "pagamento_mvp": "Pix",
+      "rede_mvp": "4G (ficha)",
+      "vendedor_mvp": "Samsung",
+      "fonte": "Samsung",
+      "url": "https://shop.samsung.com/br/galaxy-a07/p",
+      "url_visitada": "https://shop.samsung.com/br/galaxy-a07/p",
+      "quando": "2026-11-15T12:39:31.314Z",
+      "parecer": "Compatível no título/ficha e preço",
+      "preco_confirmado": true,
+      "preco_pagina": "R$ 1.044,05",
+      "pagamento_confirmado": "Pix",
+      "armazenamento_confirmado": "128 GB",
+      "rede_confirmada": "4G",
+      "vendedor_pagina": "Samsung",
+      "observacoes": [
+        "Página confirma A07 128 GB Verde, SM-A075MZGGZTO e R$ 1.044,05 à vista. O botão de formas de pagamento não exibiu detalhes. Catálogo público confirma Rede 4G e Pix à vista de R$ 1.044,05, uma parcela, sem juros."
+      ],
+      "conferencia_humana": false,
+      "sha256_captura_dom": "c45edda58e0e6f6e14b441a2880419c0954e55ffbe1d1b463cfd0c7168b3a3c8"
+    },
+    {
+      "n": 11,
+      "titulo_mvp": "Celular Samsung Galaxy A07 Tela 6.7\" 128GB 4G 90Hz Câmera Dupla 50MP Preto",
+      "preco_mvp": "R$ 1.048,83",
+      "pagamento_mvp": "Pix",
+      "rede_mvp": "4G",
+      "vendedor_mvp": "Fast Shop · Ponto",
+      "fonte": "Fast Shop",
+      "url": "https://site.fastshop.com.br/celular-samsung-galaxy-a07-tela-6-7--128gb-4g-90hz-camera-dupla-50mp-preto-139106/p",
+      "url_visitada": "https://site.fastshop.com.br/celular-samsung-galaxy-a07-tela-6-7--128gb-4g-90hz-camera-dupla-50mp-preto-139106/p",
+      "quando": "2026-11-15T12:39:51.042Z",
+      "parecer": "Inconclusiva",
+      "preco_confirmado": false,
+      "preco_pagina": null,
+      "pagamento_confirmado": null,
+      "armazenamento_confirmado": null,
+      "rede_confirmada": null,
+      "vendedor_pagina": null,
+      "observacoes": [
+        "O endereço exibido pelo MVP abriu a mensagem de página não encontrada na Fast Shop."
+      ],
+      "conferencia_humana": false,
+      "sha256_captura_dom": "c51bad409cb073f3454dfd12e7899b75b9c85ecdae8538d6a8c0f796a1878450"
+    },
+    {
+      "n": 12,
+      "titulo_mvp": "Celular Samsung Galaxy A07 Tela 6.7 128GB 4G 90Hz Câmera Dupla 50MP Preto",
+      "preco_mvp": "R$ 1.048,83",
+      "pagamento_mvp": "Pix",
+      "rede_mvp": "4G",
+      "vendedor_mvp": "Fast Shop · Casas Bahia",
+      "fonte": "Fast Shop",
+      "url": "https://site.fastshop.com.br/celular-samsung-galaxy-a07-tela-6-7-128gb-4g-90hz-camera-dupla-50mp-preto-135412/p",
+      "url_visitada": "https://site.fastshop.com.br/celular-samsung-galaxy-a07-tela-6-7-128gb-4g-90hz-camera-dupla-50mp-preto-135412/p",
+      "quando": "2026-11-15T12:39:53.605Z",
+      "parecer": "Compatível no título/ficha e preço",
+      "preco_confirmado": true,
+      "preco_pagina": "R$ 1.048,83",
+      "pagamento_confirmado": "Pix",
+      "armazenamento_confirmado": "128 GB",
+      "rede_confirmada": "4G",
+      "vendedor_pagina": "Casas Bahia",
+      "observacoes": [],
+      "conferencia_humana": false,
+      "sha256_captura_dom": "65a1d427ba4aa8ad17d0dfb1797855d48da5ddc36c80588be7df29bcbd216feb"
+    },
+    {
+      "n": 13,
+      "titulo_mvp": "Smartphone Samsung Galaxy A07 128GB, 4GB, Câmera 50mp, Tela 6.7”, Proteção Ip54, Processador 6nm, Violeta",
+      "preco_mvp": "R$ 1.081,90",
+      "pagamento_mvp": "Pix",
+      "rede_mvp": "4G (ficha)",
+      "vendedor_mvp": "WEBCONTINENTAL MARKETPLACE",
+      "fonte": "KaBuM!",
+      "url": "https://www.kabum.com.br/produto/924192/celular-samsung-galaxy-a07-128gb-4gb-camera-50mp-tela-6-7-protecao-ip54-processador-6nm-violeta-128-gb",
+      "url_visitada": "https://www.kabum.com.br/produto/924192/celular-samsung-galaxy-a07-128gb-4gb-camera-50mp-tela-6-7-protecao-ip54-processador-6nm-violeta-128-gb",
+      "quando": "2026-11-15T12:39:56.004Z",
+      "parecer": "Compatível no título/ficha e preço",
+      "preco_confirmado": true,
+      "preco_pagina": "R$ 1.081,90",
+      "pagamento_confirmado": "Pix",
+      "armazenamento_confirmado": "128 GB",
+      "rede_confirmada": "4G",
+      "vendedor_pagina": "WEBCONTINENTAL MARKETPLACE",
+      "observacoes": [],
+      "conferencia_humana": false,
+      "sha256_captura_dom": "76670ae14a99d9281de848cbfdcad364758ef9293e880537cc20f085606cd27f"
+    },
+    {
+      "n": 14,
+      "titulo_mvp": "Smartphone Samsung Galaxy A07 128GB, 4GB, Câmera 50mp, Tela 6.7”, Proteção Ip54, Processador 6nm, Verde",
+      "preco_mvp": "R$ 1.198,87",
+      "pagamento_mvp": "Pix",
+      "rede_mvp": "4G (ficha)",
+      "vendedor_mvp": "WORLDTRONICS",
+      "fonte": "KaBuM!",
+      "url": "https://www.kabum.com.br/produto/924200/celular-samsung-galaxy-a07-128gb-4gb-camera-50mp-tela-6-7-protecao-ip54-processador-6nm-verde-128-gb",
+      "url_visitada": "https://www.kabum.com.br/produto/924200/celular-samsung-galaxy-a07-128gb-4gb-camera-50mp-tela-6-7-protecao-ip54-processador-6nm-verde-128-gb",
+      "quando": "2026-11-15T12:40:15.413Z",
+      "parecer": "Compatível no título/ficha e preço",
+      "preco_confirmado": true,
+      "preco_pagina": "R$ 1.198,87",
+      "pagamento_confirmado": "Pix",
+      "armazenamento_confirmado": "128 GB",
+      "rede_confirmada": "4G",
+      "vendedor_pagina": "WORLDTRONICS",
+      "observacoes": [],
+      "conferencia_humana": false,
+      "sha256_captura_dom": "ef7393fa3b68c64889d07d49d1190bfee51d54557dbb8b51bb4a8459df22998c"
+    },
+    {
+      "n": 15,
+      "titulo_mvp": "Smartphone Samsung Galaxy A07 128GB - Violeta, 4g, Ram 4gb, Câmera 50mp + Selfie 8mp, Tela 6,7\"",
+      "preco_mvp": "R$ 1.220,49",
+      "pagamento_mvp": "Pix",
+      "rede_mvp": "4G",
+      "vendedor_mvp": "ECOM ELETRO",
+      "fonte": "KaBuM!",
+      "url": "https://www.kabum.com.br/produto/921128/smartphone-samsung-galaxy-a07-128gb-violeta-4g-ram-4gb-camera-50mp-selfie-8mp-tela-6-7-",
+      "url_visitada": "https://www.kabum.com.br/produto/921128/smartphone-samsung-galaxy-a07-128gb-violeta-4g-ram-4gb-camera-50mp-selfie-8mp-tela-6-7-",
+      "quando": "2026-11-15T12:40:17.466Z",
+      "parecer": "Compatível no título/ficha e preço",
+      "preco_confirmado": true,
+      "preco_pagina": "R$ 1.220,49",
+      "pagamento_confirmado": "Pix",
+      "armazenamento_confirmado": "128 GB",
+      "rede_confirmada": "4G",
+      "vendedor_pagina": "ECOM ELETRO",
+      "observacoes": [],
+      "conferencia_humana": false,
+      "sha256_captura_dom": "f141a0b6e6b061277393a4dfcffe5f199083a0ad28eb2f4eed2fc887af032a88"
+    },
+    {
+      "n": 16,
+      "titulo_mvp": "Smartphone Samsung Galaxy A07 A075 8GB 128GB 50MP 4G Android Preto",
+      "preco_mvp": "R$ 1.359,91",
+      "pagamento_mvp": "Pix",
+      "rede_mvp": "4G",
+      "vendedor_mvp": "Webcontinental · Tá Barato Tô Levando",
+      "fonte": "Webcontinental",
+      "url": "https://www.webcontinental.com.br/smartphone-samsung-galaxy-a07-a075-8gb-128gb-50mp-4g-android-preto-002648007476/p",
+      "url_visitada": "https://www.webcontinental.com.br/smartphone-samsung-galaxy-a07-a075-8gb-128gb-50mp-4g-android-preto-002648007476/p",
+      "quando": "2026-11-15T12:40:21.147Z",
+      "parecer": "Compatível no título/ficha e preço",
+      "preco_confirmado": true,
+      "preco_pagina": "R$ 1.359,91",
+      "pagamento_confirmado": "Pix",
+      "armazenamento_confirmado": "128 GB",
+      "rede_confirmada": "4G",
+      "vendedor_pagina": "Webcontinental Marketplace",
+      "observacoes": [
+        "O catálogo público confirma o vendedor mostrado no MVP, mas a página renderiza o nome genérico Webcontinental Marketplace. A divergência fica registrada; não muda a contagem de uma única loja Webcontinental."
+      ],
+      "conferencia_humana": false,
+      "sha256_captura_dom": "5f218bf76d7a3e0281fb79f19adfc7fc6485e89b2c52bb2fc4c30f22a033dabe"
+    },
+    {
+      "n": 17,
+      "titulo_mvp": "Smartphone Samsung Galaxy A07 128GB 4G Samsung Preto",
+      "preco_mvp": "R$ 1.599,90",
+      "pagamento_mvp": "Pix",
+      "rede_mvp": "4G",
+      "vendedor_mvp": "Fast Shop · Webcontinental Marketplace",
+      "fonte": "Fast Shop",
+      "url": "https://site.fastshop.com.br/smartphone-samsung-galaxy-a07-128gb-4g-samsung-preto-170970/p",
+      "url_visitada": "https://site.fastshop.com.br/smartphone-samsung-galaxy-a07-128gb-4g-samsung-preto-170970/p",
+      "quando": "2026-11-15T12:40:23.548Z",
+      "parecer": "Inconclusiva",
+      "preco_confirmado": true,
+      "preco_pagina": "R$ 1.599,90",
+      "pagamento_confirmado": "Pix",
+      "armazenamento_confirmado": null,
+      "rede_confirmada": "4G",
+      "vendedor_pagina": "Webcontinental Marketplace",
+      "observacoes": [
+        "Título e especificações indicam 128 GB, mas a descrição também anuncia 256 GB. Informação contraditória na loja."
+      ],
+      "conferencia_humana": false,
+      "sha256_captura_dom": "1b847f3eb4dac5ba6895988e2a0aaf25f331668c00c14834396b188be4498b26"
+    }
+  ],
+  "complementos_catalogo": [
+    {
+      "fonte": "Samsung",
+      "url_catalogo": "https://shop.samsung.com/br/api/catalog_system/pub/products/search/?ft=galaxy%20a07%20128gb&_from=0&_to=29",
+      "quando": "2026-11-15T09:44:19.854854-03:00",
+      "produto": "Celular Samsung Galaxy A07 128GB, 4GB, Câmera 50MP, Tela 6.7\", Proteção IP54, Processador 6nm",
+      "rede": [
+        "4G"
+      ],
+      "itens": [
+        {
+          "nome": "Verde",
+          "vendedores": [
+            {
+              "nome": "SAMSUNG ELETRÔNICA DA AMAZÔNIA LTDA.",
+              "padrao": true,
+              "preco_generico": 1099.0,
+              "pix": [
+                {
+                  "Value": 1044.05,
+                  "InterestRate": 0.0,
+                  "TotalValuePlusInterestRate": 1044.05,
+                  "NumberOfInstallments": 1,
+                  "PaymentSystemName": "Pix",
+                  "PaymentSystemGroupName": "instantPaymentPaymentGroup",
+                  "Name": "Pix à vista"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "fonte": "Webcontinental",
+      "url_catalogo": "https://www.webcontinental.com.br/api/catalog_system/pub/products/search/?ft=galaxy%20a07%20128gb&_from=0&_to=29",
+      "quando": "2026-11-15T09:44:17.909815-03:00",
+      "produto": "Smartphone Samsung Galaxy A07 A075 8GB 128GB 50MP 4G Android Bateria 5000mAh Preto",
+      "rede": [
+        "Bluetooth, Wi-Fi, Dual SIM"
+      ],
+      "itens": [
+        {
+          "nome": "Smartphone Samsung Galaxy A07 A075 8GB 128GB 50MP 4G Android Preto",
+          "vendedores": [
+            {
+              "nome": "Tá Barato Tô Levando",
+              "padrao": true,
+              "preco_generico": 1407.91,
+              "pix": [
+                {
+                  "Value": 1359.91,
+                  "InterestRate": 0.0,
+                  "TotalValuePlusInterestRate": 1359.91,
+                  "NumberOfInstallments": 1,
+                  "PaymentSystemName": "Pix",
+                  "PaymentSystemGroupName": "instantPaymentPaymentGroup",
+                  "Name": "Pix à vista"
+                }
+              ]
+            },
+            {
+              "nome": "WebContinental",
+              "padrao": false,
+              "preco_generico": 0.0,
+              "pix": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "fonte": "Webcontinental",
+      "url_catalogo": "https://www.webcontinental.com.br/api/catalog_system/pub/products/search/?ft=galaxy%20a07%20128gb&_from=0&_to=29",
+      "quando": "2026-11-15T09:44:17.909815-03:00",
+      "produto": "Smartphone Samsung A07 4GB RAM 128GB 50MP Câmera Traseira Dupla Violeta",
+      "rede": [
+        "4G"
+      ],
+      "itens": [
+        {
+          "nome": "Smartphone Samsung A07 4GB RAM 128GB 50MP Violeta",
+          "vendedores": [
+            {
+              "nome": "Lojas Edmil",
+              "padrao": true,
+              "preco_generico": 843.9,
+              "pix": [
+                {
+                  "Value": 843.9,
+                  "InterestRate": 0.0,
+                  "TotalValuePlusInterestRate": 843.9,
+                  "NumberOfInstallments": 1,
+                  "PaymentSystemName": "Pix",
+                  "PaymentSystemGroupName": "instantPaymentPaymentGroup",
+                  "Name": "Pix à vista"
+                }
+              ]
+            },
+            {
+              "nome": "WebContinental",
+              "padrao": false,
+              "preco_generico": 0.0,
+              "pix": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
