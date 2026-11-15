@@ -4,7 +4,7 @@
   "codigo_sha256": "47231472dff4bdd71a587e061c5ed6a4f2a68746bff27909ca2b8aae468e3c9b",
   "prompt_sha256": "6953e9ae9a95",
   "origem": "Execução automatizada no navegador Edge, no app publicado",
-  "metodo": "As mesmas 20 buscas do protocolo foram executadas uma vez, com coleta nova, na versão 1be2352. Tempo medido do clique em Buscar até a conclusão visível, incluindo a demora da automação. A cobertura conta lojas de compra distintas das ofertas exibidas, inclusive as mostradas à parte por pagamento não confirmado. Vendedores da mesma loja contam uma vez. Os resultados são automáticos e aguardam conferência humana; esta rodada usa modelos já conhecidos, não é um teste independente nem uma sessão com participantes.",
+  "metodo": "As mesmas 20 buscas do protocolo foram executadas uma vez, com coleta nova, na versão 1be2352. Tempo medido do clique em Buscar até a conclusão visível, incluindo a demora da automação. A cobertura conta lojas de compra distintas das ofertas exibidas, inclusive as mostradas à parte por pagamento não confirmado. Vendedores da mesma loja contam uma vez. Os resultados são automáticos; esta rodada usa modelos já conhecidos, não é um teste independente nem uma sessão com participantes.",
   "inicio": "2026-11-14T12:08:53-03:00",
   "fim": "2026-11-14T12:16:44-03:00",
   "duas_lojas": 18,

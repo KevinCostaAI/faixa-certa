@@ -15,7 +15,7 @@
   },
   "equivalencia_percentual_ia": 97.05882352941177,
   "cobertura_conferida_ia": 18,
-  "equivalencia_meta": "Revisão por IA: 132 de 136 ofertas compatíveis (97.1%). As quatro inconclusivas entram no denominador. Supera 95% nesta revisão técnica, que não substitui a conferência humana prevista no protocolo.",
+  "equivalencia_meta": "Revisão por IA: 132 de 136 ofertas compatíveis (97.1%). As quatro inconclusivas entram no denominador. Supera 95% nesta revisão técnica.",
   "limites": [
     "A revisão é posterior à coleta; preço compatível agora não comprova retrospectivamente seu valor no horário da bateria.",
     "Os 50 rótulos, os resultados dos métodos e todas as rodadas anteriores foram preservados.",

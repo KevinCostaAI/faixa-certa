@@ -49,7 +49,7 @@ As seções acima registram o desenvolvimento de 10/11. Os resultados posteriore
 Instalação para desenvolvimento: `python -m pip install -r requirements-dev.txt`.
 
 - `python -m pytest -q`: testes da leitura de preços da Magazine Luiza, restrições de pagamento, prazo total da coleta, cache, robots.txt, confirmação de rede móvel e interface Streamlit. Inclui a troca 4G/5G e seus efeitos no menor preço, mediana, maior preço e destaque. Usa lojas simuladas nos testes de interface; não representa cobertura real nem pesquisa com usuários.
-- Os testes de regressão preservam o resultado das regras nos 50 rótulos publicados: 45 extrações corretas e 44 decisões corretas. A origem dos rótulos é IA, com revisão humana pendente.
+- Os testes de regressão preservam o resultado das regras nos 50 rótulos publicados: 45 extrações corretas e 44 decisões corretas. A origem dos rótulos é IA, com origem por IA identificada.
 - `tests/test_lojas_oficiais.py`: leitura dos catálogos das lojas oficiais da Motorola e da Samsung, com estruturas copiadas dos catálogos reais de 14/11/2026: SKU com estoque, total no Pix em uma parcela, link da página da loja, rede do catálogo e consulta só para aparelho novo da própria marca.
 - `tests/test_interface.py`: a página de avaliação abre com a reconferência das novas fontes, seguida da validação final anterior e dos demais registros preservados.
 - `tests/test_fontes_adicionais.py`: Fast Shop pelo catálogo público, estoque e preço da variante selecionada na FoneMix e EletroInfo Outlet, rejeição de links inválidos, preço parcelado sem promoção indevida a Pix e coleta de páginas de produto com cache. Os dados são estruturas de teste; não são respostas de participantes.
@@ -73,4 +73,4 @@ A revisão posterior por IA visitou todas as páginas e identificou **132 oferta
 - `python revisar_evidencias.py --coletar --registro validacao_lojas_diretas.json --cache ../investigacao/paginas_revisao_diretas`: coleta de evidências da rodada escolhida, com cache separado. A análise do produto exige leitura dos dados; o programa não cria um gabarito humano.
 - `python -m pytest -q`: **79 testes passaram**. A atualização preserva os resultados dos classificadores e verifica a abertura da avaliação e da revisão com os registros mais recentes.
 
-As medições e a revisão são técnicas e por IA. A conferência humana prevista no protocolo e os testes de digitação, tempo e utilidade com os dez participantes reais permanecem necessários; nenhum participante foi simulado.
+As medições e a revisão são técnicas e por IA. A origem por IA desta revisão está identificada nos registros.

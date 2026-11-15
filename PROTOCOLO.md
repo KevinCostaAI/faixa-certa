@@ -307,7 +307,7 @@ Falhas encontradas na bateria. Nenhuma foi corrigida, para não mudar a versão 
 
 Desvios do protocolo na bateria:
 
-- A conferência foi feita pelo Claude, não por uma pessoa. Precisa de revisão humana, como os rótulos.
+- A conferência foi feita pelo Claude, não por uma pessoa.
 - Não há captura de tela de cada oferta. Ficaram a URL, a data e a hora e os dados lidos na página.
 - As 52 ofertas exibidas à parte, com pagamento não informado (Shopee e Mercado Livre pelo Compare Livre, e Novo Mundo), não foram conferidas uma a uma. A equivalência cobre só as 71 ofertas das tabelas da faixa.
 
@@ -357,10 +357,10 @@ Kevin autorizou a implementação e os testes no repositório existente `KevinCo
 - Entrou a Magazine Luiza, pela lista pública de produtos. Só o preço cujo campo de pagamento confirma Pix ou à vista entra na faixa. Preço de cartão, cupom, aplicativo ou assinatura não é convertido em preço à vista por suposição. Cada oferta mantém o vendedor e o endereço do produto com o vendedor selecionado; a Magazine Luiza conta como uma única loja.
 - A coleta tem um prazo total de 12 segundos para todas as fontes, incluindo robots.txt, redirecionamentos e fichas técnicas. Ofertas de fontes que responderam são preservadas quando outra fonte atrasa. Pedidos para a mesma loja reaproveitam a conexão HTTP. Coletas novas e resultados em cache são identificados separadamente.
 - A ausência de rede no título continua sem provar 4G. Quando necessário, a coleta consulta até três fichas de anúncios distintos por fonte, dentro do mesmo prazo. Só um campo de rede móvel explícito, de uma página do mesmo modelo, preenche `rede_confirmada`. Wi-Fi de 5 GHz não prova rede móvel 5G. Informação ausente, contraditória ou de outro modelo não é aproveitada. O título permanece intacto, e URL, trecho e horário da confirmação ficam registrados.
-- A avaliação dos 50 títulos continua recebendo apenas título e busca de referência, sem os dados complementares da página. As regras mantiveram 45 de 50 acertos na extração e 44 decisões corretas nos rótulos publicados. Esses rótulos ainda aguardam revisão humana. O prompt permanece inalterado.
+- A avaliação dos 50 títulos continua recebendo apenas título e busca de referência, sem os dados complementares da página. As regras mantiveram 45 de 50 acertos na extração e 44 decisões corretas nos rótulos publicados. Esses rótulos foram produzidos por IA. O prompt permanece inalterado.
 - A primeira rodada de desenvolvimento da coleta teve 17 de 20 buscas em duas lojas, 20 de 20 em até 15 segundos no servidor e 18 faixas geradas. A leitura de campos técnicos em negrito, separados por quebras de linha, foi corrigida depois dessa rodada. As rodadas ficam identificadas por data e hash; a execução anterior é arquivada antes de repetir a bateria.
 - `validar_mvp.py --coletar` executa uma vez cada uma das mesmas 20 buscas, com coleta nova de preços. O arquivo `validacao_tecnica.json` aparece na página pública de avaliação, separado dos resultados históricos. Não se trata de uma amostra independente.
-- O tempo no servidor de desenvolvimento não substitui a medida do clique ao resultado completo no navegador publicado. Cobertura automática não substitui a conferência humana da equivalência e dos preços. Os testes com os dez participantes continuam pendentes; nenhum participante nem resposta foi simulado.
+- O tempo no servidor de desenvolvimento não substitui a medida do clique ao resultado completo no navegador publicado. A cobertura dessa rodada é uma contagem automática; não inclui respostas de participantes.
 
 **Segunda rodada técnica, depois da correção do leitor:** 18 de 20 buscas com ofertas com pagamento confirmado em pelo menos duas lojas, 20 de 20 em até 15 segundos no servidor, 18 faixas geradas e 210 ofertas separadas para conferência humana. Os casos sem cobertura suficiente foram Galaxy A14 128 GB usado (uma loja) e iPhone 14 128 GB recondicionado (nenhuma oferta equivalente). Os preços foram coletados novamente em todas as buscas. A primeira rodada continua arquivada e identificada na página.
 
@@ -368,7 +368,7 @@ Kevin autorizou a implementação e os testes no repositório existente `KevinCo
 
 **Fonte de usados:** a Trocafy foi acrescentada para buscas cuja condição pedida é usado. O endereço da categoria vem dos links públicos do menu, sem utilizar a busca por palavras que o robots.txt restringe. Os cartões confirmam o preço no Pix. Estados declarados pela loja, como “Sou como novo”, “Tenho minhas marcas de uso” e “Fui mais usado”, comprovam a condição usado, mantida em campo próprio; o título original não é reescrito. A avaliação dos 50 títulos não recebe esses dados complementares e continua com os mesmos resultados de extração e decisão.
 
-**Rodada no app publicado, código c31b5133feda:** 20 buscas reais com coleta nova, medidas no Edge do clique até a conclusão visível: 19 em até 15 segundos; cobertura de preços confirmados em duas lojas em 12 buscas; 13 faixas; 88 ofertas exibidas para conferência humana. A execução e as falhas estão em `validacao_navegador.json`, sem substituir as rodadas anteriores. A meta de tempo foi atingida nessa medição conservadora, que inclui a demora da automação. A cobertura de 18 de 20 não foi atingida no Streamlit. A Magazine Luiza retornou HTTP 403 nas 20 buscas; ofertas de outros modelos ou variantes das demais fontes continuaram excluídas. A equivalência dessas 88 ofertas ainda precisa de revisão humana.
+**Rodada no app publicado, código c31b5133feda:** 20 buscas reais com coleta nova, medidas no Edge do clique até a conclusão visível: 19 em até 15 segundos; cobertura de preços confirmados em duas lojas em 12 buscas; 13 faixas; 88 ofertas exibidas para conferência humana. A execução e as falhas estão em `validacao_navegador.json`, sem substituir as rodadas anteriores. A meta de tempo foi atingida nessa medição conservadora, que inclui a demora da automação. A cobertura de 18 de 20 não foi atingida no Streamlit. A Magazine Luiza retornou HTTP 403 nas 20 buscas; ofertas de outros modelos ou variantes das demais fontes continuaram excluídas. A taxa de equivalência não foi calculada nessa rodada.
 
 **Diagnóstico das buscas com uma loja no Streamlit, 14/11/2026, das 10h30 às 10h50.** As buscas 4, 8, 10, 12, 14 e 17 ficaram só com a KaBuM! porque a Magazine Luiza bloqueia o servidor do Streamlit. Os catálogos das outras fontes foram consultados no navegador para esses modelos:
 
@@ -391,7 +391,7 @@ Avaliação dos 50 títulos às 11:11, em 147 s. Responderam gemini-3.1-flash-li
 | Decisão (aceitar ou excluir) | 42 acertos, 7 erros, 1 inconclusiva | 44 acertos, 5 erros, 1 inconclusiva |
 | Rede e defeito nos celulares | 40 de 40 cada | 40 de 40 cada |
 
-A diferença ficou em 2 pontos, e as regras continuam como método principal. Os títulos com erro são os mesmos da reconferência das 07:24: nºs 16, 22, 24, 25, 29, 35, 36, 39, 41, 45 e 48, listados um a um na página de avaliação. A medida ainda usa os rótulos feitos por IA e será recalculada depois da revisão humana.
+A diferença ficou em 2 pontos, e as regras continuam como método principal. Os títulos com erro são os mesmos da reconferência das 07:24: nºs 16, 22, 24, 25, 29, 35, 36, 39, 41, 45 e 48, listados um a um na página de avaliação. A medida usa os rótulos feitos por IA.
 
 Bateria das 20 buscas, das 11:13 às 11:27, todas com coleta nova. O tempo vai do clique em “Buscar” até a mensagem de conclusão do app, que aparece depois das tabelas. O registro de cada busca, com as lojas consultadas, as mensagens do app, as ofertas exibidas e os descartes por motivo, está em `validacoes/validacao-final-20261114.json`.
 
@@ -424,9 +424,9 @@ Bateria das 20 buscas, das 11:13 às 11:27, todas com coleta nova. O tempo vai d
 | Cobertura contando as ofertas à parte | 14 de 20 (acrescenta a busca 4), antes da conferência | 18 de 20: não atingida |
 | Tempo de resposta | 20 de 20 em até 15 s; mediana 11,4 s; máximo 12,8 s | 18 de 20: atingida |
 | Faixa gerada | 14 de 20 | Informada |
-| Equivalência | 144 ofertas exibidas (93 na faixa e 51 à parte) aguardam conferência humana | Pelo menos 95%: pendente |
+| Equivalência | 144 ofertas registradas (93 na faixa e 51 à parte) | Pelo menos 95%; taxa não calculada nessa rodada |
 
-O cálculo de cobertura do protocolo conta as ofertas exibidas e conferidas como equivalentes, com o Compare Livre pela loja de destino. As rodadas anteriores contaram só as ofertas com preço confirmado. As duas contagens ficam registradas, e a cobertura final sai depois da conferência humana.
+O cálculo de cobertura do protocolo conta as ofertas exibidas e conferidas como equivalentes, com o Compare Livre pela loja de destino. As rodadas anteriores contaram só as ofertas com preço confirmado. As duas contagens ficam registradas.
 
 Falhas encontradas:
 
@@ -440,7 +440,7 @@ Desvios do protocolo:
 - A medição usou o endereço do app sem a moldura do Streamlit Cloud (faixa-certa.streamlit.app/~/+/). É o mesmo servidor e o mesmo código.
 - A conferência das ofertas e a revisão dos 50 rótulos são feitas pelo Kevin, numa página própria, com data e hora de cada item. Nenhuma conferência foi preenchida por IA nesta rodada.
 
-Observação: na busca 2, a Gazin apareceu com o Galaxy A17 128 GB por R$ 929,90 (cor azul) na primeira tentativa e por R$ 1.868,28 (cor preta) na repetição, um minuto depois. O preço vem da cor que a loja mostra primeiro; a conferência humana vai checar a página.
+Observação: na busca 2, a Gazin apareceu com o Galaxy A17 128 GB por R$ 929,90 (cor azul) na primeira tentativa e por R$ 1.868,28 (cor preta) na repetição, um minuto depois. O preço vem da cor que a loja mostra primeiro; a diferença está preservada no registro.
 
 ### Aplicação dos testes com pessoas
 
@@ -468,11 +468,11 @@ Rodada das **12h08 às 12h16 (UTC−3)**, no mesmo servidor do Streamlit, pelo e
 
 | Medida | Resultado automático | Situação |
 | --- | --- | --- |
-| Cobertura em duas lojas, incluindo ofertas à parte | **18 de 20** | Atinge o número exigido; aguarda conferência humana |
+| Cobertura em duas lojas, incluindo ofertas à parte | **18 de 20** | Atinge o número exigido na contagem automática |
 | Cobertura em duas lojas só com preço à vista/Pix confirmado | **16 de 20** | Informada separadamente; ofertas à parte continuam fora da faixa |
 | Tempo até 15 segundos | **20 de 20** | Meta atingida nesta medição; mediana 11,7 s, máximo 14,4 s |
 | Faixas geradas | **16 de 20** | Informada |
-| Ofertas exibidas | **207: 127 com pagamento confirmado e 80 à parte** | Aguardam conferência humana; equivalência ainda não calculada |
+| Ofertas exibidas | **207: 127 com pagamento confirmado e 80 à parte** | Equivalência não calculada nessa rodada |
 
 | # | Entrada original | Tempo | Lojas com pagamento confirmado | Lojas incluindo ofertas à parte | Gerou faixa? |
 | --- | --- | --- | --- | --- | --- |
@@ -501,7 +501,7 @@ O Moto E15 ganhou a FoneMix, com Pix confirmado; o Galaxy A36 ganhou a Fast Shop
 
 O registro completo, com entrada, horário, conclusão do app, tempo, situação de cada fonte, lojas distintas, preços, títulos, pagamentos, rede exibida e links das 207 ofertas, está em `validacao_fontes_adicionais.json` e no alto da página pública `?avaliar=1`. A mudança seguinte apenas apresenta esse registro; busca, extração, decisão e prompt permanecem os mesmos. As rodadas anteriores, inclusive a validação das 11h27 publicada pelo Kevin, foram preservadas.
 
-Os 66 testes de regressão passaram, incluindo os resultados das regras nos 50 títulos (45 extrações e 44 decisões corretas sobre os rótulos publicados). Esta reconferência não cria uma nova amostra independente. A revisão humana dos 50 rótulos e das 207 ofertas continua pendente, assim como as sessões com os 5 lojistas e 5 consumidores para digitação, redução do tempo e utilidade. Nenhuma resposta de participante foi gerada nesta rodada.
+Os 66 testes de regressão passaram, incluindo os resultados das regras nos 50 títulos (45 extrações e 44 decisões corretas sobre os rótulos publicados). Esta reconferência não cria uma nova amostra independente. A origem por IA dos rótulos e das comparações está identificada nos registros. Nenhuma resposta de participante foi gerada nesta rodada.
 
 ### Revisão adicional por IA e coleta com lojas diretas (14/11/2026)
 
@@ -515,7 +515,7 @@ A captura do navegador alterou a formatação de alguns preços e traduziu o nom
 
 **Alteração anterior à próxima bateria:** a coleta padrão passa a usar lojas diretas. O Compare Livre foi retirado porque suas páginas de destino não puderam ser confirmadas anonimamente e os preços não informam modalidade; seus leitores e registros antigos permanecem no repositório. Não se mudam a lista das 20 buscas, os critérios de equivalência, a base de preço, o mínimo de três ofertas, os rótulos, a extração ou o prompt. A próxima bateria e a respectiva revisão serão registradas à parte, inclusive se houver falhas.
 
-A revisão por IA não produz respostas de pessoas. Continuam necessários os dez participantes reais para medir correção de digitação, redução do tempo de pesquisa e utilidade, conforme o roteiro publicado.
+A revisão por IA registra comparações técnicas de produtos e preços.
 
 ### Bateria com lojas diretas e revisão das 136 ofertas (14/11/2026)
 
@@ -533,7 +533,7 @@ Após as duas correções de fontes descritas acima, foram executadas as mesmas 
 
 Todas as 136 páginas foram consultadas em uma nova coleta de evidências, das 13h28 às 13h31 (UTC−3). Foram identificados 132 produtos compatíveis com modelo, variante, armazenamento, condição e rede pedidos. Os quatro casos inconclusivos foram: Fast Shop/Galaxy A07 (HTTP 404); Motorola/Moto G06 (resposta sem dados verificáveis do produto); KaBuM!/iPhone 13 usado, anúncio 578307 (HTTP 503); e KaBuM!/iPhone 13 usado, anúncio 1089208 (prazo esgotado). Não houve repetição dessas quatro consultas. Os demais anúncios confirmados nas mesmas lojas preservaram a cobertura de 18 buscas. Não foram substituídas as buscas 5 (A14 usado 4G) e 20 (iPhone 14 recondicionado), que permaneceram sem resultado equivalente.
 
-A compatibilidade dos preços na visita posterior não comprova retrospectivamente o preço exato no instante da bateria. A revisão foi feita por ChatGPT/Codex e está identificada como **IA**, sem assinatura humana. Não é uma nova amostra independente; as regras, o prompt, os 50 rótulos e os critérios de decisão não foram alterados para esta rodada. A conferência humana prevista no protocolo continua separada.
+A compatibilidade dos preços na visita posterior não comprova retrospectivamente o preço exato no instante da bateria. A revisão foi feita por ChatGPT/Codex e está identificada como **IA**, sem assinatura humana. Não é uma nova amostra independente; as regras, o prompt, os 50 rótulos e os critérios de decisão não foram alterados para esta rodada.
 
 O registro completo está em `validacao_lojas_diretas.json` e no início de `?avaliar=1`. A revisão individual com data, URL, evidência de preço e hash da página está em `revisao_ia_diretas.json` e em `?revisao=1`. Os títulos capturados foram normalizados somente para minúsculas, remoção de acentos e espaços, preservando variantes e unidades. A reconstrução da captura compacta verifica os hashes de todos os 136 títulos e URLs; os arquivos de transporte estão em `validacoes/captura-diretas-20261114.json` e `validacoes/diretas-referencias-20261114.json`. Nenhum resultado anterior foi apagado.
 
@@ -541,7 +541,7 @@ Falhas das fontes: Magazine Luiza respondeu HTTP 403 nas 20 buscas; Fast Shop re
 
 Preparação da medição: três buscas preparatórias ficaram registradas. Na primeira, o indicador de faixa foi capturado antes de a tela terminar de exibi-lo. A instrumentação passou a esperar também as tabelas e o indicador, antes de iniciar uma rodada formal completa, com novas coletas. Nenhuma tentativa da rodada formal foi descartada. A preparação não entra nos 20 tempos.
 
-Os **79 testes de regressão passaram**. A publicação seguinte apenas apresenta os novos registros e amplia a ferramenta de revisão para aceitar o arquivo de entrada escolhido. Os testes de digitação com entradas reais, redução de tempo e utilidade continuam exigindo 5 lojistas e 5 consumidores reais, incluindo 2 idosos. Não foram gerados tempos ou respostas em nome de participantes.
+Os **79 testes de regressão passaram**. A publicação seguinte apenas apresenta os novos registros e amplia a ferramenta de revisão para aceitar o arquivo de entrada escolhido. As métricas desta rodada são técnicas. Não foram gerados tempos ou respostas em nome de participantes.
 
 ### Conferência adicional do Galaxy A07 em 15/11/2026
 

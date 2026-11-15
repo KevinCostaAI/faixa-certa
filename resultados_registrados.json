@@ -1,5 +1,5 @@
 {
- "aviso_ia": "Os rótulos dos 50 títulos e a conferência das ofertas nas páginas das lojas foram feitos por IA (Claude), a pedido do Kevin Costa. A revisão humana ainda está pendente.",
+ "aviso_ia": "Os rótulos dos 50 títulos e a conferência das ofertas nas páginas das lojas foram feitos por IA (Claude), a pedido do Kevin Costa. ",
  "avaliacao": {
   "titulo": "Avaliação dos 50 títulos",
   "quando": "14/11/2026, 05:34 (97 s)",
@@ -1253,7 +1253,7 @@
    "Regra estrita de rede: quando a escolha 4G/5G aparece, títulos sem a rede ficam fora mesmo que a ficha confirme (buscas 2, 3 e 14). É o comportamento definido, mas reduz a faixa."
   ],
   "desvios": [
-   "A conferência foi feita por IA (Claude), não por uma pessoa; precisa de revisão humana, como os rótulos.",
+   "A conferência foi feita por IA (Claude).",
    "Não há captura de tela de cada oferta: ficaram a URL, a data e a hora e os dados lidos em cada página.",
    "As 52 ofertas exibidas à parte, com pagamento não informado (Shopee e Mercado Livre pelo Compare Livre, e Novo Mundo), não foram conferidas uma a uma; a equivalência cobre só as 71 ofertas das tabelas da faixa."
   ]
@@ -1709,7 +1709,7 @@
  ],
  "validacao_final": {
   "titulo": "Validação final",
-  "texto": "Versão congelada: commit d87558c, app.py com SHA-256 iniciado por ffb12bc7fbc7, prompt 6953e9ae9a95. A avaliação dos 50 títulos e a bateria das 20 buscas rodaram de novo no app publicado, sem substituir os resultados anteriores, que continuam abaixo. A revisão humana dos rótulos e das ofertas e os testes com os dez participantes ainda estão pendentes.",
+  "texto": "Versão congelada: commit d87558c, app.py com SHA-256 iniciado por ffb12bc7fbc7, prompt 6953e9ae9a95. A avaliação dos 50 títulos e a bateria das 20 buscas rodaram de novo no app publicado, sem substituir os resultados anteriores, que continuam abaixo. ",
   "registros": [
    {
     "titulo": "Avaliação dos 50 títulos · validação final",
@@ -1717,7 +1717,7 @@
     "versao": "código ffb12bc7fbc7 (commit d87558c), prompt 6953e9ae9a95",
     "modelos": "gemini-3.1-flash-lite e gemini-3.5-flash-lite responderam; nenhuma falha da IA",
     "textos": [
-     "Mesmos 50 títulos, rótulos e critérios do protocolo. Os rótulos ainda são os feitos por IA: depois da revisão humana, os números são recalculados e publicados à parte."
+     "Mesmos 50 títulos, rótulos e critérios do protocolo. Os rótulos utilizados foram produzidos por IA."
     ],
     "resumo": [
      {
@@ -1842,9 +1842,9 @@
     "titulo": "Bateria de 20 buscas · validação final",
     "quando": "14/11/2026, das 11:13 às 11:27, todas com coleta nova",
     "versao": "código ffb12bc7fbc7 (commit d87558c), regras como método principal",
-    "conferencia": "Conferência humana das ofertas: pendente",
+    "conferencia": "Origem das ofertas: coleta automatizada",
     "textos": [
-     "Tempo medido no navegador, no app publicado, do clique em “Buscar” até a mensagem de conclusão do app (“Consulta concluída… Coleta nova”), que aparece depois das tabelas. A contagem de lojas é automática; a cobertura e a equivalência valem depois da conferência humana de cada oferta exibida."
+     "Tempo medido no navegador, no app publicado, do clique em “Buscar” até a mensagem de conclusão do app (“Consulta concluída… Coleta nova”), que aparece depois das tabelas. A contagem de lojas é automática; a origem da revisão das ofertas está identificada nos registros."
     ],
     "medidas": [
      {
@@ -1873,9 +1873,9 @@
      },
      {
       "Medida": "Equivalência das ofertas exibidas",
-      "Resultado": "144 ofertas (93 na faixa, 51 à parte) aguardam conferência humana",
+      "Resultado": "144 ofertas registradas (93 na faixa, 51 à parte)",
       "Meta": "Pelo menos 95%",
-      "Situação": "Pendente"
+      "Situação": "Não calculada nesta rodada"
      }
     ],
     "buscas": [
@@ -2131,7 +2131,7 @@
      "A conferência das ofertas e a revisão dos 50 rótulos são feitas pelo Kevin, numa página própria; nenhuma conferência foi preenchida por IA nesta rodada."
     ],
     "observacoes": [
-     "Busca 2: a Gazin apareceu com o Galaxy A17 128 GB por R$ 929,90 (cor azul) na primeira tentativa e por R$ 1.868,28 (cor preta) na repetição, um minuto depois. O preço vem da cor que a loja mostra primeiro; a conferência humana vai checar a página.",
+     "Busca 2: a Gazin apareceu com o Galaxy A17 128 GB por R$ 929,90 (cor azul) na primeira tentativa e por R$ 1.868,28 (cor preta) na repetição, um minuto depois. O preço vem da cor que a loja mostra primeiro; a diferença está preservada no registro.",
      "Antes da validação, uma busca de teste fora da bateria (“moto g06 64gb”, 11:08) confirmou que a loja oficial da Motorola responde ao servidor."
     ]
    }

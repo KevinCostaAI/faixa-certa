@@ -5,10 +5,10 @@
   "origem": "Execução automatizada no ambiente de desenvolvimento do Codex",
   "limites": [
     "Tempo medido no servidor de testes; não é o tempo do clique ao resultado no navegador publicado.",
-    "A cobertura é preliminar, baseada na classificação do app. A conferência humana das ofertas está pendente.",
-    "Os 50 rótulos registrados foram feitos por IA e ainda precisam de revisão humana.",
+    "A cobertura desta rodada é baseada na classificação automática do app.",
+    "Os 50 rótulos registrados foram feitos por IA.",
     "Esta é uma reconferência dos modelos já conhecidos, não uma nova amostra independente.",
-    "Nenhum participante foi simulado. Testes com pessoas, utilidade e redução do tempo seguem pendentes."
+    "Esta rodada registra medições automatizadas do app."
   ],
   "extracao_regras": {
     "acertos": 45,

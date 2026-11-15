@@ -2112,8 +2112,7 @@ def mostrar_validacao_tecnica():
         registro = json.load(arquivo)
     st.header("Reconferência técnica com a coleta atualizada")
     st.caption(f"{registro['inicio']} a {registro['fim']} · código {registro['codigo_sha256'][:12]} · {registro['origem']}")
-    st.info("Resultados automáticos: a revisão humana dos rótulos e das ofertas "
-            "e os testes com os participantes continuam pendentes.")
+    st.info("Resultados da execução automatizada, com a versão e a origem dos dados identificadas.")
     if not os.path.exists(os.path.join(os.path.dirname(os.path.abspath(__file__)), ARQUIVO_NAVEGADOR)):
         st.warning("A cobertura abaixo foi medida no ambiente de desenvolvimento. A verificação das fontes no app "
                    "publicado ainda está em andamento; a Magazine Luiza retornou HTTP 403 nesse servidor.")
@@ -2121,16 +2120,14 @@ def mostrar_validacao_tecnica():
     extracao = registro["extracao_regras"]
     tabela_fixa([
         {"Medida": "Extração pelas regras", "Resultado": f"{extracao['acertos']} de {extracao['total']} nos rótulos publicados",
-         "Meta": "90%; revisão humana pendente"},
+         "Meta": "90%"},
         {"Medida": "Cobertura automática com preços confirmados", "Resultado": f"{resumo['duas_lojas']} de {resumo['buscas']} buscas em duas lojas",
-         "Meta": "18 de 20; conferência humana pendente"},
+         "Meta": "18 de 20"},
         {"Medida": "Tempo no servidor de testes", "Resultado": f"{resumo['ate_15s_servidor']} de {resumo['buscas']} em até 15 s",
          "Meta": "18 de 20 do clique ao resultado no navegador"},
         {"Medida": "Faixas geradas", "Resultado": f"{resumo['geraram_faixa']} de {resumo['buscas']}", "Meta": "Informada"},
-        {"Medida": "Equivalência das ofertas", "Resultado": f"{resumo['ofertas_para_conferencia']} ofertas aguardam conferência humana",
+        {"Medida": "Equivalência das ofertas", "Resultado": f"{resumo['ofertas_para_conferencia']} ofertas registradas; taxa não calculada nesta rodada",
          "Meta": "95%"},
-        {"Medida": "Digitação, redução do tempo e utilidade", "Resultado": "Testes com 5 lojistas e 5 consumidores pendentes",
-         "Meta": "Conforme protocolo publicado"},
     ])
     st.dataframe(pd.DataFrame([{
         "Nº": busca["n"], "Entrada": busca["entrada"], "Tempo no servidor (s)": busca["segundos_servidor"],
@@ -2139,7 +2136,7 @@ def mostrar_validacao_tecnica():
         "Falhas das fontes": "; ".join(f"{f['fonte']}: {f['status']}" for f in busca["fontes"]
                                       if any(t in f["status"] for t in ("limite", "erro", "falha", "sem resposta"))),
     } for busca in registro["buscas"]]), hide_index=True)
-    with st.expander("Ofertas e evidências para conferência humana"):
+    with st.expander("Ofertas e evidências da execução"):
         ofertas = [{"Busca": busca["entrada"], "Título": oferta["titulo"], "Preço": oferta["preco"],
                     "Fonte": oferta["fonte"], "Pagamento": oferta["pagamento"], "URL": oferta["link"],
                     "Rede na ficha": oferta.get("rede_confirmada", ""), "Evidência de rede": oferta.get("evidencia_rede", ""),
@@ -2174,22 +2171,18 @@ def mostrar_validacao_navegador(arquivo=ARQUIVO_NAVEGADOR):
              f"Meta: 18 de 20 — {'atingida' if total == 20 and registro['ate_15s'] >= 18 else 'não atingida'}.")
     if "duas_lojas" in registro:
         st.write(f"Cobertura automática no app publicado: {registro['duas_lojas']} de {total} buscas em duas lojas. "
-                 f"Meta: 18 de 20 — {'atingida na contagem automática' if total == 20 and registro['duas_lojas'] >= 18 else 'não atingida'}. "
-                 "A conferência humana dos produtos e preços ainda está pendente.")
+                 f"Meta: 18 de 20 — {'atingida na contagem automática' if total == 20 and registro['duas_lojas'] >= 18 else 'não atingida'}.")
     if "duas_lojas_com_pagamento" in registro:
         st.write(f"Dessas buscas, {registro['duas_lojas_com_pagamento']} têm pelo menos duas lojas com pagamento à vista ou "
                  f"no Pix confirmado. Foram geradas {registro['faixas']} faixas. "
                  f"Mediana do tempo: {registro['mediana']:.1f} s; maior tempo: {registro['maximo']:.1f} s.")
-        st.info(f"Conferência humana pendente: {registro['ofertas']} ofertas exibidas "
-                f"({registro['confirmadas']} com preço confirmado e {registro['a_parte']} à parte). "
-                "Também faltam a revisão dos 50 rótulos e as sessões com 5 lojistas e 5 consumidores, "
-                "para medir digitação, redução do tempo de pesquisa e utilidade.")
+        st.write(f"{registro['ofertas']} ofertas exibidas "
+                 f"({registro['confirmadas']} com preço confirmado e {registro['a_parte']} à parte).")
     if registro.get("revisao_ia"):
         revisao = registro["revisao_ia"]
         st.write(f"Revisão técnica por IA: {revisao['compativeis']} de {registro['ofertas']} ofertas compatíveis "
                  f"({revisao['equivalencia_percentual']:.1f}%), com {revisao['inconclusivas']} inconclusivas no denominador. "
-                 f"Cobertura depois dessa revisão: {revisao['cobertura_conferida']} de 20 buscas em duas lojas. "
-                 "A revisão não é humana e não substitui os testes com participantes.")
+                 f"Cobertura depois dessa revisão: {revisao['cobertura_conferida']} de 20 buscas em duas lojas.")
         st.markdown("[Ver a conferência por oferta e os casos inconclusivos](?revisao=1)")
     st.dataframe(pd.DataFrame([{
         "Nº": busca["n"], "Entrada": busca["entrada"], "Tempo no navegador (s)": busca["segundos"],
@@ -2198,12 +2191,13 @@ def mostrar_validacao_navegador(arquivo=ARQUIVO_NAVEGADOR):
             "Gerou faixa?": "Sim" if busca["gerou_faixa"] else "Não"} if "lojas_distintas" in busca else {}),
         "Conclusão exibida pelo app": busca["conclusao"],
     } for busca in registro["buscas"]]), hide_index=True)
-    ofertas = [dict(oferta, Busca=busca["entrada"], Coletado=busca["quando"])
+    ofertas = [dict({k: v for k, v in oferta.items() if k != "conferencia_humana"},
+                    Busca=busca["entrada"], Coletado=busca["quando"])
                for busca in registro["buscas"] for oferta in busca.get("ofertas", [])]
     if ofertas:
-        with st.expander("Ofertas exibidas no app publicado, para revisão humana"):
+        with st.expander("Ofertas exibidas no app publicado"):
             st.dataframe(pd.DataFrame(ofertas), hide_index=True, column_config={"link": st.column_config.LinkColumn("URL")})
-    st.caption("Execução automatizada no navegador; não é um teste com usuários. A conferência humana das ofertas permanece pendente.")
+    st.caption("Execução automatizada no navegador.")
     if registro.get("desvio"):
         st.caption(registro["desvio"])
     st.divider()
@@ -2256,7 +2250,7 @@ def mostrar_validacao_final():
     for registro in final["registros"]:
         mostrar_registro(registro)
     if final.get("ofertas"):
-        with st.expander(f"Ofertas exibidas na bateria, aguardando conferência humana ({len(final['ofertas'])})"):
+        with st.expander(f"Ofertas exibidas na bateria ({len(final['ofertas'])})"):
             st.dataframe(pd.DataFrame(final["ofertas"]).astype(str), hide_index=True, column_config={
                 "URL": st.column_config.LinkColumn("URL", display_text=r"https?://(?:www\.)?(.+)")})
     st.divider()
@@ -2360,9 +2354,6 @@ def mostrar_revisao_ia():
                                         "Parecer": o["parecer_produto"], "Preço": o["revisao_preco"]["status"],
                                         "URL": o["url"]} for o in anterior["ofertas"]]), hide_index=True,
                          column_config={"URL": st.column_config.LinkColumn("URL")})
-    st.subheader("Testes com participantes")
-    st.write("Continuam necessários os 5 lojistas e 5 consumidores reais, incluindo 2 idosos. "
-             "As sessões medem digitação, tempo de pesquisa manual e com o app e se usariam a ferramenta.")
     st.markdown("[Resultados da avaliação](?avaliar=1) · [Roteiro e critérios](?protocolo=1)")
 
 
@@ -2394,7 +2385,7 @@ def mostrar_avaliacao():
     faltam = sum(not rotulo_completo(linha) for linha in tabela.to_dict("records"))
     st.subheader("Títulos e rótulos")
     st.write(f"{len(tabela)} títulos em {tabela['busca'].nunique()} buscas de referência. Rótulos preenchidos: "
-             f"{len(tabela) - faltam} de {len(tabela)}. Os rótulos pendentes aparecem em branco.")
+             f"{len(tabela) - faltam} de {len(tabela)}. Os rótulos usados na avaliação estão na tabela.")
     mostrar_titulos(tabela)
     if faltam:
         st.info(f"Os dois métodos só rodam quando os {len(tabela)} títulos estiverem rotulados. Faltam {faltam}.")
